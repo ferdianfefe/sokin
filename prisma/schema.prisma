@@ -12,13 +12,60 @@ datasource db {
 
 model User {
   id            String    @id @db.ObjectId @map("_id")
-  email         String    @unique
   name          String?
-  password      String
+  email         String    @unique
+  emailVerified DateTime? @map("email_verified")
+  password      String?   @map("hashed_password")
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
   balance       Float     @default(0)
-  coordinates   String?   @default("")
+  coordinates   String?   
   points        Int       @default(0)
   creditScore   Int       @default(0)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+
+  @@map("users")
+}
+
+model Account{
+  id                  String  @id @db.ObjectId @map("_id")
+  userId              String  @map("user_id")
+  type                String
+  provider            String
+  providerAccountId   String  @map("provider_account_id")
+  refresh_token       String? @db.String
+  access_token        String? @db.String
+  expires_at          Int?
+  token_type          String?
+  scope               String?
+  id_token            String? @db.String
+  session_state       String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session{
+  id            String    @id @db.ObjectId @map("_id")
+  sessionToken  String    @unique @map("session_token")
+  userId        String    @map("user_id")
+  expires       DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions") 
+}
+
+model VerificationToken{
+  id          String    @id @db.ObjectId @map("_id")
+  identifier  String    @unique
+  token       String    @unique
+  expires     DateTime
+
+  @@unique([identifier, token])
+  @@map("verificationtokens")
 }
