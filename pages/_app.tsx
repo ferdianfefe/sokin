@@ -7,7 +7,7 @@ import { SessionProvider } from "next-auth/react";
 import { HeadlessInferencer } from "@pankod/refine-inferencer/headless";
 import { useEffect } from "react";
 
-//import "src/styles/globals.css";
+import '../src/styles/global.css'
 
 const API_URL = "https://api.fake-rest.refine.dev";
 
