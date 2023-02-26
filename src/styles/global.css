@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+    font-family: "satoshi";
+    src: url("/fonts/satoshi.woff2") format("woff2");
+  }
+  
+  body {
+    font-family: "satoshi", sans-serif;
+  }
+  
