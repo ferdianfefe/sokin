@@ -6,6 +6,8 @@ import dataProvider from "@pankod/refine-simple-rest";
 import { SessionProvider } from "next-auth/react";
 import { HeadlessInferencer } from "@pankod/refine-inferencer/headless";
 import { useEffect } from "react";
+import "./global.css";
+
 
 //import "src/styles/globals.css";
 
