@@ -11,7 +11,7 @@ datasource db {
 }
 
 model User {
-  id            String    @id @db.ObjectId @map("_id")
+  id            String    @default(auto()) @id @db.ObjectId @map("_id")
   name          String?
   email         String    @unique
   emailVerified DateTime? @map("email_verified")
@@ -32,16 +32,15 @@ model User {
 model Account{
   id                  String  @id @db.ObjectId @map("_id")
   userId              String  @map("user_id")
-  type                String
   provider            String
   providerAccountId   String  @map("provider_account_id")
-  refresh_token       String? @db.String
-  access_token        String? @db.String
-  expires_at          Int?
-  token_type          String?
+  refreshToken        String? @db.String  @map("refresh_token")
+  accessToken         String? @db.String  @map("access_token")
+  expiresAt           Int?  @map("expires_at")
+  tokenType           String? @map("token_type")
   scope               String?
-  id_token            String? @db.String
-  session_state       String?
+  idToken             String? @db.String  @map("id_token")
+  sessionState        String? @map("session_state")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -68,4 +67,26 @@ model VerificationToken{
 
   @@unique([identifier, token])
   @@map("verificationtokens")
+}
+
+model Owner{
+  id            String    @id @db.ObjectId @map("_id")
+  name          String?
+  idCardNumber  Int       @unique
+  city          String?
+  address       String?
+  phoneNumber   Int
+  email         String    @unique
+  password      String?   @map("hashed_password")
+
+}
+
+
+model Merchant{
+  id          String    @id @db.ObjectId @map("_id")
+  ownerId     String    @map("owner_id")
+  name        String?
+  postalCode  String?
+  coordinates String?
+  benchmark   String?
 }

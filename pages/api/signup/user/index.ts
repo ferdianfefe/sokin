@@ -9,6 +9,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
+
   if (req.method === 'POST') {
     const { name, email, password } = req.body as SignupRequestBody;
 
