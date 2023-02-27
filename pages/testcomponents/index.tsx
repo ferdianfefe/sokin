@@ -5,11 +5,11 @@ import Navbar from 'components/elements/Navbar'
 export default function TestComponents() {
   return (
     <>
-      <div className='max-w-sm justify-center flex'>
+      <div className='grid-flow-row max-w-sm align-middle'>
         <Button text='Button' type='secondary' size='small'/>
-        <Button text='Button' size='big'/>
+        <Button text='Masuk' size='big'/>
       </div>
-      <div>
+      <div className='mt-2'>
         <Navbar />
       </div>
     </>
