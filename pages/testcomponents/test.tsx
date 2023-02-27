@@ -10,7 +10,7 @@ export default function TestComponents() {
         <Button text='Masuk' size='big'/>
       </div>
       <div className='mt-2'>
-        <Navbar location='home'/>
+        <Navbar location='pesan'/>
       </div>
     </>
   )
