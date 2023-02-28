@@ -10,7 +10,7 @@ export default function SignupMerchant() {
               <h3>Daftarkan Usahamu,</h3>
               <h3>Jadilah Bagian dari <span className='font-bold'>Sokin</span></h3>
             </div>
-            <div className='flex flex-col items-center p-8 mt-11 bg-white h-[450px] w-[90%] rounded-3xl shadow-md'>
+            <div className='flex flex-col items-center p-8 mt-11 bg-white h-[450px] w-[90%] rounded-3xl shadow-md mb-14'>
               <h3 className='font-bold'>Langkah - Langkah</h3>
               <div className='flex mt-9 mb-3'>
                 <div className='w-[90px] flex justify-center mr-5'>
