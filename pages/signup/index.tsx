@@ -4,7 +4,7 @@ import { signIn } from "next-auth/react";
 import { useEffect } from "react";
 import prisma from "../../lib/prisma";
 
-const SignIn: React.FunctionComponent = (): JSX.Element => {
+const SignUp: React.FunctionComponent = (): JSX.Element => {
   const { data: session, status } = useSession();
 
   useEffect(() => {
@@ -29,4 +29,4 @@ const SignIn: React.FunctionComponent = (): JSX.Element => {
   );
 };
 
-export default SignIn;
+export default SignUp;
