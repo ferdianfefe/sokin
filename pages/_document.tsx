@@ -18,4 +18,4 @@ class MyDocument extends Document {
   }
 }
 
-export default Document
+export default MyDocument;
