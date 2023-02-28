@@ -3,8 +3,9 @@ import React from "react";
 import Input from "components/elements/Input";
 import Button from "components/elements/Button";
 import GoogleButton from "components/elements/GoogleButton";
+import Link from "next/link";
 
-export default function SigninLayout(){
+export default function SignIn(){
   return (
     <>
       <div className="relative flex-col items-center flex bg-[#F37D27]/25 w-full min-h-screen">
@@ -27,7 +28,7 @@ export default function SigninLayout(){
             <Button text="Masuk" size="big" type="submit" />
           </form>
           <p className="w-full flex justify-center font-medium">
-          Belum memiliki akun? <a className="text-[#FE8304] font-semibold">&nbsp;Daftar Sekarang</a>
+          Belum memiliki akun? <Link className="text-[#FE8304] font-semibold" href="/signup">&nbsp;Daftar Sekarang</Link>
           </p>
         </div>
         <div className="p-4 w-full">
