@@ -12,7 +12,6 @@ export default async function handler(
 
   if (req.method === 'POST') {
     const { name, email, password } = req.body as SignupRequestBody;
-
     const user = await prisma.user.findUnique({
       where: { email },
     });
@@ -28,5 +27,7 @@ export default async function handler(
     return res.status(201).json(newUser);
   }
 
-  return res.status(405).json({ message: 'Method unallowed' });
+  return res.status(405).json({ message: 'Method not allowed' });
 }
+
+
