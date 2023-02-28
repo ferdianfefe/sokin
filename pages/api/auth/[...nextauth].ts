@@ -1,18 +1,15 @@
 import { NextApiHandler } from "next";
-import NextAuth from "next-auth";
+import NextAuth, { Awaitable } from "next-auth";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import GoogleProvider from "next-auth/providers/google";
 import prisma from "../../../lib/prisma";
 import { redirect } from "next/dist/server/api-utils";
 
-const authHander: NextApiHandler = (req, res) => NextAuth(req, res, options);
-export default authHander;
-
 const options = {
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
       authorization: {
         params: {
           prompt: "consent",
@@ -59,3 +56,22 @@ const options = {
     },
   },
 };
+
+const authHandler: NextApiHandler = (req, res) =>
+  NextAuth(req, res, { ...options });
+export default authHandler;
+
+// id            String    @id @db.ObjectId @map("_id")
+// name          String?
+// email         String    @unique
+// emailVerified DateTime? @map("email_verified")
+// password      String?   @map("hashed_password")
+// image         String?
+// accounts      Account[]
+// sessions      Session[]
+// balance       Float     @default(0)
+// coordinates   String?
+// points        Int       @default(0)
+// creditScore   Int       @default(0)
+// createdAt     DateTime  @default(now())
+// updatedAt     DateTime  @updatedAt
