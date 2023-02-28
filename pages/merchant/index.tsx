@@ -16,18 +16,26 @@ const OrderItem: React.FC<{
   time,
 }): JSX.Element => {
   return (
-    <div className="flex px-4 items-center justify-between">
+    <div className="flex px-4 py-2 items-center justify-between shadow-md shadow-list-order rounded-full border-[#b85f00]/15 border-[1px] border-opacity-30">
       <div className="flex items-center">
         <p className="text-3xl font-bold text-[#FE860B]">#{orderNumber}</p>
         <div className="ml-4">
-          <p className="text-lg font-bold">{customerName}</p>
-          <div className="flex text-[#535353]">
-            <p className="">{menuCount} Menu</p>
-            <p>Rp {totalPrice}</p>
+          <p className="text-sm font-bold">{customerName}</p>
+          <div className="text-xs flex  gap-1">
+            <p className="text-[#535353] font-semibold">{menuCount} Menu</p>
+            <p className="text-[#B3A5A5]">|</p>
+            <p className="text-[#535353] font-semibold">Rp{totalPrice}</p>
           </div>
         </div>
       </div>
-      <div className="">{time}</div>
+      <div className="bg-[#FF7272] rounded-full text-white text-[10px] font-bold px-2 py-2 flex gap-1">
+        <svg className='items-center' width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7.992 0C3.576 0 0 3.584 0 8C0 12.416 3.576 16 7.992 16C12.416 16 16 12.416 16 8C16 3.584 12.416 0 7.992 0ZM8 14.4C4.464 14.4 1.6 11.536 1.6 8C1.6 4.464 4.464 1.6 8 1.6C11.536 1.6 14.4 4.464 14.4 8C14.4 11.536 11.536 14.4 8 14.4Z" fill="white"/>
+          <path d="M8.4002 4H7.2002V8.8L11.4002 11.32L12.0002 10.336L8.4002 8.2V4Z" fill="white"/>
+        </svg>
+
+        {time}
+      </div>
     </div>
   );
 };
@@ -61,53 +69,121 @@ const Merchant: React.FC = () => {
     <DefaultLayout>
       <div className="p-8 h-full">
         <h1 className="font-bold text-black text-lg mb-3">Informasi Akun</h1>
-        <div className="bg-[#FCBF86] w-full flex rounded-3xl px-3 py-6 mb-3">
-          <div className="w-[94px] h-[94px] relative ">
-            <Image alt="preksu-logo" src={"/images/preksu.png"} fill></Image>
+        <div className="bg-[#FCBF86] rounded-3xl p-5 flex flex-col sm:flex-row gap-2 md:gap-6">
+          <div className="flex justify-center sm:hidden py-2 max-w-[150px] mx-auto my-0">
+          <Image alt="preksu-logo" src={"/images/preksu.png"} width={300} height={300}></Image>
           </div>
-          <div className="mx-2">
-            <h1>Preksu: Ayam Geprek & Susu</h1>
-            <div className="bg-white p-2 mb-2 flex rounded-xl">
-              <div className="relative w-8 h-8">
-                <Image
-                  alt="wallet-icon"
-                  src={"/images/icons/wallet.svg"}
-                  fill
-                ></Image>
-              </div>
-              <div className="ml-1">
-                <p>Total Penjualan</p>
-                <p>Rp 20.000.000</p>
-              </div>
+          
+          <div className="hidden sm:flex sm:items-center md:w-[30%]">
+            <div className="w-full flex justify-center">
+              
+              <Image alt="preksu-logo" src={"/images/preksu.png"} width={300} height={300}></Image>
             </div>
-            <div className="flex">
-              <div className="bg-white flex flex-1 rounded-xl">
-                <div className="relative w-8 h-8">
+
+          </div>
+
+          <div className="flex flex-col w-full h-full gap-4 sm:justify-center">
+            <span className="text-lg font-extrabold flex mobile:justify-center text-center justify-center sm:justify-start">
+              <h1 >Preksu: Ayam Geprek & Susu</h1>
+            </span>
+            <div className="flex gap-2 flex-col">
+              <div className="flex gap-5 rounded-xl  bg-white items-center px-4 py-2">
+                <div className="relative w-10 h-10">
                   <Image
                     alt="wallet-icon"
-                    src={"/images/icons/up-arrow.svg"}
+                    src={"/images/icons/wallet.svg"}
                     fill
                   ></Image>
                 </div>
-                <div className="">
-                  <p>Pemasukan</p>
-                  <p>Rp. 200.000,-</p>
+                <div className="flex-col flex">
+                  <p className="font-bold text-sm">Total Penjualan</p>
+                  <p className="font-black">Rp20.000.000</p>
+                </div>  
+              </div>
+              <div className="flex justify-between gap-2 items-center h-full">
+                <div className="flex rounded-xl bg-white w-full px-4 py-2 gap-4">
+                  <div className="flex relative w-7 h-7  my-auto mx-0">
+                    <Image
+                      alt="up-arrow"
+                      src={"/images/icons/up-arrow.svg"}
+                      fill
+                    ></Image>
+                  </div>
+                  <div className="flex flex-col text-sm">
+                    <p className="">Pemasukan</p>
+                    <p className="font-extrabold">Rp200.000,-</p>
+                  </div>
+                </div>
+                <div className="flex rounded-xl bg-white w-full px-4 py-2 justify-center">
+                  <div className="text-center text-sm  flex flex-col">
+                    <p>Total Transaksi</p>
+                    <p className="font-extrabold">Rp1237</p>
+                  </div>
                 </div>
               </div>
-              <div className="bg-white flex ml-1 flex-1 rounded-xl">
-                <div className="">
-                  <p>Total Transaksi</p>
-                  <p>Rp. 1237</p>
-                </div>
-              </div>
+
             </div>
           </div>
         </div>
-        <div className="">
-          <div className="rounded-lg p-2 bg-[#FFE0C0] text-[#FE8304] mb-3">
+
+        {/* <div className="bg-[#FCBF86] flex rounded-3xl p-5 mb-3 justify-between w-full">
+          <div className="hidden md:visible relative md:flex flex-1 object-cover bg-slate-200">
+            <Image className="w-full h-full shrink-0" alt="preksu-logo" src={"/images/preksu.png"} width={300} height={300}></Image>
+          </div>
+
+          <div className="mx-2 text-xs items-center flex flex-grow flex-2 justify-around">
+            <div className="flex flex-col">
+              <span className="text-sm font-extrabold flex">
+                <h1>Preksu: Ayam Geprek & Susu</h1>
+              </span>
+
+              <div className="bg-white my-2 p-2 px-3 flex rounded-xl items-center gap-2">
+                <div className="relative w-5 h-5">
+                  <Image
+                    alt="wallet-icon"
+                    src={"/images/icons/wallet.svg"}
+                    fill
+                  ></Image>
+                </div>
+                <div className="ml-1">
+                  <p className="font-bold">Total Penjualan</p>
+                  <p className="font-black">Rp 20.000.000</p>
+                </div>
+              </div>
+
+              <div className="flex">
+                <div className="bg-white flex flex-1 rounded-xl items-center p-2 px-3 gap-2 w-1/2">
+                  <div className="flex relative w-5 h-5">
+                    <Image
+                      alt="up-arrow"
+                      src={"/images/icons/up-arrow.svg"}
+                      fill
+                    ></Image>
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="text-[10px]">Pemasukan</p>
+                    <p className="font-extrabold">Rp. 200.000,-</p>
+                  </div>
+                </div>
+                <div className="bg-white flex ml-1 flex-1 rounded-xl items-center justify-center">
+                  <div className="text-center">
+                    <p>Total Transaksi</p>
+                    <p className="font-extrabold">Rp. 1237</p>
+                  </div>
+                </div>
+            </div>
+
+
+            </div>
+
+
+          </div>
+        </div> */}
+        <div className="mt-6">
+          <div className="rounded-full py-2 px-3 bg-[#FFE0C0] text-[#FE8304] mb-3 text-xs font-semibold text-center shadow-md shadow-[#FE8304]/50 w-[45%]">
             Antrian Pesanan
           </div>
-          <div className="mb-10">
+          <div className="mb-10 flex flex-col gap-4">
             {orderData.map((order) => {
               return (
                 <OrderItem
