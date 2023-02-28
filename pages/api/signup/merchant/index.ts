@@ -2,16 +2,14 @@ import { PrismaClient, Prisma } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 type OwnerCreateRequestBody = {
-  name?: string;
-  idCardNumber: number;
-  city?: string;
-  address?: string;
-  phoneNumber: number;
+  name: string;
+  idCardNumber: string;
+  city: string;
+  address: string;
+  phoneNumber: string;
   email: string;
-  password?: string;
+  password: string;
 };
-
-
 
 const prisma = new PrismaClient();
 
@@ -32,7 +30,7 @@ export default async function handler(
     } = req.body as OwnerCreateRequestBody;
 
     const owner = await prisma.owner.findUnique({
-      where: { idCardNumber },
+      where: { email },
     });
 
     if (owner) {
@@ -47,11 +45,16 @@ export default async function handler(
         address,
         phoneNumber,
         email,
-        hashed_password: password,
+        password,
       },
     });
 
     return res.status(201).json(newOwner);
+  }
+
+  if (req.method === 'GET'){
+    const users = await prisma.owner.findMany()
+    return res.status(200).json(users);
   }
 
   return res.status(405).json({ message: 'Method unallowed' });

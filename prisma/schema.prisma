@@ -70,16 +70,15 @@ model VerificationToken {
 }
 
 model Owner {
-  id           String  @id @map("_id") @db.ObjectId
-  name         String?
-  idCardNumber Int     @unique
-  city         String?
-  address      String?
-  phoneNumber  Int
-  email        String  @unique
-  password     String? @map("hashed_password")
-
-  Merchant Merchant[]
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  idCardNumber String     @unique
+  city         String
+  address      String
+  phoneNumber  String
+  email        String     @unique
+  password     String     @map("hashed_password")
+  Merchant     Merchant[]
 }
 
 model Merchant {
