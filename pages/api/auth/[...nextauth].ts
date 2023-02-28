@@ -3,6 +3,7 @@ import NextAuth from "next-auth";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import GoogleProvider from "next-auth/providers/google";
 import prisma from "../../../lib/prisma";
+import { redirect } from "next/dist/server/api-utils";
 
 const authHander: NextApiHandler = (req, res) => NextAuth(req, res, options);
 export default authHander;
@@ -19,35 +20,42 @@ const options = {
           response_type: "code",
         },
       },
-      profile(profile, tokens) {
+      profile(profile) {
         return {
-          id: profile.id.toString(),
-          name: profile.displayName,
-          email: profile.emails[0].value,
-          image: profile.photos[0].value,
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture,
         };
       },
+      checks: ["both"],
     }),
   ],
   adapter: PrismaAdapter(prisma),
   secret: process.env.SECRET,
   callbacks: {
     async signIn(user: any, account: any, profile: any) {
-      console.log(user, account, profile);
-      const { email } = user;
-      const userExists = await prisma.user.findUnique({
-        where: {
-          email,
-        },
-      });
-      if (!userExists) {
-        await prisma.user.create({
-          data: {
+      try {
+        const { email } = user;
+        const userExists = await prisma.user.findFirst({
+          where: {
             email,
           },
         });
+        if (!userExists) {
+          await prisma.user.create({
+            data: {
+              email,
+              name: user.name,
+              image: user.image,
+            },
+          });
+        }
+        return true;
+      } catch (error) {
+        console.log(error);
+        return false;
       }
-      return true;
     },
   },
 };
