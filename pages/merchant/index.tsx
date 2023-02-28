@@ -20,16 +20,16 @@ const OrderItem: React.FC<{
       <div className="flex items-center">
         <p className="text-3xl font-bold text-[#FE860B]">#{orderNumber}</p>
         <div className="ml-4">
-          <p className="text-sm font-bold">{customerName}</p>
-          <div className="text-xs flex  gap-1">
+          <p className="text-sm font-bold md:text-lg">{customerName}</p>
+          <div className="text-xs flex gap-1 md:text-base">
             <p className="text-[#535353] font-semibold">{menuCount} Menu</p>
             <p className="text-[#B3A5A5]">|</p>
             <p className="text-[#535353] font-semibold">Rp{totalPrice}</p>
           </div>
         </div>
       </div>
-      <div className="bg-[#FF7272] rounded-full text-white text-[10px] font-bold px-2 py-2 flex gap-1">
-        <svg className='items-center' width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <div className="bg-[#FF7272] rounded-full text-white text-[10px] md:text-base font-bold px-2 py-2 md:px-4 flex gap-1 relative">
+        <svg className='flex md:mr-2 md:my-auto' width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M7.992 0C3.576 0 0 3.584 0 8C0 12.416 3.576 16 7.992 16C12.416 16 16 12.416 16 8C16 3.584 12.416 0 7.992 0ZM8 14.4C4.464 14.4 1.6 11.536 1.6 8C1.6 4.464 4.464 1.6 8 1.6C11.536 1.6 14.4 4.464 14.4 8C14.4 11.536 11.536 14.4 8 14.4Z" fill="white"/>
           <path d="M8.4002 4H7.2002V8.8L11.4002 11.32L12.0002 10.336L8.4002 8.2V4Z" fill="white"/>
         </svg>
@@ -71,18 +71,18 @@ const Merchant: React.FC = () => {
         <h1 className="font-bold text-black text-lg mb-3">Informasi Akun</h1>
         <div className="bg-[#FCBF86] rounded-3xl p-5 flex flex-col sm:flex-row gap-2 md:gap-6">
           <div className="flex justify-center sm:hidden py-2 max-w-[150px] mx-auto my-0">
-          <Image alt="preksu-logo" src={"/images/preksu.png"} width={300} height={300}></Image>
+            <Image alt="preksu-logo" src={"/images/preksu.png"} width={150} height={150}></Image>
           </div>
           
           <div className="hidden sm:flex sm:items-center md:w-[30%]">
             <div className="w-full flex justify-center">
               
-              <Image alt="preksu-logo" src={"/images/preksu.png"} width={300} height={300}></Image>
+              <Image alt="preksu-logo" src={"/images/preksu.png"} width={150} height={150}></Image>
             </div>
 
           </div>
 
-          <div className="flex flex-col w-full h-full gap-4 sm:justify-center">
+          <div className="flex flex-col gap-4 w-full">
             <span className="text-lg font-extrabold flex mobile:justify-center text-center justify-center sm:justify-start">
               <h1 >Preksu: Ayam Geprek & Susu</h1>
             </span>
@@ -180,7 +180,7 @@ const Merchant: React.FC = () => {
           </div>
         </div> */}
         <div className="mt-6">
-          <div className="rounded-full py-2 px-3 bg-[#FFE0C0] text-[#FE8304] mb-3 text-xs font-semibold text-center shadow-md shadow-[#FE8304]/50 w-[45%]">
+          <div className="md:text-base rounded-full py-2 px-3 bg-[#FFE0C0] text-[#FE8304] mb-3 text-xs font-semibold text-center shadow-md shadow-[#FE8304]/50 w-[45%] md:w-[25%]">
             Antrian Pesanan
           </div>
           <div className="mb-10 flex flex-col gap-4">
