@@ -32,7 +32,7 @@ export default function SigninLayout(){
         </div>
         <div className="p-4 w-full">
           <h3 className="font-semibold flex justify-center">Masuk kembali mitra Sokin</h3>
-          <div className="flex justify-evenly w-full">
+          <div className="flex justify-evenly w-full mt-2">
             <Button text="Sebagai Driver" size="small" />
             <Button text="Sebagai Merchant" size="small" type="secondary" />
           </div>
