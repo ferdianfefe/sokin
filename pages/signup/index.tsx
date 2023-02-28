@@ -4,7 +4,7 @@ import { signIn } from "next-auth/react";
 import { useEffect } from "react";
 import prisma from "../../lib/prisma";
 
-const SignIn: React.FunctionComponent = (): JSX.Element => {
+const SignUp: React.FunctionComponent = (): JSX.Element => {
   const { data: session, status } = useSession();
 
   useEffect(() => {
@@ -16,7 +16,9 @@ const SignIn: React.FunctionComponent = (): JSX.Element => {
   return (
     <>
       {!session ? (
-        <button onClick={() => signIn()}>Sign in</button>
+        <button onClick={() => signIn("google", { callbackUrl: "/post" })}>
+          Sign in
+        </button>
       ) : (
         <div>
           <h1>Sign in</h1>
@@ -27,4 +29,4 @@ const SignIn: React.FunctionComponent = (): JSX.Element => {
   );
 };
 
-export default SignIn;
+export default SignUp;

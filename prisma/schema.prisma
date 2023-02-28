@@ -42,9 +42,10 @@ model Account {
   idToken           String? @map("id_token") @db.String
   sessionState      String? @map("session_state")
 
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([provider, providerAccountId])
+  @@unique([provider, providerAccountId], name: "provider_providerAccountId")
   @@map("accounts")
 }
 
@@ -65,7 +66,6 @@ model VerificationToken {
   token      String   @unique
   expires    DateTime
 
-  @@unique([identifier, token])
   @@map("verificationtokens")
 }
 
