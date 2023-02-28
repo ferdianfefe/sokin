@@ -16,7 +16,9 @@ const SignIn: React.FunctionComponent = (): JSX.Element => {
   return (
     <>
       {!session ? (
-        <button onClick={() => signIn()}>Sign in</button>
+        <button onClick={() => signIn("google", { callbackUrl: "/post" })}>
+          Sign in
+        </button>
       ) : (
         <div>
           <h1>Sign in</h1>
