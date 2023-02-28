@@ -19,6 +19,7 @@
     "@pankod/refine-react-table": "^4.9.0",
     "@pankod/refine-simple-rest": "^3.18.0",
     "@prisma/client": "^4.10.1",
+    "cors": "^2.8.5",
     "next": "^13.0.6",
     "next-auth": "^4.19.2",
     "next-compose-plugins": "^2.2.1",
