@@ -77,16 +77,33 @@ model Owner {
   address      String
   phoneNumber  String
   email        String     @unique
+  bankName     String
+  accountNumber String
+  balance      Int?
   password     String     @map("hashed_password")
   Merchant     Merchant[]
 }
 
 model Merchant {
-  id          String  @id @map("_id") @db.ObjectId
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
   ownerId     String  @map("owner_id") @db.ObjectId
   name        String?
   postalCode  String?
   coordinates String?
   benchmark   String?
   owner       Owner   @relation(fields: [ownerId], references: [id])
+}
+
+model Driver {
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  idCardNumber    String  @unique
+  city            String
+  address         String
+  phoneNumber     String
+  email           String  @unique
+  licenseNumber   String
+  vehicle         String
+  productionYear  String
+  password        String  @map("hashed_password")
 }
