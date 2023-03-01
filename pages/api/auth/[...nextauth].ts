@@ -3,6 +3,7 @@ import NextAuth, { Awaitable } from "next-auth";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import GoogleProvider from "next-auth/providers/google";
 import prisma from "../../../lib/prisma";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { redirect } from "next/dist/server/api-utils";
 
 const options = {
@@ -26,6 +27,25 @@ const options = {
         };
       },
       checks: ["both"],
+    }),
+    CredentialsProvider({
+      name: "Credentials",
+      async authorize(credentials: any, req: any) {
+        const user = await prisma.owner.findFirst({
+          where: {
+            email: credentials.email,
+          },
+        })
+        if (!user) {
+          throw new Error("No user found")
+        }
+        else if (user.password !== credentials.password) {
+          throw new Error("Password is incorrect")
+        }
+        else {
+          return {user}
+        }
+      }
     }),
   ],
   adapter: PrismaAdapter(prisma),
