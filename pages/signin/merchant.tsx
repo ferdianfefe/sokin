@@ -6,6 +6,7 @@ import GoogleButton from "components/elements/GoogleButton";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { signIn } from "next-auth/react";
 
 export default function SignIn(){
   const router = useRouter();
@@ -19,25 +20,18 @@ export default function SignIn(){
     }
     // console.log(email + password);
     e.preventDefault();
-    await fetch("/api/signin/merchant", {
-      method: "POST",
-      body: JSON.stringify({email, password}),
-    })
-      .then(async (res) => {
-        const data = await res.json();
-        if (res.status != 200) {
-          return alert(data.message);
-        } else {
-          router.push("/merchant");
-          // setLogged(true);
-          // const res = await signIn("credentials", {
-          //   redirect: false,
-          //   email: e.email,
-          //   password: e.password,
-          //   csrfToken,
-          // });
-        }
-      })
+    const status = await signIn('credentials', {
+      redirect: false,
+      email,
+      password,
+      callbackUrl: '/merchant'
+    });
+
+    console.log(status);
+    if (status.error) {
+      return alert(status.error);
+    }
+    router.push('/merchant');
   }
 
   return (

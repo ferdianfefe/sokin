@@ -46,7 +46,7 @@ const SignUp: React.FC = (): JSX.Element => {
   const daftarMerchant = () => {
     console.log("tes");
     router.push("/signupmerchant");
-  }
+  };
 
 
   return (
@@ -97,7 +97,7 @@ const SignUp: React.FC = (): JSX.Element => {
                 }),
               }}
             />
-            {errors.name?.message}
+            <small className="text-[#ff0000]">{errors.username?.message}</small>
             <Input
               text="Email"
               side="/images/envelope.svg"
@@ -110,7 +110,7 @@ const SignUp: React.FC = (): JSX.Element => {
                 }),
               }}
             />
-            {errors.email?.message}
+            <small className="text-[#ff0000]">{errors.email?.message}</small>
             <Input
               text="Password"
               side="/images/Lock.svg"
@@ -123,7 +123,7 @@ const SignUp: React.FC = (): JSX.Element => {
                 }),
               }}
             />
-            {errors.password?.message}
+            <small className="text-[#FF0000]">{errors.password?.message}</small>
             <Button text="Daftar" size="big" type="primary" isSubmit={true} />
           </form>
           <p className="w-full flex justify-center font-medium">
