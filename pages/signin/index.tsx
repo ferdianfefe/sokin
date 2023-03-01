@@ -1,53 +1,46 @@
-import prisma from "../../lib/prisma";
 import Image from "next/image";
-import GoogleButton from "components/elements/GoogleButton";
-import Button from "components/elements/Button";
+import React from "react";
 import Input from "components/elements/Input";
+import Button from "components/elements/Button";
+import GoogleButton from "components/elements/GoogleButton";
 import Link from "next/link";
-import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
 
 interface IFormInputs {
-  name: string;
   email: string;
   password: string;
 }
 
-const SignUp: React.FC = (): JSX.Element => {
-  const router = useRouter();
-
+export default function SignIn() {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<IFormInputs>();
 
-  const onSubmit: SubmitHandler<IFormInputs> = async (data: IFormInputs) => {
+  const router = useRouter();
+
+  const onSubmit = async (data: any) => {
     try {
-      const res = await fetch("/api/signup/user", {
+      const res = await fetch("/api/signin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
-  
-      if (!res.ok) {
-        throw new Error("Gagal");
-      }
-  
-      const responseData = await res.json();
-      console.log(responseData);
+      const json = await res.json();
+      if (!res.ok) throw Error(json.message);
+      router.push("/dashboard");
     } catch (error) {
-      console.error("Error:", error);
+      console.log(error);
     }
   };
 
-  const daftarMerchant = () => {
-    console.log("tes");
-    router.push("/signupmerchant");
+  const loginMerchant = () => {
+    router.push("/signin/merchant");
   };
-
 
   return (
     <>
@@ -69,12 +62,10 @@ const SignUp: React.FC = (): JSX.Element => {
           className="absolute top-4 left-9 z-0"
         />
         <div
-          className={`flex flex-col bg-white mt-[30px] w-full h-[500px] z-20 rounded-t-[35px] p-7`}
+          className={`flex flex-col bg-white mt-[60px] w-full h-[425px] z-20 rounded-t-[35px] p-7`}
         >
-          <h2 className="font-bold">Daftar Sekarang!</h2>
-          <p className="text-xs text-gray-500 mb-5">
-            Nikmati makanan lezat dengan harga terjangkau
-          </p>
+          <h2 className="font-bold">Masuk ke Sokin</h2>
+          <p className="text-xs text-gray-500 mb-5">Sebagai Customer</p>
           <GoogleButton />
           <div className="flex justify-center items-center mt-5 text-gray-500">
             <div className="h-[1px] w-[20%] bg-gray-500"></div>
@@ -82,25 +73,12 @@ const SignUp: React.FC = (): JSX.Element => {
             <div className="h-[1px] w-[20%] bg-gray-500"></div>
           </div>
           <form
-            className="flex flex-col justify-evenly h-[275px]"
+            className="flex flex-col justify-evenly h-[225px]"
             onSubmit={handleSubmit(onSubmit)}
           >
             <Input
-              text="Nama Pengguna"
-              side="/images/profil.svg"
-              formHookProps={{
-                ...register("name", {
-                  required: {
-                    value: true,
-                    message: "Nama pengguna tidak boleh kosong",
-                  },
-                }),
-              }}
-            />
-            <small className="text-[#ff0000]">{errors.username?.message}</small>
-            <Input
               text="Email"
-              side="/images/envelope.svg"
+              side="/images/profil.svg"
               formHookProps={{
                 ...register("email", {
                   required: {
@@ -110,7 +88,6 @@ const SignUp: React.FC = (): JSX.Element => {
                 }),
               }}
             />
-            <small className="text-[#ff0000]">{errors.email?.message}</small>
             <Input
               text="Password"
               side="/images/Lock.svg"
@@ -123,13 +100,12 @@ const SignUp: React.FC = (): JSX.Element => {
                 }),
               }}
             />
-            <small className="text-[#FF0000]">{errors.password?.message}</small>
-            <Button text="Daftar" size="big" type="primary" isSubmit={true} />
+            <Button text="Masuk" size="big" type="submit" isSubmit={true} />
           </form>
           <p className="w-full flex justify-center font-medium">
-            Sudah memiliki akun?{" "}
-            <Link className="text-[#FE8304] font-semibold" href="/signin">
-              &nbsp;Masuk Sekarang
+            Belum memiliki akun?{" "}
+            <Link className="text-[#FE8304] font-semibold" href="/signup">
+              &nbsp;Daftar Sekarang
             </Link>
           </p>
         </div>
@@ -139,18 +115,14 @@ const SignUp: React.FC = (): JSX.Element => {
           </h3>
           <div className="flex justify-evenly w-full mt-2">
             <div>
-              <Button text="Daftar Driver" size="small" />
+              <Button text="Sebagai Driver" size="small" />
             </div>
-            <div onClick={daftarMerchant}>
-              <Button text="Daftar Merchant" size="small" type="secondary" />
+            <div onClick={loginMerchant}>
+              <Button text="Sebagai Merchant" size="small" type="secondary" />
             </div>
-            {/* <Button text="Daftar Driver" size="small" />
-            <Button text="Daftar Merchant" size="small" type="secondary" /> */}
           </div>
         </div>
       </div>
     </>
   );
-};
-
-export default SignUp;
+}

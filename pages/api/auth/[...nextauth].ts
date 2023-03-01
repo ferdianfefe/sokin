@@ -3,6 +3,7 @@ import NextAuth, { Awaitable } from "next-auth";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import GoogleProvider from "next-auth/providers/google";
 import prisma from "../../../lib/prisma";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { redirect } from "next/dist/server/api-utils";
 
 const options = {
@@ -26,6 +27,25 @@ const options = {
         };
       },
       checks: ["both"],
+    }),
+    CredentialsProvider({
+      name: "Credentials",
+      async authorize(credentials: any, req: any) {
+        const user = await prisma.owner.findFirst({
+          where: {
+            email: credentials.email,
+          },
+        })
+        if (!user) {
+          throw new Error("No user found")
+        }
+        else if (user.password !== credentials.password) {
+          throw new Error("Password is incorrect")
+        }
+        else {
+          return {user}
+        }
+      }
     }),
   ],
   adapter: PrismaAdapter(prisma),
@@ -60,18 +80,3 @@ const options = {
 const authHandler: NextApiHandler = (req, res) =>
   NextAuth(req, res, { ...options });
 export default authHandler;
-
-// id            String    @id @db.ObjectId @map("_id")
-// name          String?
-// email         String    @unique
-// emailVerified DateTime? @map("email_verified")
-// password      String?   @map("hashed_password")
-// image         String?
-// accounts      Account[]
-// sessions      Session[]
-// balance       Float     @default(0)
-// coordinates   String?
-// points        Int       @default(0)
-// creditScore   Int       @default(0)
-// createdAt     DateTime  @default(now())
-// updatedAt     DateTime  @updatedAt
