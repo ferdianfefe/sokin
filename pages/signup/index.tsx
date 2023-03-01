@@ -97,7 +97,7 @@ const SignUp: React.FC = (): JSX.Element => {
                 }),
               }}
             />
-            <small className="text-[#ff0000]">{errors.username?.message}</small>
+            <small className="text-[#ff0000]">{errors.name?.message}</small>
             <Input
               text="Email"
               side="/images/envelope.svg"
