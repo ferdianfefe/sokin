@@ -7,9 +7,34 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
+import { useForm } from "react-hook-form";
+
+interface IFormInputs {
+    email: string;
+    password: string;
+}
 
 export default function SignIn(){
   const router = useRouter();
+
+  const{register, handleSubmit, formState: {errors}} = useForm<IFormInputs>();
+
+  const onSubmit = async (data: any) => {
+    try {
+      const res = await fetch("/api/signin/merchant", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const json = await res.json();
+      if (!res.ok) throw Error(json.message);
+      router.push("/dashboard");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,7 +53,7 @@ export default function SignIn(){
     });
 
     console.log(status);
-    if (status.error) {
+    if (status?.error) {
       return alert(status.error);
     }
     router.push('/merchant');
@@ -50,44 +75,35 @@ export default function SignIn(){
             <div className="mx-3 text-sm">Atau lanjut dengan email</div>
             <div className="h-[1px] w-[20%] bg-gray-500"></div>
           </div>
-          <form className="flex flex-col justify-evenly h-[225px]">
-            <div className="w-full">
-              <p className="font-semibold text-xs">Email</p>
-
-              <div className="mt-1 relative">
-                <input
-                  className={` bg-[#FFF0E0] text-orange-800 font-semibold px-8 w-full rounded-[20px] h-8 shadow-[-2px_2px_3px_0.1px_rgb(100,100,0,0.3)]`}
-                  onChange={(e) => setEmail(e.target.value)}
-                ></input>
-                <Image
-                  className="absolute top-[8px] left-3"
-                  src={`/images/profil.svg`}
-                  alt="person"
-                  width={16}
-                  height={16}
-                />
-              </div>
-            </div>
-            <div className="w-full">
-              <p className="font-semibold text-xs">Password</p>
-
-              <div className="mt-1 relative">
-                <input
-                  className={` bg-[#FFF0E0] text-orange-800 font-semibold px-8 w-full rounded-[20px] h-8 shadow-[-2px_2px_3px_0.1px_rgb(100,100,0,0.3)]`}
-                  onChange={(e) => setPassword(e.target.value)}
-                ></input>
-                <Image
-                  className="absolute top-[8px] left-3"
-                  src={`/images/Lock.svg`}
-                  alt="person"
-                  width={16}
-                  height={16}
-                />
-              </div>
-            </div>
-            {/* <Input text="Email" side="/images/profil.svg" />
-            <Input text="Password" side="/images/Lock.svg" /> */}
-            <div onClick={submitHandler}>
+          <form
+            className="flex flex-col justify-evenly h-[225px]"
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <Input
+              text="Email"
+              side="/images/profil.svg"
+              formHookProps={{
+                ...register("email", {
+                  required: {
+                    value: true,
+                    message: "Email tidak boleh kosong",
+                  },
+                }),
+              }}
+            />
+            <Input
+              text="Password"
+              side="/images/Lock.svg"
+              formHookProps={{
+                ...register("password", {
+                  required: {
+                    value: true,
+                    message: "Password tidak boleh kosong",
+                  },
+                }),
+              }}
+            />
+            <div className="mt-4">
               <Button text="Masuk" size="big" type="submit" />
             </div>
           </form>
