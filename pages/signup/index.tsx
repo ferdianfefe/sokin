@@ -8,7 +8,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/router";
 
 interface IFormInputs {
-  username: string;
+  name: string;
   email: string;
   password: string;
 }
@@ -22,18 +22,24 @@ const SignUp: React.FC = (): JSX.Element => {
     formState: { errors },
   } = useForm<IFormInputs>();
 
-  const onSubmit: SubmitHandler<IFormInputs> = async (data: any) => {
+  const onSubmit: SubmitHandler<IFormInputs> = async (data: IFormInputs) => {
     try {
-      await fetch("/api/signup/user", {
+      const res = await fetch("/api/signup/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
-      router.push("/signin");
+  
+      if (!res.ok) {
+        throw new Error("Gagal");
+      }
+  
+      const responseData = await res.json();
+      console.log(responseData);
     } catch (error) {
-      console.log(error);
+      console.error("Error:", error);
     }
   };
 
@@ -41,6 +47,7 @@ const SignUp: React.FC = (): JSX.Element => {
     console.log("tes");
     router.push("/signupmerchant");
   };
+
 
   return (
     <>
@@ -82,7 +89,7 @@ const SignUp: React.FC = (): JSX.Element => {
               text="Nama Pengguna"
               side="/images/profil.svg"
               formHookProps={{
-                ...register("username", {
+                ...register("name", {
                   required: {
                     value: true,
                     message: "Nama pengguna tidak boleh kosong",
