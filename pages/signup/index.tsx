@@ -22,8 +22,19 @@ const SignUp: React.FC = (): JSX.Element => {
     formState: { errors },
   } = useForm<IFormInputs>();
 
-  const onSubmit: SubmitHandler<IFormInputs> = (data: any) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<IFormInputs> = async (data: any) => {
+    try {
+      await fetch("/api/signup/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      router.push("/signin");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const daftarMerchant = () => {
