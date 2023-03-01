@@ -32,7 +32,9 @@ export default function SignIn(){
           <form className="flex flex-col justify-evenly h-[225px]">
             <Input text="Email" side="/images/profil.svg" />
             <Input text="Password" side="/images/Lock.svg" />
-            <Button text="Masuk" size="big" type="submit" />
+            <div className="mt-4">
+              <Button text="Masuk" size="big" type="submit" />
+            </div>
           </form>
           <p className="w-full flex justify-center font-medium">
           Belum memiliki akun? <Link className="text-[#FE8304] font-semibold" href="/signup">&nbsp;Daftar Sekarang</Link>

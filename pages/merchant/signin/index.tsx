@@ -57,43 +57,9 @@ export default function SignIn(){
             <div className="h-[1px] w-[20%] bg-gray-500"></div>
           </div>
           <form className="flex flex-col justify-evenly h-[225px]">
-            <div className="w-full">
-              <p className="font-semibold text-xs">Email</p>
-
-              <div className="mt-1 relative">
-                <input
-                  className={` bg-[#FFF0E0] text-orange-800 font-semibold px-8 w-full rounded-[20px] h-8 shadow-[-2px_2px_3px_0.1px_rgb(100,100,0,0.3)]`}
-                  onChange={(e) => setEmail(e.target.value)}
-                ></input>
-                <Image
-                  className="absolute top-[8px] left-3"
-                  src={`/images/profil.svg`}
-                  alt="person"
-                  width={16}
-                  height={16}
-                />
-              </div>
-            </div>
-            <div className="w-full">
-              <p className="font-semibold text-xs">Password</p>
-
-              <div className="mt-1 relative">
-                <input
-                  className={` bg-[#FFF0E0] text-orange-800 font-semibold px-8 w-full rounded-[20px] h-8 shadow-[-2px_2px_3px_0.1px_rgb(100,100,0,0.3)]`}
-                  onChange={(e) => setPassword(e.target.value)}
-                ></input>
-                <Image
-                  className="absolute top-[8px] left-3"
-                  src={`/images/Lock.svg`}
-                  alt="person"
-                  width={16}
-                  height={16}
-                />
-              </div>
-            </div>
-            {/* <Input text="Email" side="/images/profil.svg" />
-            <Input text="Password" side="/images/Lock.svg" /> */}
-            <div onClick={submitHandler}>
+            <Input text="Email" side="/images/profil.svg" />
+            <Input text="Password" side="/images/Lock.svg" />
+            <div className="mt-4">
               <Button text="Masuk" size="big" type="submit" />
             </div>
           </form>

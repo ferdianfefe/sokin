@@ -32,7 +32,7 @@ const Button: React.FC<Props> = ({
                 ${
                   size === "small"
                     ? "w-[153px] h-[33px] text-[14px]"
-                    : "w-[309px] h-[39px] text-[17px]"
+                    : "w-full h-[39px] text-[17px]"
                 }
             `}
     >
