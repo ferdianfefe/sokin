@@ -4,8 +4,15 @@ import Input from "components/elements/Input";
 import Button from "components/elements/Button";
 import GoogleButton from "components/elements/GoogleButton";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function SignIn(){
+  const router = useRouter();
+
+  const loginMerchant = () => {
+    // console.log("tes");
+    router.push("/signin/merchant");
+  }
   return (
     <>
       <div className="relative flex-col items-center flex bg-[#F37D27]/25 w-full min-h-screen">
@@ -34,8 +41,12 @@ export default function SignIn(){
         <div className="p-4 w-full">
           <h3 className="font-semibold flex justify-center">Masuk kembali mitra Sokin</h3>
           <div className="flex justify-evenly w-full mt-2">
-            <Button text="Sebagai Driver" size="small" />
-            <Button text="Sebagai Merchant" size="small" type="secondary" />
+            <div>
+              <Button text="Sebagai Driver" size="small" />
+            </div>
+            <div onClick={loginMerchant}>
+              <Button text="Sebagai Merchant" size="small" type="secondary" />
+            </div>
           </div>
         </div>
       </div>

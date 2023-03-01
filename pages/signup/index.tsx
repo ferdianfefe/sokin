@@ -5,6 +5,7 @@ import Button from "components/elements/Button";
 import Input from "components/elements/Input";
 import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useRouter } from "next/router";
 
 interface IFormInputs {
   username: string;
@@ -13,6 +14,8 @@ interface IFormInputs {
 }
 
 const SignUp: React.FC = (): JSX.Element => {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -22,6 +25,11 @@ const SignUp: React.FC = (): JSX.Element => {
   const onSubmit: SubmitHandler<IFormInputs> = (data: any) => {
     console.log(data);
   };
+
+  const daftarMerchant = () => {
+    console.log("tes");
+    router.push("/signupmerchant");
+  }
 
   return (
     <>
@@ -112,8 +120,14 @@ const SignUp: React.FC = (): JSX.Element => {
             Masuk kembali mitra Sokin
           </h3>
           <div className="flex justify-evenly w-full mt-2">
-            <Button text="Daftar Driver" size="small" />
-            <Button text="Daftar Merchant" size="small" type="secondary" />
+            <div>
+              <Button text="Daftar Driver" size="small" />
+            </div>
+            <div onClick={daftarMerchant}>
+              <Button text="Daftar Merchant" size="small" type="secondary" />
+            </div>
+            {/* <Button text="Daftar Driver" size="small" />
+            <Button text="Daftar Merchant" size="small" type="secondary" /> */}
           </div>
         </div>
       </div>
