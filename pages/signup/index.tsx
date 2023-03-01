@@ -5,6 +5,7 @@ import Button from "components/elements/Button";
 import Input from "components/elements/Input";
 import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useRouter } from "next/router";
 
 interface IFormInputs {
   username: string;
@@ -13,6 +14,8 @@ interface IFormInputs {
 }
 
 const SignUp: React.FC = (): JSX.Element => {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -21,6 +24,11 @@ const SignUp: React.FC = (): JSX.Element => {
 
   const onSubmit: SubmitHandler<IFormInputs> = (data: any) => {
     console.log(data);
+  };
+
+  const daftarMerchant = () => {
+    console.log("tes");
+    router.push("/signupmerchant");
   };
 
   return (
@@ -71,7 +79,7 @@ const SignUp: React.FC = (): JSX.Element => {
                 }),
               }}
             />
-            {errors.username?.message}
+            <small className="text-[#ff0000]">{errors.username?.message}</small>
             <Input
               text="Email"
               side="/images/envelope.svg"
@@ -84,7 +92,7 @@ const SignUp: React.FC = (): JSX.Element => {
                 }),
               }}
             />
-            {errors.email?.message}
+            <small className="text-[#ff0000]">{errors.email?.message}</small>
             <Input
               text="Password"
               side="/images/Lock.svg"
@@ -97,7 +105,7 @@ const SignUp: React.FC = (): JSX.Element => {
                 }),
               }}
             />
-            {errors.password?.message}
+            <small className="text-[#FF0000]">{errors.password?.message}</small>
             <Button text="Daftar" size="big" type="primary" isSubmit={true} />
           </form>
           <p className="w-full flex justify-center font-medium">
@@ -112,8 +120,14 @@ const SignUp: React.FC = (): JSX.Element => {
             Masuk kembali mitra Sokin
           </h3>
           <div className="flex justify-evenly w-full mt-2">
-            <Button text="Daftar Driver" size="small" />
-            <Button text="Daftar Merchant" size="small" type="secondary" />
+            <div>
+              <Button text="Daftar Driver" size="small" />
+            </div>
+            <div onClick={daftarMerchant}>
+              <Button text="Daftar Merchant" size="small" type="secondary" />
+            </div>
+            {/* <Button text="Daftar Driver" size="small" />
+            <Button text="Daftar Merchant" size="small" type="secondary" /> */}
           </div>
         </div>
       </div>
