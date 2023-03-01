@@ -4,7 +4,7 @@
 
 @font-face {
     font-family: "satoshi";
-    src: url("/pages/fonts/Satoshi-Regular.woff2");
+    src: url("/pages/fonts/Satoshi.woff2") format("woff2");
   }
   
   body {

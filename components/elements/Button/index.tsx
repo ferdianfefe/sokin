@@ -22,7 +22,7 @@ const Button: React.FC<Props> = ({
   return (
     <button
       type={isSubmit ? "submit" : "button"}
-      className={`
+      className={`${className} 
                 font-black justify-center rounded-[18px] shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)]
                 ${
                   type === "secondary"
