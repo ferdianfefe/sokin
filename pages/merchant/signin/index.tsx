@@ -128,7 +128,7 @@ export default function SignIn() {
           </form>
           <p className="w-full flex justify-center font-medium">
             Belum memiliki akun?{" "}
-            <Link className="text-[#FE8304] font-semibold" href="/signup">
+            <Link className="text-[#FE8304] font-semibold" href="/merchant/signup">
               &nbsp;Daftar Sekarang
             </Link>
           </p>
