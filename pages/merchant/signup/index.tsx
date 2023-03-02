@@ -1,12 +1,6 @@
 import React from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
 import Button from "components/elements/Button";
-import { Steps, StepsProvider, useSteps } from "react-step-builder";
-import SlideRoutes from "react-slide-routes";
-import { Route, useLocation } from "react-router-dom";
-
-import "swiper/css";
 
 export default function SignUp() {
   return (
@@ -29,7 +23,7 @@ export default function SignUp() {
                 alt={"Profile card"}
               />
             </div>
-            <p>Lengkapi identitas diri dan informasi rekenign bank</p>
+            <p>Lengkapi identitas diri dan informasi rekening bank</p>
           </div>
           <div className="w-[100%] h-[1px] bg-slate-400"></div>
           <div className="flex my-3">
@@ -41,7 +35,7 @@ export default function SignUp() {
                 alt={"Profile card"}
               />
             </div>
-            <p>Lengkapi identitas diri dan informasi rekenign bank</p>
+            <p>Lengkapi logo dan informasi mengenai usahamu</p>
           </div>
           <div className="w-[100%] h-[1px] bg-slate-400"></div>
           <div className="flex my-3">
@@ -53,7 +47,7 @@ export default function SignUp() {
                 alt={"Profile card"}
               />
             </div>
-            <p>Lengkapi identitas diri dan informasi rekenign bank</p>
+            <p>Verifikasi data usaha membutuhkan waktu 2 hari</p>
           </div>
           <div className="w-[100%] h-[1px] bg-slate-400"></div>
           <div className="flex my-3">
@@ -65,7 +59,7 @@ export default function SignUp() {
                 alt={"Profile card"}
               />
             </div>
-            <p>Lengkapi identitas diri dan informasi rekenign bank</p>
+            <p>Akunmu telah terverifikasi dan sudah bisa digunakan</p>
           </div>
           <div className="w-[100%] h-[1px] bg-slate-400"></div>
         </div>
