@@ -1,12 +1,6 @@
 import React from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
 import Button from "components/elements/Button";
-import { Steps, StepsProvider, useSteps } from "react-step-builder";
-import SlideRoutes from "react-slide-routes";
-import { Route, useLocation } from "react-router-dom";
-
-import "swiper/css";
 
 export default function SignUp() {
   return (
