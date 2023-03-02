@@ -4,6 +4,7 @@ import Button from 'components/elements/Button'
 import CarouselIklan from 'components/homepage-1/CarouselIklan/CarouselIklan'
 import CardCarousel from 'components/homepage-1/CardCarousel/CardCarousel'
 import KategoriCarousel from 'components/homepage-1/Kategori/KategoriCarousel'
+import Navbar from 'components/elements/Navbar'
 
 const Homepage: React.FunctionComponent = (): JSX.Element => {
     return(
@@ -94,11 +95,16 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
                             </div>
                         </div>
 
+                        <div className='h-10 w-full'></div>
+
                         
                     </div>
 
                 </div>
 
+                <div className='fixed bottom-0 w-full bg-white'>
+                    <Navbar />    
+                </div>
 
             </div>
         </>
