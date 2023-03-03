@@ -12,25 +12,23 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
-    const { name, email, password } = req.body as SignupRequestBody;
-    const user = await prisma.user.findUnique({
+    const { email, password } = req.body;
+
+    // console.log(email + password);
+
+    const owner = await prisma.owner.findUnique({
       where: { email },
     });
 
-    if (user) {
-      return res.status(400).json({ message: "User already exists" });
+    if (!owner) {
+      return res.status(400).json({ message: "Email not registered" });
     }
 
-    const newUser = await prisma.user.create({
-      data: { name, email, password },
-    });
+    if (owner.password !== password) {
+      return res.status(400).json({ message: "Password is incorrect" });
+    }
 
-    return res.status(201).json(newUser);
-  }
-
-  if (req.method === "GET") {
-    const users = await prisma.user.findMany();
-    return res.status(200).json(users);
+    return res.status(200).json({ message: "Login sukses" });
   }
 
   return res.status(405).json({ message: "Method not allowed" });
