@@ -8,7 +8,7 @@ type Props = {
 
 const Navbar: React.FC<Props> = ({ location }: Props) => {
   return (
-    <div className="sticky bottom-0">
+    <div className="sticky bottom-0 bg-white w-full">
       <div className="flex w-auto h-[65px] shadow-[0_-1px_2px_0.1px_rgb(0,0,0,0.2)] justify-evenly p-3 rounded-t-2xl">
         <Link href={"/testcomponents"}>
           <div className="w-14 grid justify-items-center">

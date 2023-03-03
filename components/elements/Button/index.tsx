@@ -29,6 +29,7 @@ const Button: React.FC<Props> = ({
                     ? "bg-orange-100 text-black"
                     : "bg-[#FE8304] text-white"
                 }
+               
                 ${
                   size === "small"
                     ? "w-[153px] h-[33px] text-[14px]"
