@@ -1,9 +1,8 @@
-import React, { Component } from 'react'
+import React from 'react'
 
-export default class CardCarousel extends Component {
-  render() {
-    return (
-      <div className="w-[160px] h-[252px] rounded-[20px] shadow-md shadow-[#FE8304]/20 overflow-hidden">
+const CardCarousel = () => {
+  return (
+    <div className="w-[160px] h-[252px] rounded-[20px] shadow-md shadow-[#FE8304]/20 overflow-hidden">
         <div className='bg-slate-200 w-full h-[60%]'>
 
         </div>
@@ -23,6 +22,7 @@ export default class CardCarousel extends Component {
         </div>
 
       </div>
-    )
-  }
+  )
 }
+export default CardCarousel;
+
