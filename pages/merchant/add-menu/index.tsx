@@ -5,55 +5,60 @@ import Navbar from "components/elements/Navbar";
 
 const AddMenu = () => {
   return (
-    <div className='p-6 flex flex-col gap-4'>
-        <h1 className='mt-12 font-black text-[18px] text-center'>Preksu: Ayam Geprek & Susu</h1>
-        
-        <div className="flex justify-between px-3">
-            <button className=" w-[112px] h-[27px] text-[13px] px-3 py-1 rounded-full bg-[#FFE0C0] text-[#FE8304] font-bold shadow-md shadow-[#FEB262]/50 shadow-inner-white">
-                <p>
-                    + Tambahkan
-                </p>
+    <div>
 
-            </button>
-            <div className="flex items-center gap-2">
-                            <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g filter="url(#filter0_di_589_626)">
-                <circle cx="8.5" cy="7.5" r="6.5" fill="#FE8304"/>
-                </g>
-                    <defs>
-                        <filter id="filter0_di_589_626" x="0" y="0" width="17" height="17" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-                            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-                            <feOffset dy="1"/>
-                            <feGaussianBlur stdDeviation="1"/>
-                            <feComposite in2="hardAlpha" operator="out"/>
-                            <feColorMatrix type="matrix" values="0 0 0 0 0.600096 0 0 0 0 0.304849 0 0 0 0 0 0 0 0 1 0"/>
-                            <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_589_626"/>
-                            <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_589_626" result="shape"/>
-                            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-                            <feOffset dy="-1"/>
-                            <feGaussianBlur stdDeviation="2"/>
-                            <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
-                            <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
-                        <feBlend mode="normal" in2="shape" result="effect2_innerShadow_589_626"/>
-                        </filter>
-                    </defs>
-                </svg>
+        <div className='p-6 flex flex-col gap-4'>
+            <h1 className='mt-12 font-black text-[18px] text-center'>Preksu: Ayam Geprek & Susu</h1>
+            
+            <div className="flex justify-between px-3">
+                <button className=" w-[112px] h-[27px] text-[13px] px-3 py-1 rounded-full bg-[#FFE0C0] text-[#FE8304] font-bold shadow-md shadow-[#FEB262]/50 shadow-inner-white">
+                    <p>
+                        + Tambahkan
+                    </p>
 
-                <p className="text-[#20CB50]">Buka</p>
+                </button>
+                <div className="flex items-center gap-2">
+                                <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g filter="url(#filter0_di_589_626)">
+                    <circle cx="8.5" cy="7.5" r="6.5" fill="#FE8304"/>
+                    </g>
+                        <defs>
+                            <filter id="filter0_di_589_626" x="0" y="0" width="17" height="17" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                                <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                                <feOffset dy="1"/>
+                                <feGaussianBlur stdDeviation="1"/>
+                                <feComposite in2="hardAlpha" operator="out"/>
+                                <feColorMatrix type="matrix" values="0 0 0 0 0.600096 0 0 0 0 0.304849 0 0 0 0 0 0 0 0 1 0"/>
+                                <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_589_626"/>
+                                <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_589_626" result="shape"/>
+                                <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                                <feOffset dy="-1"/>
+                                <feGaussianBlur stdDeviation="2"/>
+                                <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+                                <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+                            <feBlend mode="normal" in2="shape" result="effect2_innerShadow_589_626"/>
+                            </filter>
+                        </defs>
+                    </svg>
+
+                    <p className="text-[#20CB50]">Buka</p>
+                </div>
+
             </div>
 
+            <div className="flex flex-col px-10 items-center gap-7 mt-4">
+                <MenuCard />
+                <MenuCard />
+                <MenuCard />
+            </div>
+            
+            
         </div>
-
-        <div className="flex flex-col px-10 items-center gap-7 mt-4">
-            <MenuCard />
-            <MenuCard />
-            <MenuCard />
-        </div>
-
         <Navbar 
-        //  role="merchant"
+        role="merchant"
         />
+        
     </div>
   )
 }
