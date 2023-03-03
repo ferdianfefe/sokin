@@ -52,7 +52,7 @@ const AddMenu = () => {
         </div>
 
         <Navbar 
-         role="merchant"
+        //  role="merchant"
         />
     </div>
   )
