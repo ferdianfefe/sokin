@@ -36,6 +36,7 @@ function MyApp({
         <Component className="h-screen" {...pageProps} />
       </SessionProvider>
     </Refine>
+    
   );
 }
 
