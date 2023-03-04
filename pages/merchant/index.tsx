@@ -2,7 +2,6 @@ import Image from "next/image";
 import MerchantLayout from "components/layout/MerchantLayout";
 import Button from "components/elements/Button";
 import Navbar from "components/elements/Navbar";
-
 const OrderItem: React.FC<{
   orderNumber: number;
   customerName: string;
@@ -216,8 +215,8 @@ const Merchant: React.FC = () => {
           />
 
         </div>
-      
-    </div>
+      </div>
+    </MerchantLayout>
   );
 };
 
