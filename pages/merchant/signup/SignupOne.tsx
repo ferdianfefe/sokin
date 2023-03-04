@@ -43,7 +43,7 @@ export default function SignupOne() {
                   <Input className='mb-3' text='Nomor KTP' />
                   <Input className='mb-3' text='Domisili' />
                   <Input className='mb-3' text='Alamat' />
-                  <Input className='mb-3' text='NomorTelepon' />
+                  <Input className='mb-3' text='Nomor Telepon' />
                   <Input className='mb-3' text='Email' />
                   <div className='mb-3'>
                     <Input className='' text='Password' />
@@ -67,20 +67,33 @@ export default function SignupOne() {
                   <Input className='mb-3' text='Logo Usaha'/>
                 </>)}
               </form>
-              {(currentStep === 2) && <h1 className='font-semibold text-[#E17301] text-xl mt-5'>Melakukan Verifikasi</h1>}
+              {(currentStep === 2) && <>
+                <Image src='/images/Verifikasi.svg' width={360} height={216} alt='gambar verifikasi' />
+                <div className='p-6 flex flex-col items-center justify-center text-justify'>
+                  <h2 className='font-bold'>Data usaha sedang diverifikasi</h2>
+                  <p className='justify-center mt-3'>Untuk mengetahui status usahamu, kamu bisa cek halaman ini secara berkala atau kamu dapat menunggu notifikasi yang akan kami kirimkan melalui emailmu</p>
+                </div>
+              </>}
               {(currentStep === 3) && <h1 className='font-semibold text-[#E17301] text-xl mt-5'>Verifikasi Berhasil, HORE!!!</h1>}
-              {(currentStep === 0 || currentStep === 1) &&
+              {(currentStep === 0) &&
                 <>
                   <div className='mt-10 flex justify-between'>
-                    <div onClick={kembali}>
-                      <Button text='Kembali' size='small' type='secondary'/>
-                    </div>
-                    <div onClick={lanjut}>
-                      <Button text='Lanjutkan' size='small' />
+                    <div onClick={lanjut} className='w-full'>
+                      <Button text='Lanjutkan' />
                     </div>
                   </div>
                 </>
               }
+              {(currentStep === 1) && <>
+                <div className='mt-10 flex justify-between'>
+                  <div onClick={kembali}>
+                    <Button text='kembali' size='small' type='secondary' />
+                  </div>
+                  <div onClick={lanjut}>
+                    <Button text='Lanjutkan' size='small' />
+                  </div>
+                </div>
+              </>}
               {(currentStep === 3) && <>
                 <div onClick={lanjut}>
                   <Button text='Lanjutkan' size='small' />
