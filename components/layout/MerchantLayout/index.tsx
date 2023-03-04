@@ -8,7 +8,7 @@ const MerchantLayout: React.FC<{ children: any, location: string }> = ({
   return (
     <div className="relative h-screen">
       {children}
-      <Navbar location={location} />
+      <Navbar location={location} role='merchant'/>
     </div>
   );
 };
