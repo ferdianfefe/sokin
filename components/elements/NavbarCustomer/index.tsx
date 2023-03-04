@@ -6,7 +6,7 @@ type Props = {
   location?: string;
 };
 
-const Navbar: React.FC<Props> = ({ location }: Props) => {
+const NavbarCustomer: React.FC<Props> = ({ location }: Props) => {
   return (
     <div className="sticky bottom-0">
       <div className="flex w-auto h-[65px] shadow-[0_-1px_2px_0.1px_rgb(0,0,0,0.2)] justify-evenly p-3 rounded-t-2xl">
@@ -119,4 +119,4 @@ const Navbar: React.FC<Props> = ({ location }: Props) => {
   );
 };
 
-export default Navbar;
+export default NavbarCustomer;

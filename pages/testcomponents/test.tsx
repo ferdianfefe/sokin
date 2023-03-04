@@ -1,6 +1,6 @@
 import React from 'react'
 import Button from 'components/elements/Button'
-import Navbar from 'components/elements/Navbar'
+import Navbar from 'components/elements/NavbarCustomer'
 
 export default function TestComponents() {
   return (

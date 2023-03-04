@@ -1,5 +1,5 @@
 import Image from "next/image";
-import DefaultLayout from "components/layout/DefaultLayout";
+import MerchantLayout from "components/layout/MerchantLayout";
 import Button from "components/elements/Button";
 
 const OrderItem: React.FC<{
@@ -58,17 +58,17 @@ const orderData = [
 
 const Merchant: React.FC = () => {
   return (
-    <DefaultLayout>
+    <MerchantLayout location="home">
       <div className="p-8 h-full">
         <h1 className="font-bold text-black text-lg mb-3">Informasi Akun</h1>
-        <div className="bg-[#FCBF86] w-full flex rounded-3xl px-3 py-6 mb-3">
-          <div className="w-[94px] h-[94px] relative ">
-            <Image alt="preksu-logo" src={"/images/preksu.png"} fill></Image>
+        <div className="bg-[#FCBF86] w-full flex rounded-3xl px-3 py-6 mb-3 items-center justify-evenly">
+          <div className="">
+            <Image alt="preksu-logo" src={"/images/preksu.png"} width={94} height={94}></Image>
           </div>
           <div className="mx-2">
-            <h1>Preksu: Ayam Geprek & Susu</h1>
+            <h1 className="font-semibold">Preksu: Ayam Geprek & Susu</h1>
             <div className="bg-white p-2 mb-2 flex rounded-xl">
-              <div className="relative w-8 h-8">
+              <div className="relative w-8 h-8 mr-4">
                 <Image
                   alt="wallet-icon"
                   src={"/images/icons/wallet.svg"}
@@ -76,8 +76,8 @@ const Merchant: React.FC = () => {
                 ></Image>
               </div>
               <div className="ml-1">
-                <p>Total Penjualan</p>
-                <p>Rp 20.000.000</p>
+                <p className="">Total Penjualan</p>
+                <p className="font-semibold">Rp 20.000.000</p>
               </div>
             </div>
             <div className="flex">
@@ -91,13 +91,13 @@ const Merchant: React.FC = () => {
                 </div>
                 <div className="">
                   <p>Pemasukan</p>
-                  <p>Rp. 200.000,-</p>
+                  <p className="font-semibold">Rp. 200.000,-</p>
                 </div>
               </div>
               <div className="bg-white flex ml-1 flex-1 rounded-xl">
-                <div className="">
+                <div className="flex flex-col justify-center items-center text-sm">
                   <p>Total Transaksi</p>
-                  <p>Rp. 1237</p>
+                  <p className="font-semibold">1237</p>
                 </div>
               </div>
             </div>
@@ -121,11 +121,11 @@ const Merchant: React.FC = () => {
             })}
           </div>
         </div>
-        <div className="w-full flex justify-center">
+        <div className="w-[80%] fixed flex bottom-24 mx-auto left-0 right-0">
           <Button text="Tutup Toko" />
         </div>
       </div>
-    </DefaultLayout>
+    </MerchantLayout>
   );
 };
 
