@@ -6,8 +6,7 @@ const MerchantRegistrationPage4: React.FunctionComponent = (): JSX.Element =>{
     return(
         <>
             <div className="w-full h-full bg-[#FFEAD3]">
-                <StatusBarRegistration
-                pageIndex={4} />
+                <StatusBarRegistration />
                 
                 <span className="font-extrabold text-md text-[#E17301] text-center w-full h-full">
                     <h1 className="my-4 text-lg">Verifikasi</h1>
