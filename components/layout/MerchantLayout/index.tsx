@@ -1,5 +1,5 @@
 // Create a layout with navbar
-import NavbarMerchant from "components/elements/NavbarMerchant";
+import Navbar from "components/elements/Navbar";
 
 const MerchantLayout: React.FC<{ children: any, location: string }> = ({
   children,
@@ -8,7 +8,7 @@ const MerchantLayout: React.FC<{ children: any, location: string }> = ({
   return (
     <div className="relative h-screen">
       {children}
-      <NavbarMerchant location={location} />
+      <Navbar location={location} />
     </div>
   );
 };

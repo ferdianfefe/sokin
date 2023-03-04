@@ -1,9 +1,7 @@
 import React from 'react'
 import Button from 'components/elements/Button'
-import Navbar from 'components/elements/NavbarCustomer'
+import Navbar from 'components/elements/Navbar'
 import Input from 'components/elements/Input'
-import NavbarCustomer from 'components/elements/NavbarCustomer'
-import NavbarMerchant from 'components/elements/NavbarMerchant'
 
 export default function TestComponents() {
   return (
@@ -13,8 +11,8 @@ export default function TestComponents() {
         <Button text='Masuk' size='big'/>
       </div>
       <div className='mt-2'>
-        <NavbarCustomer location='home'/>
-        <NavbarMerchant location='home'/>
+        <Navbar location='home'/>
+        <Navbar location='home'role='merchant'/>
       </div>
       <div>
         <Input text='Nama Pengguna' side='/images/profil.svg'/>
