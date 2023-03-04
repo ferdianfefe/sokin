@@ -2,6 +2,7 @@ import React from 'react'
 import Button from 'components/elements/Button'
 import Navbar from 'components/elements/Navbar'
 import Input from 'components/elements/Input'
+import ProductCard from 'components/elements/ProductCard'
 
 export default function TestComponents() {
   return (
@@ -18,6 +19,9 @@ export default function TestComponents() {
         <Input text='Nama Pengguna' side='/images/profil.svg'/>
         <Input text='E-mail' side='/images/envelope.svg'/>
         <Input text='Password' side='/images/Lock.svg'/>
+      </div>
+      <div>
+        <ProductCard />
       </div>
 
     </>

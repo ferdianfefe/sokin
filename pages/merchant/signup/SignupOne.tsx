@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useState } from 'react'
 import Input from 'components/elements/Input'
 import Button from 'components/elements/Button'
+import InputImage from 'components/elements/InputImage'
 
 export default function SignupOne() {
 
@@ -49,7 +50,7 @@ export default function SignupOne() {
                     <Input className='' text='Password' />
                     <p className='text-xs text-gray-500 mt-1'>Foto KTP harus jelas, tidak boleh blur atau buram, dan terpotong. Harap tidak menggunakan flash saat mengambil foto KTP</p>
                   </div>
-                  <Input className='mb-3' text='Foto KTP' />
+                  <InputImage className='mb-3' text='Foto KTP' />
                   <Input className='mb-3' text='Jenis Bank' />
                   <Input className='mb-3' text='Nomor Rekening' />
                   <div className='mb-3'>
