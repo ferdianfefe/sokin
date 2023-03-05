@@ -1,5 +1,6 @@
 import Image from "next/image";
-import Dummy from "public/img/homepage/nasgor.jpg"
+import Dummy from "public/img/homepage/kupon.jpg"
+import {Swiper, SwiperSlide} from 'swiper/react';
 
 interface Props {
     img: typeof Image;
@@ -7,17 +8,36 @@ interface Props {
 
 const CarouselIklan = () => {
     return(
-        <div className="flex">
-            {/* <CardIklan 
-                img = {Dummy}
-            /> */}
-            <div className="flex gap-4">
-                <CardIklan />
-                <CardIklan />
-                <CardIklan />
+        <Swiper
+            direction="horizontal"
+            pagination={true}
+            spaceBetween={200}
+            slidesPerView={3}
+            onSlideChange={() => console.log('slide change')}
+            onSwiper={() => console.log('swiper')}
+        >
+            <SwiperSlide><CardIklan /></SwiperSlide>
+            <SwiperSlide><CardIklan /></SwiperSlide>
+            <SwiperSlide><CardIklan /></SwiperSlide>
+            
+            
+            
 
-            </div>
-        </div>
+        </Swiper>
+
+
+
+        // <div className="flex">
+        //     {/* <CardIklan 
+        //         img = {Dummy}
+        //     /> */}
+        //     <div className="flex gap-4">
+        //         <CardIklan />
+        //         <CardIklan />
+        //         <CardIklan />
+
+        //     </div>
+        // </div>
     )
 }
 
