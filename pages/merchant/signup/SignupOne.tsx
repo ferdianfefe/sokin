@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useState } from 'react'
 import Input from 'components/elements/Input'
 import Button from 'components/elements/Button'
+import InputImage from 'components/elements/InputImage'
 
 export default function SignupOne() {
 
@@ -43,13 +44,13 @@ export default function SignupOne() {
                   <Input className='mb-3' text='Nomor KTP' />
                   <Input className='mb-3' text='Domisili' />
                   <Input className='mb-3' text='Alamat' />
-                  <Input className='mb-3' text='NomorTelepon' />
+                  <Input className='mb-3' text='Nomor Telepon' />
                   <Input className='mb-3' text='Email' />
                   <div className='mb-3'>
                     <Input className='' text='Password' />
                     <p className='text-xs text-gray-500 mt-1'>Foto KTP harus jelas, tidak boleh blur atau buram, dan terpotong. Harap tidak menggunakan flash saat mengambil foto KTP</p>
                   </div>
-                  <Input className='mb-3' text='Foto KTP' />
+                  <InputImage className='mb-3' text='Foto KTP' />
                   <Input className='mb-3' text='Jenis Bank' />
                   <Input className='mb-3' text='Nomor Rekening' />
                   <div className='mb-3'>
@@ -67,20 +68,33 @@ export default function SignupOne() {
                   <Input className='mb-3' text='Logo Usaha'/>
                 </>)}
               </form>
-              {(currentStep === 2) && <h1 className='font-semibold text-[#E17301] text-xl mt-5'>Melakukan Verifikasi</h1>}
+              {(currentStep === 2) && <>
+                <Image src='/images/Verifikasi.svg' width={360} height={216} alt='gambar verifikasi' />
+                <div className='p-6 flex flex-col items-center justify-center text-justify'>
+                  <h2 className='font-bold'>Data usaha sedang diverifikasi</h2>
+                  <p className='justify-center mt-3'>Untuk mengetahui status usahamu, kamu bisa cek halaman ini secara berkala atau kamu dapat menunggu notifikasi yang akan kami kirimkan melalui emailmu</p>
+                </div>
+              </>}
               {(currentStep === 3) && <h1 className='font-semibold text-[#E17301] text-xl mt-5'>Verifikasi Berhasil, HORE!!!</h1>}
-              {(currentStep === 0 || currentStep === 1) &&
+              {(currentStep === 0) &&
                 <>
                   <div className='mt-10 flex justify-between'>
-                    <div onClick={kembali}>
-                      <Button text='Kembali' size='small' type='secondary'/>
-                    </div>
-                    <div onClick={lanjut}>
-                      <Button text='Lanjutkan' size='small' />
+                    <div onClick={lanjut} className='w-full'>
+                      <Button text='Lanjutkan' />
                     </div>
                   </div>
                 </>
               }
+              {(currentStep === 1) && <>
+                <div className='mt-10 flex justify-between'>
+                  <div onClick={kembali}>
+                    <Button text='kembali' size='small' type='secondary' />
+                  </div>
+                  <div onClick={lanjut}>
+                    <Button text='Lanjutkan' size='small' />
+                  </div>
+                </div>
+              </>}
               {(currentStep === 3) && <>
                 <div onClick={lanjut}>
                   <Button text='Lanjutkan' size='small' />
