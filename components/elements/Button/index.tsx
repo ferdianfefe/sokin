@@ -20,7 +20,7 @@ const Button: React.FC<Props> = ({
   className,
 }: Props) => {
   return (
-    <Link href={`${href}`} className='w-full'>
+    <Link href={`${href}`} className=''>
       <button
         type={isSubmit ? "submit" : "button"}
         className={`${className} 
@@ -33,21 +33,6 @@ const Button: React.FC<Props> = ({
                   ${
                     size === "small"
                       ? "w-[154px] h-[33px] text-[14px]"
-                      : "w-full h-[39px] text-[17px]"
-                  }
-                  ${
-                    size === "responsive"
-                      ? "h-[33px] text-[14px] w-full mx-auto"
-                      : "w-full h-[39px] text-[17px]"
-                  }
-                  ${
-                    size === "very-small"
-                      ? "w-[100px] h-[33px] text-[14px]"
-                      : "w-full h-[39px] text-[17px]"
-                  }
-                  ${
-                    size === "responsive"
-                      ? "h-[33px] text-[14px] w-full mx-auto"
                       : "w-full h-[39px] text-[17px]"
                   }
                   `}
