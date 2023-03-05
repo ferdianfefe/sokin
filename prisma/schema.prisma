@@ -105,5 +105,37 @@ model Driver {
   licenseNumber   String
   vehicle         String
   productionYear  String
+  balance         Float?
+  isActive        Boolean @default(false)
+  coordinates     String?
+  dailyIncome     Float?     @default(0)
+  distanceCovered Float?     @default(0)
+  dailyTarget     Int     @default(20)
   password        String  @map("hashed_password")
+  orders          Order[] 
 }
+
+model Order {
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  driverId        String  @map("owner_id") @db.ObjectId
+  userId          String  @map("user_id") @db.ObjectId
+  customerName    String
+  source          String 
+  destination     String
+  distance        Float
+  status          OrderStatus @default(PENDING)
+  creditScore     Float
+  menuOrder       String[]
+  eta             Int
+  isAccepted      Boolean @default(false)
+  isCompleted     Boolean @default(false)
+  fee             Float?
+  driver          Driver   @relation(fields: [driverId], references: [id])
+}
+
+enum OrderStatus {
+  PENDING
+  ACCEPTED
+  COMPLETED
+}
+
