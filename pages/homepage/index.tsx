@@ -5,6 +5,7 @@ import SwiperCarouselCoupon from 'components/homepage-1/SwiperCarouselCoupon'
 import CardCarousel from 'components/homepage-1/CardCarousel/CardCarousel'
 import KategoriCarousel from 'components/homepage-1/Kategori/KategoriCarousel'
 import Navbar from 'components/elements/Navbar'
+import Link from 'next/link'
 
 
 const Homepage: React.FunctionComponent = (): JSX.Element => {
@@ -17,12 +18,15 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
                     
                     {/* Login/Daftar */}
                     <div className="bg-login-daftar rounded-[30px] w-full flex object-clip bg-cover py-6 px-8 justify-center items-center gap-6">
-                        <Button
-                            text="Login"
-                            type="secondary"
-                            size="small"
+                        
+                            <Button
+                                text="Login"
+                                type="secondary"
+                                size="small"
 
-                        ></Button>
+                            ></Button>
+                        
+
                         <Button
                             text="Daftar"
                             type="secondary"

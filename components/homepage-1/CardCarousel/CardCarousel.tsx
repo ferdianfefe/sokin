@@ -15,7 +15,7 @@ import SwiperCore, { Autoplay } from 'swiper';
 
 
 export default function CardCarousel() {
-    SwiperCore.use([Autoplay]);
+    // SwiperCore.use([Autoplay]);
 
 
     const slides = [
@@ -57,7 +57,6 @@ export default function CardCarousel() {
         freeMode={true}
         slidesPerView={2}
         loop
-        autoplay
         modules={[FreeMode]}
         className="mySwiper h-[110%] w-[420px]"
       >
