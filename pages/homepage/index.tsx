@@ -82,7 +82,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
                 </div>
 
                 <div className='fixed bottom-0 w-full bg-white'>
-                    <Navbar />    
+                    <Navbar role='customer' location='home'/>    
                 </div>
 
             </div>
