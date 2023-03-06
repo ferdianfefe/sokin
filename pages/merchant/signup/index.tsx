@@ -12,7 +12,7 @@ export default function SignUp() {
             Jadilah Bagian dari <span className="font-bold">Sokin</span>
           </h3>
         </div>
-        <div className="flex flex-col items-center p-8 mt-11 bg-white h-[450px] w-[90%] rounded-3xl shadow-md mb-14">
+        <div className="flex flex-col items-center p-8 mt-11 bg-white h-[450px] w-[90%] rounded-3xl shadow-[0_0px_5px_0.1px_rgb(100,100,0,0.2)] mb-14">
           <h3 className="font-bold">Langkah - Langkah</h3>
           <div className="flex mt-9 mb-3">
             <div className="w-[90px] flex justify-center mr-5">
@@ -23,7 +23,7 @@ export default function SignUp() {
                 alt={"Profile card"}
               />
             </div>
-            <p>Lengkapi identitas diri dan informasi rekenign bank</p>
+            <p>Lengkapi identitas diri dan informasi rekening bank</p>
           </div>
           <div className="w-[100%] h-[1px] bg-slate-400"></div>
           <div className="flex my-3">
@@ -35,7 +35,7 @@ export default function SignUp() {
                 alt={"Profile card"}
               />
             </div>
-            <p>Lengkapi identitas diri dan informasi rekenign bank</p>
+            <p>Lengkapi logo dan informasi mengenai usahamu</p>
           </div>
           <div className="w-[100%] h-[1px] bg-slate-400"></div>
           <div className="flex my-3">
@@ -47,7 +47,7 @@ export default function SignUp() {
                 alt={"Profile card"}
               />
             </div>
-            <p>Lengkapi identitas diri dan informasi rekenign bank</p>
+            <p>Verifikasi data usaha membutuhkan waktu 2 hari</p>
           </div>
           <div className="w-[100%] h-[1px] bg-slate-400"></div>
           <div className="flex my-3">
@@ -59,7 +59,7 @@ export default function SignUp() {
                 alt={"Profile card"}
               />
             </div>
-            <p>Lengkapi identitas diri dan informasi rekenign bank</p>
+            <p>Akunmu telah terverifikasi dan sudah bisa digunakan</p>
           </div>
           <div className="w-[100%] h-[1px] bg-slate-400"></div>
         </div>

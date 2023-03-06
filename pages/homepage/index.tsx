@@ -1,10 +1,11 @@
 import Image from 'next/image'
 import Search from "public/img/homepage/icon-search.png"
 import Button from 'components/elements/Button'
-import CarouselIklan from 'components/homepage-1/CarouselIklan/CarouselIklan'
+import SwiperCarouselCoupon from 'components/homepage-1/SwiperCarouselCoupon'
 import CardCarousel from 'components/homepage-1/CardCarousel/CardCarousel'
 import KategoriCarousel from 'components/homepage-1/Kategori/KategoriCarousel'
 import Navbar from 'components/elements/Navbar'
+
 
 const Homepage: React.FunctionComponent = (): JSX.Element => {
     return(
@@ -28,7 +29,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
                             size="small"
 
                         ></Button>
-                    </div>
+                    </div>  
 
                     <div className='mt-4 w-full h-full flex flex-col gap-3'>
                         <div className='flex justify-between'>
@@ -46,37 +47,19 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
 
                         </div>
 
-                        <div className='flex gap-2 overflow-visible'>
-                            <CarouselIklan 
-                                source = "/public/img/components/voucher.jpg"
-                                // alt='carousel pic'
-                            />
-                            <CarouselIklan 
-                                source = "/public/img/components/voucher.jpg"
-                                // alt='carousel pic'
-                            />
+                        {/* <div className='overflow-visible'>
+                            <SwiperCarousel />
+                           
+                        </div> */}
+                        <div className='flex '>
+                            <SwiperCarouselCoupon />
                         </div>
-
-                        <div className='flex justify-center'>
-                            <svg width="128" height="10" viewBox="0 0 128 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="4.5" cy="4.93481" r="4.5" fill="#595656"/>
-                                <circle cx="21.5" cy="4.93481" r="4.5" fill="#D9D9D9"/>
-                                <circle cx="38.5" cy="4.93481" r="4.5" fill="#D9D9D9"/>
-                                <circle cx="55.5" cy="4.93481" r="4.5" fill="#D9D9D9"/>
-                                <circle cx="72.5" cy="4.93481" r="4.5" fill="#D9D9D9"/>
-                                <circle cx="89.5" cy="4.93481" r="4.5" fill="#D9D9D9"/>
-                                <circle cx="106.5" cy="4.93481" r="4.5" fill="#D9D9D9"/>
-                                <circle cx="123.5" cy="4.93481" r="4.5" fill="#D9D9D9"/>
-                            </svg>
-
-                        </div>
+                        
 
                         <div className='mt-4 flex'>
                             <div className='flex-col flex gap-3'>
                                 <h2 className='font-bold'>Paling Laris</h2>
                                 <div className='flex gap-4 overflow-visible'>
-                                    <CardCarousel />
-                                    <CardCarousel />
                                     <CardCarousel />
                                 </div>
                             </div>
@@ -85,11 +68,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
                         <div className='mt-4 flex'>
                             <div className='flex-col flex gap-3'>
                                 <h2 className='font-bold'>Kategori</h2>
-                                <div className='flex gap-4 overflow-visible'>
-                                    <KategoriCarousel />
-                                    <KategoriCarousel />
-                                    <KategoriCarousel />
-                                    <KategoriCarousel />
+                                <div className='flex overflow-visible'>
                                     <KategoriCarousel />
                                 </div>
                             </div>
@@ -103,7 +82,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
                 </div>
 
                 <div className='fixed bottom-0 w-full bg-white'>
-                    <Navbar />    
+                    <Navbar role='customer' location='home'/>    
                 </div>
 
             </div>

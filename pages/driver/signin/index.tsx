@@ -87,7 +87,7 @@ export default function SignIn() {
           className={`flex flex-col bg-white mt-[60px] w-full h-[425px] z-20 rounded-t-[35px] p-7`}
         >
           <h2 className="font-bold">Masuk ke Sokin</h2>
-          <p className="text-xs text-gray-500 mb-5">Sebagai <span className="text-black font-bold">Merchant</span></p>
+          <p className="text-xs text-gray-500 mb-5">Sebagai <span className="text-black font-bold">Driver</span></p>
           <GoogleButton />
           <div className="flex justify-center items-center mt-5 text-gray-500">
             <div className="h-[1px] w-[20%] bg-gray-500"></div>
@@ -128,7 +128,7 @@ export default function SignIn() {
           </form>
           <p className="w-full flex justify-center font-medium">
             Belum memiliki akun?{" "}
-            <Link className="text-[#FE8304] font-semibold" href="/merchant/signup">
+            <Link className="text-[#FE8304] font-semibold" href="/driver/signup">
               &nbsp;Daftar Sekarang
             </Link>
           </p>
@@ -137,9 +137,9 @@ export default function SignIn() {
           <h3 className="font-semibold flex justify-center">
             Masuk kembali mitra Sokin
           </h3>
-          <div className="flex justify-evenly items-center w-full mt-2">
+          <div className="flex justify-evenly w-full mt-2">
             <Button text="Sebagai Customer" size="small" />
-            <Button text="Sebagai Driver" size="small" type="secondary" href="/driver/signin"/>
+            <Button text="Sebagai Merchant" size="small" type="secondary" href="/merchant/signin"/>
           </div>
         </div>
       </div>
