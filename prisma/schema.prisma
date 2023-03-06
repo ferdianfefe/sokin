@@ -115,6 +115,18 @@ model Driver {
   orders          Order[] 
 }
 
+model Menu {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  ownerId     String  @map("owner_id") @db.ObjectId
+  name        String
+  price       Float
+  category    String? 
+  description String?
+  stock       Int?  @default(0)
+  image       String?
+  owner       Owner   @relation(fields: [ownerId], references: [id])
+}
+
 model Order {
   id              String  @id @default(auto()) @map("_id") @db.ObjectId
   driverId        String  @map("owner_id") @db.ObjectId
