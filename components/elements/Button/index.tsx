@@ -20,10 +20,9 @@ const Button: React.FC<Props> = ({
   className,
 }: Props) => {
   return (
-    <Link href={`${href}`} className='w-full'>
-      <button
-        type={isSubmit ? "submit" : "button"}
-        className={`${className} 
+    <button
+      type={isSubmit ? "submit" : "button"}
+      className={`${className} 
                   font-black justify-center rounded-[18px] shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)]
                   ${
                     type === "secondary"
@@ -61,10 +60,11 @@ const Button: React.FC<Props> = ({
                       : "w-full h-[39px] text-[17px]"
                   }
                   `}
-      >
-      {text}
-      </button>
-    </Link>
+    >
+      <Link href={`${href}`} className="w-full">
+        {text}
+      </Link>
+    </button>
   );
 };
 
