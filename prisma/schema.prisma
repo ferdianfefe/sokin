@@ -76,8 +76,8 @@ model Owner {
   address      String
   phoneNumber  String
   email        String     @unique
-  bankName     String
-  accountNumber String
+  bankName     String?
+  accountNumber String?
   balance      Int?
   password     String     @map("hashed_password")
   Merchant     Merchant[]
