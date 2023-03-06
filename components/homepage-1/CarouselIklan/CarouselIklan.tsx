@@ -1,21 +1,56 @@
 import Image from "next/image";
-import React from "react";
+import Dummy from "public/img/homepage/kupon.jpg"
+import {Swiper, SwiperSlide} from 'swiper/react';
 
-interface ImageProps {
-    source: string;
-  }
-  
-const CarouselIklan: React.FC<ImageProps> = ({source}) =>{
+interface Props {
+    img: typeof Image;
+}
+
+const CarouselIklan = () => {
     return(
-        <div className='w-[230px] h-[111px] rounded-xl bg-slate-400 flex border-[#FE8304]/40 border-[1px] object-clip shadow-md shadow-[#FE8304]/25'>
-            <Image
-                src={source}
-                alt=""
-                width={500}
-                height={500}
-            />
-        </div>
+        <Swiper
+            direction="horizontal"
+            pagination={true}
+            spaceBetween={200}
+            slidesPerView={3}
+            onSlideChange={() => console.log('slide change')}
+            onSwiper={() => console.log('swiper')}
+        >
+            <SwiperSlide><CardIklan /></SwiperSlide>
+            <SwiperSlide><CardIklan /></SwiperSlide>
+            <SwiperSlide><CardIklan /></SwiperSlide>
+            
+            
+            
+
+        </Swiper>
+
+
+
+        // <div className="flex">
+        //     {/* <CardIklan 
+        //         img = {Dummy}
+        //     /> */}
+        //     <div className="flex gap-4">
+        //         <CardIklan />
+        //         <CardIklan />
+        //         <CardIklan />
+
+        //     </div>
+        // </div>
     )
 }
 
 export default CarouselIklan;
+
+const CardIklan = () => {
+    return(
+        <div className="min-w-[190px] h-[111px] rounded-[14px] bg-slate-200 overflow-hidden flex shadow-md shadow-[#D78632]/40">
+            <Image
+                src={Dummy}
+                alt=""
+                className="object-cover"
+            />
+        </div>
+    )
+}
