@@ -69,7 +69,7 @@ export default function SignupOne() {
                   <Input className='mb-3' text='Jenis Bank' />
                   <Input className='mb-3' text='Nomor Rekening' />
                   <div className='mb-3'>
-                    <Input className='' text='Foto Buku Tabungan' />
+                    <InputImage className='' text='Foto Buku Tabungan' />
                     <p className='text-xs text-gray-500 mt-1'>Foto yang terlampir merupakan halaman pertama dari buku tabungan</p>
                   </div>
                 </>)}
@@ -80,7 +80,7 @@ export default function SignupOne() {
                   <Input className='mb-3' text='Alamat Usaha'/>
                   <Input className='mb-3' text='Lokasi Usaha'/>
                   <Input className='mb-3' text='Patokan'/>
-                  <Input className='mb-3' text='Logo Usaha'/>
+                  <InputImage className='mb-3' text='Logo Usaha'/>
                 </>)}
               </form>
               {(currentStep === 2) && <>
