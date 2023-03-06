@@ -13,7 +13,7 @@ interface IFormInputs {
   stok: number;
 }
 
-const Add: React.FC = (): JSX.ELement => {
+const Add: React.FC = (): JSX.Element => {
   const [currentFile, setCurrentFile] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
@@ -35,7 +35,26 @@ const Add: React.FC = (): JSX.ELement => {
   const submitHandler: SubmitHandler<IFormInputs> = async (
     data: IFormInputs
   ) => {
-    console.log(data);
+    const { namaProduk, harga, kategori, deskripsi, stok } = data;
+    if (currentFile) {
+      const formData = new FormData();
+      formData.append("file", currentFile);
+      formData.append("name", namaProduk);
+      formData.append("price", harga.toString());
+      formData.append("category", kategori);
+      formData.append("description", deskripsi);
+      formData.append("stock", stok.toString());
+
+      const res = await fetch(
+        "/api/merchant//add",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const json = await res.json();
+      console.log(json);
+    }
   };
 
   return (

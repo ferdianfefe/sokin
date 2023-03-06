@@ -81,7 +81,10 @@ model Owner {
   accountNumber String
   balance      Int?
   password     String     @map("hashed_password")
+  menus        Menu[]
   Merchant     Merchant[]
+
+  @@map("owners")
 }
 
 model Merchant {
@@ -92,6 +95,8 @@ model Merchant {
   coordinates String?
   benchmark   String?
   owner       Owner   @relation(fields: [ownerId], references: [id])
+
+  @@map("merchants")
 }
 
 model Driver {
@@ -113,6 +118,8 @@ model Driver {
   dailyTarget     Int     @default(20)
   password        String  @map("hashed_password")
   orders          Order[] 
+
+  @@map("drivers")
 }
 
 model Menu {
@@ -125,6 +132,8 @@ model Menu {
   stock       Int?  @default(0)
   image       String?
   owner       Owner   @relation(fields: [ownerId], references: [id])
+
+  @@map("menus")
 }
 
 model Order {
