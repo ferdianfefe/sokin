@@ -50,7 +50,7 @@ model Account {
 }
 
 model Session {
-  id           String   @id @map("_id") @db.ObjectId
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
   sessionToken String   @unique @map("session_token")
   userId       String   @map("user_id") @db.ObjectId
   expires      DateTime
