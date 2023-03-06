@@ -20,9 +20,10 @@ const Button: React.FC<Props> = ({
   className,
 }: Props) => {
   return (
-    <button
-      type={isSubmit ? "submit" : "button"}
-      className={`${className} 
+    <Link href={`${href}`} className="">
+      <button
+        type={isSubmit ? "submit" : "button"}
+        className={`${className} 
                   font-black justify-center rounded-[18px] shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)]
                   ${
                     type === "secondary"
@@ -34,37 +35,11 @@ const Button: React.FC<Props> = ({
                       ? "w-[154px] h-[33px] text-[14px]"
                       : "w-full h-[39px] text-[17px]"
                   }
-                  ${
-                    size === "responsive"
-                      ? "h-[33px] text-[14px] w-full mx-auto"
-                      : "w-full h-[39px] text-[17px]"
-                  }
-                  ${
-                    size === "very-small"
-                      ? "w-[100px] h-[33px] text-[14px]"
-                      : "w-full h-[39px] text-[17px]"
-                  }
-                  ${
-                    size === "responsive"
-                      ? "h-[33px] text-[14px] w-full mx-auto"
-                      : "w-full h-[39px] text-[17px]"
-                  }
-                  ${
-                    size === "very-small"
-                      ? "w-[100px] h-[33px] text-[14px]"
-                      : "w-full h-[39px] text-[17px]"
-                  }
-                  ${
-                    size === "responsive"
-                      ? "h-[33px] text-[14px] w-full mx-auto"
-                      : "w-full h-[39px] text-[17px]"
-                  }
                   `}
-    >
-      <Link href={`${href}`} className="w-full">
+      >
         {text}
-      </Link>
-    </button>
+      </button>
+    </Link>
   );
 };
 
