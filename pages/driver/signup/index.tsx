@@ -77,7 +77,7 @@ export default function SignUp() {
           <div className="w-[100%] h-[1px] bg-slate-400"></div>
         </div>
         <div className="w-[90%]" onClick={lanjut}>
-          <Button text="Lanjutkan" href="/merchant/signup/SignupOne" />
+          <Button text="Lanjutkan" />
         </div>
       </div>
     }
@@ -88,7 +88,7 @@ export default function SignUp() {
             <Link href='/driver/signin'>
               <Image src={'/images/ExitIcon.svg'} width={24} height={24} alt='exit icon'  className='absolute top-[26px] left-5'/>
             </Link>
-            <h1 className='text-[#565351] font-semibold text-xl'>Pendaftaran akun Merchant</h1>
+            <h1 className='text-[#565351] font-semibold text-xl'>Pendaftaran Akun Driver</h1>
           </div>
           {currentStep === 1 &&
           <div className='w-full justify-center items-center flex mt-3'>
@@ -108,12 +108,14 @@ export default function SignUp() {
         </div>
         <div className='w-full top-20 items-center flex-col flex'>
               {(currentStep === 1) && <h1 className='font-semibold text-[#E17301] text-xl mt-5'>Informasi Pemilik</h1>}
-              {(currentStep === 2) && <h1 className='font-semibold text-[#E17301] text-xl mt-5'>Informasi Usaha</h1>}
+              {(currentStep === 2) && <h1 className='font-semibold text-[#E17301] text-xl mt-5'>Informasi Kendaraan</h1>}
               {(currentStep === 3) && <h1 className='font-semibold text-[#E17301] text-xl mt-5'>Verifikasi</h1>}
               {(currentStep === 4) && <h1 className='font-semibold text-[#E17301] text-xl mt-5'>Akunmu Terdaftar</h1>}
             <div className='bg-white mt-4 rounded-t-[40px] w-full px-9 py-12 flex flex-col'>
               <form>  
                 {(currentStep === 1) && (<>
+                    <InputImage  text="Foto Profil"/>
+                    <p className="text-xs text-gray-500 mt-1 mb-3">Foto berukuran 1x1 sepinggang</p>
                   <div className='mb-3'>
                     <Input className='' text='Nama' />
                     <p className='text-xs text-gray-500 mt-1'>Nama harus ditulis persis seperti yang tertera pada KTP, Termasuk jika ada jabatan, titik, koma, dll</p>
@@ -125,24 +127,17 @@ export default function SignUp() {
                   <Input className='mb-3' text='Email' />
                   <div className='mb-3'>
                     <Input className='' text='Password' />
-                    <p className='text-xs text-gray-500 mt-1'>Foto KTP harus jelas, tidak boleh blur atau buram, dan terpotong. Harap tidak menggunakan flash saat mengambil foto KTP</p>
                   </div>
                   <InputImage className='mb-3' text='Foto KTP' />
-                  <Input className='mb-3' text='Jenis Bank' />
-                  <Input className='mb-3' text='Nomor Rekening' />
-                  <div className='mb-3'>
-                    <Input className='' text='Foto Buku Tabungan' />
-                    <p className='text-xs text-gray-500 mt-1'>Foto yang terlampir merupakan halaman pertama dari buku tabungan</p>
-                  </div>
+                  <p className='text-xs text-gray-500 mt-1'>Foto KTP harus jelas, tidak boleh blur atau buram, dan terpotong. Harap tidak menggunakan flash saat mengambil foto KTP</p>
+
+                  
                 </>)}
                 {(currentStep === 2) && (
                 <>
-                  <Input className='mb-3' text='Nama Usaha'/>
-                  <Input className='mb-3' text='Kode Pos'/>
-                  <Input className='mb-3' text='Alamat Usaha'/>
-                  <Input className='mb-3' text='Lokasi Usaha'/>
-                  <Input className='mb-3' text='Patokan'/>
-                  <Input className='mb-3' text='Logo Usaha'/>
+                  <Input className='mb-3' text='Merek Kendaraan'/>
+                  <Input className='mb-3' text='Plat Kendaraan'/>
+                  <InputImage className='mb-3' text='Foto Kendaraan'/>
                 </>)}
               </form>
               {(currentStep === 3) && <>
