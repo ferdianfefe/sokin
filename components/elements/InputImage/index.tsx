@@ -41,7 +41,7 @@ const InputImage: React.FC<Props> = ({
       />
       {!previewImage &&
       <label htmlFor="picture" className="w-4 bg-orange-600 h-6">
-        <div className="flex w-[316px] h-20 border-[1px] rounded-2xl border-gray-300 justify-center items-center">
+        <div className="flex w-full h-20 border-[1px] rounded-2xl border-gray-300 justify-center items-center">
             <Image src="/images/regis/UploadImageIcon.svg" width={37} height={37} alt="Upload image icon"/>
             <h3 className="text-orange-500 ml-3">Upload Foto</h3>
         </div>
