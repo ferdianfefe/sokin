@@ -38,10 +38,6 @@ export default function SignIn() {
     }
   };
 
-  const loginMerchant = () => {
-    router.push("/signin/merchant");
-  };
-
   return (
     <>
       <div className="relative flex-col items-center flex bg-[#F37D27]/25 w-full min-h-screen">
@@ -117,8 +113,8 @@ export default function SignIn() {
             <div>
               <Button text="Sebagai Driver" size="small" />
             </div>
-            <div onClick={loginMerchant}>
-              <Button text="Sebagai Merchant" size="small" type="secondary" />
+            <div>
+              <Button text="Sebagai Merchant" size="small" type="secondary" href="/merchant/signin"/>
             </div>
           </div>
         </div>
