@@ -1,36 +1,38 @@
-import Link from 'next/link'
-import React from 'react'
-import Image from 'next/image'
-import { useState } from 'react'
-import Input from 'components/elements/Input'
-import Button from 'components/elements/Button'
-import InputImage from 'components/elements/InputImage'
+import Link from "next/link";
+import React from "react";
+import Image from "next/image";
+import { useState } from "react";
+import Input from "components/elements/Input";
+import Button from "components/elements/Button";
+import InputImage from "components/elements/InputImage";
 import { useForm } from "react-hook-form";
+import MapContainer from "components/elements/MapContainer";
+import { CldImage } from "next-cloudinary";
 
 interface IFormInputs {
+  name: string;
+  KTPNumber: number;
+  domicile: string;
+  address: string;
+  phoneNumber: string;
   email: string;
   password: string;
-  name: string,
-  idCardNumber : string,
-  city : string,
-  address : string,
-  phoneNumber : string,
-  bankName : string,
-  accountNumber : string,
-  fotoKTP : string,
-  merName : string,
-  merAddress : string,
-  postalCode : string,
-  coordinates : string,
-  benchmark : string,
-  fotoBT : string,
-  logoUsaha : string,
+  city: string;
+  bankName: string;
+  accountNumber: string;
+  accountBookPhoto: File;
+
+  merchantName: string;
+  postalCode: string;
+  merchantAddress: string;
+  coordinates: string;
+  benchmark: string;
+  merchantLogo: string;
 }
 
 export default function SignupOne() {
-
   const [currentStep, setCurrentStep] = useState(0);
-  const [style, setStyle] = useState(['block', 'hidden']);
+  const [style, setStyle] = useState(["block", "hidden"]);
 
   const {
     register,
@@ -40,40 +42,42 @@ export default function SignupOne() {
 
   const onSubmit = async (data: IFormInputs) => {
     // console.log(data);
-    setStyle(['hidden', 'hidden']);
+    setStyle(["hidden", "hidden"]);
     setCurrentStep(currentStep + 1);
-    await fetch('/api/signup/owner', {
-      method: 'POST',
+    await fetch("/api/signup/owner", {
+      method: "POST",
       body: JSON.stringify(data),
     }).then((res) => {
       if (res.status === 200) {
-        console.log('success');
+        console.log("success");
       } else {
-        console.log('error');
+        console.log("error");
       }
     });
-  }
+  };
+
+  const [keyword, setKeyword] = useState("");
 
   const lanjut = () => {
     setCurrentStep(currentStep + 1);
     if (currentStep === 0) {
-      setStyle(['hidden', 'block']);
+      setStyle(["hidden", "block"]);
     }
     if (currentStep === 1) {
-      setStyle(['hidden', 'hidden']);
+      setStyle(["hidden", "hidden"]);
     }
-  }
+  };
 
   const kembali = () => {
     setCurrentStep(currentStep - 1);
     if (currentStep === 1) {
-      setStyle(['block', 'hidden']);
+      setStyle(["block", "hidden"]);
     }
-  }
+  };
 
   const lanjutkan = () => {
-    console.log('lanjutkan');
-  }
+    console.log("lanjutkan");
+  };
 
   return (
     <>
@@ -351,6 +355,12 @@ export default function SignupOne() {
                     }),
                   }}
                 />
+                <Input
+                  className="mb-3"
+                  text="Cari lokasi"
+                  onValueChangeHandler={(value) => setKeyword(value)}
+                />
+                <MapContainer keywordProp={keyword} />
                 <Input
                   className="mb-3"
                   text="Patokan"

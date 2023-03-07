@@ -5,6 +5,10 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
+          <link
+            href="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css"
+            rel="stylesheet"
+          />
           <link rel="manifest" href="/manifest.json" />
           <link rel="apple-touch-icon" href="/icon-192x192.png" />
           <meta name="theme-color" content="#042940" />
@@ -19,4 +23,3 @@ class MyDocument extends Document {
 }
 
 export default MyDocument;
-
