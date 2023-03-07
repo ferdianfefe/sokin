@@ -78,5 +78,5 @@ const options = {
 };
 
 const authHandler: NextApiHandler = (req, res) =>
-  NextAuth(req, res, { ...options });
+  NextAuth(req, res, options);
 export default authHandler;

@@ -85,6 +85,21 @@ export default function SignupOne() {
             </Link>
             <h1 className='text-[#565351] font-semibold text-xl'>Pendaftaran akun Merchant</h1>
           </div>
+          {currentStep === 0 &&
+          <div className='w-full justify-center items-center flex mt-3'>
+            <Image src={'/images/regis/Step1.svg'} width={300} height={10} alt='step one' className='mt-3'/>
+          </div>
+          }
+          {currentStep === 1 &&
+          <div className='w-full justify-center items-center flex mt-3'>
+            <Image src={'/images/regis/Step2.svg'} width={300} height={10} alt='step one' className='mt-3'/>
+          </div>
+          }
+          {currentStep === 2 &&
+          <div className='w-full justify-center items-center flex mt-3'>
+            <Image src={'/images/regis/Step3.svg'} width={300} height={10} alt='step one' className='mt-3'/>
+          </div>
+          }
         </div>
         <div className='w-full top-20 items-center flex-col flex'>
               {(currentStep === 0) && <h1 className='font-semibold text-[#E17301] text-xl mt-5'>Informasi Pemilik</h1>}
