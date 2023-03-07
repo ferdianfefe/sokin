@@ -1,6 +1,7 @@
 import Button from 'components/elements/Button'
 import Image from 'next/image'
 import React from 'react'
+import Link from 'next/link'
 
 const DriverRegist1 = () => {
   return (
@@ -42,9 +43,11 @@ const DriverRegist1 = () => {
               <div className='w-[100%] h-[1px] bg-slate-400'></div>
             </div>
             
-            <div className='w-[300px]'>
-              <Button text='Lanjutkan'/>
-            </div>
+            
+              <div className='w-[300px]'>
+                <Button text='Lanjutkan' href='/driver/registration-2'/>
+              </div>
+            
         </div>
     </>
 
