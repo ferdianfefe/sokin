@@ -45,7 +45,7 @@ const SignUp: React.FC = (): JSX.Element => {
 
   const daftarMerchant = () => {
     console.log("tes");
-    router.push("/signupmerchant");
+    router.push("merchant/signup");
   };
 
 
