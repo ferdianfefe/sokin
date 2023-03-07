@@ -9,6 +9,7 @@ type Props = {
   formHookProps?: any;
   defaultValue?: string;
   error?: any;
+  type?: string;
 };
 
 const Input: React.FC<Props> = ({
@@ -18,6 +19,7 @@ const Input: React.FC<Props> = ({
   formHookProps,
   defaultValue = "",
   error = null,
+  type = "text",
 }: Props) => {
   const [value, setValue] = useState("");
 
@@ -35,6 +37,7 @@ const Input: React.FC<Props> = ({
 
       <div className="mt-1 relative">
         <input
+          type={type}
           {...formHookProps}
           value={value}
           onChange={onChangeHandler}

@@ -9,6 +9,7 @@ type Props = {
   href?: string;
   isSubmit?: boolean;
   className?: string;
+  onClickHandler?: Function;
 };
 
 const Button: React.FC<Props> = ({
@@ -18,6 +19,7 @@ const Button: React.FC<Props> = ({
   href = "#",
   isSubmit = false,
   className,
+  onClickHandler = () => {},
 }: Props) => {
   return (
     <button
@@ -35,6 +37,7 @@ const Button: React.FC<Props> = ({
                       : "w-full h-[39px] text-[17px]"
                   }
                   `}
+      onClick={(e) => onClickHandler(e)}
     >
       <Link href={`${href}`} className="">
         {text}
