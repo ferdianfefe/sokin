@@ -17,32 +17,32 @@ export default function KategoriCarousel()  {
     {
       id: 1,
       nama: 'Bakso',
-      imageUrl: 'https://via.placeholder.com/400x200'
+      imageUrl: 'https://www.goodnewsfromindonesia.id/uploads/images/2020/07/3014562020-Bakso-Solo.jpg'
     },
     {
       id: 2,
       nama: 'Pizza',
-      imageUrl: 'https://via.placeholder.com/400x200'
+      imageUrl: 'https://i.pinimg.com/originals/ed/07/6d/ed076de664d00efb55aa0cde9e869268.jpg'
     },
     {
       id: 3,
       nama: 'Minuman',
-      imageUrl: 'https://via.placeholder.com/400x200'
+      imageUrl: 'https://th.bing.com/th/id/OIP.YXcccCP_6yq3PTiKQ2kJ_AHaJ4?pid=ImgDet&rs=1'
     },
     {
       id: 4,
       nama: 'Camilan',
-      imageUrl: 'https://via.placeholder.com/400x200'
+      imageUrl: 'https://i.pinimg.com/originals/ed/07/6d/ed076de664d00efb55aa0cde9e869268.jpg'
     },
     {
       id: 5,
       nama: 'Manisan',
-      imageUrl: 'https://via.placeholder.com/400x200'
+      imageUrl: 'https://th.bing.com/th/id/R.423efae9c4fbf2836e19f46e32a9d31c?rik=q%2fxkcfPBWUq6dQ&riu=http%3a%2f%2fwww.pengusahasukses.com%2fwp-content%2fuploads%2f2016%2f07%2fPeluang-Bisnis-Manisan-Pepaya-dan-Analisa-Usahanya.jpg&ehk=I13z1rCG6%2fZXaid8SBPLgR9%2b%2fW8RKKH66P%2fgr5pcpOU%3d&risl=&pid=ImgRaw&r=0'
     },
     {
       id: 6,
       nama: 'Roti',
-      imageUrl: 'https://via.placeholder.com/400x200'
+      imageUrl: 'https://th.bing.com/th/id/OIP.YXcccCP_6yq3PTiKQ2kJ_AHaJ4?pid=ImgDet&rs=1'
     },
   ];
 
@@ -53,7 +53,7 @@ export default function KategoriCarousel()  {
         grabCursor={true}
         freeMode={true}
         slidesPerView={4}
-        spaceBetween={20}
+        spaceBetween={25}
         
         onInit={(swiper) => {
           // Remove any margins or padding on SwiperSlide elements
@@ -69,9 +69,9 @@ export default function KategoriCarousel()  {
       >
         {slides.map((slide) => (
           <SwiperSlide key={slide.id}>
-            <div className='rounded-[22px] w-[90px] h-[90px] overflow-hidden'>
-              <img className='bg-slate-300 w-full h-full flex flex-col justify-end items-center 'src={slide.imageUrl}/>
-              <h3 className='absolute text-sm font-extrabold text-white  mx-2'>{slide.nama}</h3>
+            <div className='rounded-[22px] w-[90px] h-[90px] overflow-hidden relative flex justify-center'>
+              <img className='object-cover bg-slate-300 w-full h-full flex flex-col justify-end items-center 'src={slide.imageUrl}/>
+              <h3 className='absolute text-sm font-extrabold text-white bottom-2 mx-auto flex'>{slide.nama}</h3>
           </div>
         </SwiperSlide>
         ))}

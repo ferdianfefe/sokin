@@ -23,7 +23,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
                                 text="Login"
                                 type="secondary"
                                 size="small"
-
+                                href='/merchant/signin'
                             ></Button>
                         
 
@@ -31,6 +31,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
                             text="Daftar"
                             type="secondary"
                             size="small"
+                            href='/merchant/signup'
 
                         ></Button>
                     </div>  
@@ -72,7 +73,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
                         <div className='mt-4 flex'>
                             <div className='flex-col flex gap-3'>
                                 <h2 className='font-bold'>Kategori</h2>
-                                <div className='flex overflow-visible'>
+                                <div className='flex overflow-visible z-0'>
                                     <KategoriCarousel />
                                 </div>
                             </div>
