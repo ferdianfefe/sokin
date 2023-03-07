@@ -109,7 +109,6 @@ model Driver {
   email           String  @unique
   licenseNumber   String
   vehicle         String
-  productionYear  String
   balance         Float?
   isActive        Boolean @default(false)
   coordinates     String?
