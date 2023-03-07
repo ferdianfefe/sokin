@@ -15,7 +15,7 @@ const DriverRegist1 = () => {
               <h3 className='font-bold'>Langkah - Langkah</h3>
               <div className='flex mt-9 mb-3  -translate-x-5'>
                 <div className='w-[50px] flex justify-center mr-5'>
-                  <Image src={'/images/Profilecard.svg'} width={48} height={37} alt={'Profile card'} />
+                  <Image src={'/images/ProfileCard.svg'} width={48} height={37} alt={'Profile card'} />
                 </div>
                 <p>Lengkapi identitas diri</p>
               </div>
