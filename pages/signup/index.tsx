@@ -31,11 +31,11 @@ const SignUp: React.FC = (): JSX.Element => {
         },
         body: JSON.stringify(data),
       });
-  
+
       if (!res.ok) {
         throw new Error("Gagal");
       }
-  
+
       const responseData = await res.json();
       console.log(responseData);
     } catch (error) {
@@ -44,10 +44,12 @@ const SignUp: React.FC = (): JSX.Element => {
   };
 
   const daftarMerchant = () => {
-    console.log("tes");
-    router.push("merchant/signup");
+    router.push("/merchant/signup");
   };
 
+  const daftarDriver = () => {
+    router.push("/driver/signup");
+  };
 
   return (
     <>
@@ -138,7 +140,7 @@ const SignUp: React.FC = (): JSX.Element => {
             Masuk kembali mitra Sokin
           </h3>
           <div className="flex justify-evenly w-full mt-2">
-            <div>
+            <div onClick={daftarDriver}>
               <Button text="Daftar Driver" size="small" />
             </div>
             <div onClick={daftarMerchant}>

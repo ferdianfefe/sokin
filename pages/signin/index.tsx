@@ -32,7 +32,7 @@ export default function SignIn() {
       });
       const json = await res.json();
       if (!res.ok) throw Error(json.message);
-      router.push("/dashboard");
+      router.push("/home");
     } catch (error) {
       console.log(error);
     }
