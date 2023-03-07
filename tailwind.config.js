@@ -8,6 +8,7 @@ module.exports = {
     extend: {
       backgroundImage:{
         'login-daftar': "url('/public/img/homepage/bg-login-daftar.png')",
+        'dashboard-driver' : "url('/public/images/driver/dashboard/bg-dashboard-driver.png')",
       },
     },
       boxShadow:{
