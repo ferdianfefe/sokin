@@ -11,13 +11,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   };
 };
 
-export default NextRouteComponent;
+export default NextRouteComponent.bind({ initialRoute: "/home" });
 
 /**
  * To define a custom initial route for refine to redirect and start with:
  *
  * Bind the `initialRoute` value to the `NextRouteComponent` like the following:
  *
- * export default NextRouteComponent.bind({ initialRoute: "/posts" });
  *
  **/
