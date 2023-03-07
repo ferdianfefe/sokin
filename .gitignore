@@ -8,3 +8,4 @@ node_modules
 !.env.example
 public/sw.js.map
 public/sw.js.map
+public/sw.js.map

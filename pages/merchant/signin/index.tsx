@@ -101,11 +101,8 @@ export default function SignIn() {
         >
           <h2 className="font-bold">Masuk ke Sokin</h2>
           <p className="text-xs text-gray-500 mb-5">Sebagai <span className="text-black font-bold">Merchant</span></p>
-          <GoogleButton />
           <div className="flex justify-center items-center mt-5 text-gray-500">
-            <div className="h-[1px] w-[20%] bg-gray-500"></div>
-            <div className="mx-3 text-sm">Atau lanjut dengan email</div>
-            <div className="h-[1px] w-[20%] bg-gray-500"></div>
+            <div className="h-[1px] w-full bg-gray-500"></div>
           </div>
           <form
             className="flex flex-col justify-evenly h-[225px]"
