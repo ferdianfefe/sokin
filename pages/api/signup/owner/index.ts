@@ -1,5 +1,5 @@
-import { PrismaClient, Prisma } from '@prisma/client';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { PrismaClient, Prisma } from "@prisma/client";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 type OwnerCreateRequestBody = {
   name: string;
@@ -24,36 +24,37 @@ const prisma = new PrismaClient();
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
-
-  if (req.method === 'POST') {
+  if (req.method === "POST") {
     console.log(req.body);
     const {
       name,
-      idCardNumber,
-      city,
+      KTPNumber,
+      domicile,
       address,
       phoneNumber,
       email,
       password,
+      city,
       bankName,
       accountNumber,
-      fotoBT,
-      merName,
+      accountBookPhoto,
+
+      merchantName,
       postalCode,
-      merAddress,
+      merchantAddress,
       coordinates,
       benchmark,
-      logoUsaha,
-    } = JSON.parse(req.body) //as OwnerCreateRequestBody;
+      merchantLogo,
+    } = JSON.parse(req.body); //as OwnerCreateRequestBody;
 
     const owner = await prisma.owner.findUnique({
       where: { email },
     });
 
     if (owner) {
-      return res.status(400).json({ message: 'Owner already exists' });
+      return res.status(400).json({ message: "Owner already exists" });
     }
 
     const newOwner = await prisma.owner.create({
@@ -72,7 +73,7 @@ export default async function handler(
     });
 
     if (!newOwner) {
-      return res.status(400).json({ message: 'Owner creation failed' });
+      return res.status(400).json({ message: "Owner creation failed" });
     }
 
     const newMerchant = await prisma.merchant.create({
@@ -86,16 +87,21 @@ export default async function handler(
     });
 
     if (!newMerchant) {
-      return res.status(400).json({ message: 'Merchant creation failed' });
+      return res.status(400).json({ message: "Merchant creation failed" });
     }
 
-    return res.status(200).json({message:'success', data: {owner: newOwner, merchant: newMerchant}});
+    return res
+      .status(200)
+      .json({
+        message: "success",
+        data: { owner: newOwner, merchant: newMerchant },
+      });
   }
 
-  if (req.method === 'GET'){
-    const users = await prisma.owner.findMany()
+  if (req.method === "GET") {
+    const users = await prisma.owner.findMany();
     return res.status(200).json(users);
   }
 
-  return res.status(405).json({ message: 'Method unallowed' });
+  return res.status(405).json({ message: "Method unallowed" });
 }
