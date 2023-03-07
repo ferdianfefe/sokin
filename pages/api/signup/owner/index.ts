@@ -9,6 +9,15 @@ type OwnerCreateRequestBody = {
   phoneNumber: string;
   email: string;
   password: string;
+  bankName: string;
+  accountNumber: string;
+  fotoBT: string;
+  merName: string;
+  postalCode: string;
+  merAddress: string;
+  coordinates: string;
+  benchmark: string;
+  logoUsaha: string;
 };
 
 const prisma = new PrismaClient();
@@ -19,6 +28,7 @@ export default async function handler(
 ) {
 
   if (req.method === 'POST') {
+    console.log(req.body);
     const {
       name,
       idCardNumber,
@@ -27,7 +37,16 @@ export default async function handler(
       phoneNumber,
       email,
       password,
-    } = req.body as OwnerCreateRequestBody;
+      bankName,
+      accountNumber,
+      fotoBT,
+      merName,
+      postalCode,
+      merAddress,
+      coordinates,
+      benchmark,
+      logoUsaha,
+    } = JSON.parse(req.body) //as OwnerCreateRequestBody;
 
     const owner = await prisma.owner.findUnique({
       where: { email },
@@ -46,10 +65,31 @@ export default async function handler(
         phoneNumber,
         email,
         password,
+        bankName,
+        accountNumber,
+        balance: 0,
       },
     });
 
-    return res.status(201).json(newOwner);
+    if (!newOwner) {
+      return res.status(400).json({ message: 'Owner creation failed' });
+    }
+
+    const newMerchant = await prisma.merchant.create({
+      data: {
+        ownerId: newOwner.id,
+        name: merName,
+        postalCode,
+        coordinates,
+        benchmark,
+      },
+    });
+
+    if (!newMerchant) {
+      return res.status(400).json({ message: 'Merchant creation failed' });
+    }
+
+    return res.status(200).json({message:'success', data: {owner: newOwner, merchant: newMerchant}});
   }
 
   if (req.method === 'GET'){
