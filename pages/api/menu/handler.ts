@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../lib/prisma";
 
 type MenuCreateRequestBody = {
+  merchantId: number;
   name: string;
   price: number;
   category: string;
