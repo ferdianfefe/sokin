@@ -238,13 +238,6 @@ export default function SignUp() {
                   </div>
                 </>
               )}
-              {currentStep === 3 && (
-                <>
-                  <div onClick={lanjut}>
-                    <Button text="Lanjutkan" size="small" />
-                  </div>
-                </>
-              )}
             </div>
           </div>
         </div>
