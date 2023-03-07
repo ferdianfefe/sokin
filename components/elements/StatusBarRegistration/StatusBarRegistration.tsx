@@ -24,7 +24,7 @@ const StatusBarRegistration: React.FC<Props> = ({pageIndex, type}: Props) => {
               }
 
               {type === "Driver" &&
-                <Link href='#'>
+                <Link href='/driver/signin'>
                   <svg className='items-center absolute left-5 top-6' width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M24 2.41714L21.5829 0L12 9.58286L2.41714 0L0 2.41714L9.58286 12L0 21.5829L2.41714 24L12 14.4171L21.5829 24L24 21.5829L14.4171 12L24 2.41714Z" fill="#565351"/>
                   </svg>
@@ -45,12 +45,12 @@ const StatusBarRegistration: React.FC<Props> = ({pageIndex, type}: Props) => {
               {/* LINE */}
                 <div className= {` 
 
-                ${pageIndex === 1 ? 'bg-[#FE8304] w-[0px] h-1 mt-[10px] z-30 absolute ml-8': ''}
+                ${pageIndex === 1 ? 'bg-[#FE8304] w-[0px] h-1 mt-[10px] z-30 absolute ml-8 ': ''}
                 ${pageIndex === 2 ? 'bg-[#FE8304] w-[100px] h-1 mt-[10px] z-30 absolute ml-8': ''}
                 ${pageIndex === 3 ? 'bg-[#FE8304] w-[190px] h-1 mt-[10px] z-30 absolute ml-8': ''}
                 ${pageIndex === 4 ? 'bg-[#FE8304] w-[260px] h-1 mt-[10px] z-30 absolute ml-8': ''}
 
-                 w-[100px] bg-[#FE8304] h-1 mt-[10px] z-30 absolute ml-8`}
+                 `}
                  ></div>
               {/* <div className='h-1 absolute bg-'></div> */}
                 <div className= {` bg-[#FFF0E0] h-1 w-[260px] mt-[10px] z-20 absolute ml-8`}></div>
