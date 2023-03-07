@@ -1,6 +1,7 @@
 import Button from 'components/elements/Button'
 import Image from 'next/image'
 import React from 'react'
+import Link from 'next/link'
 
 const DriverRegist1 = () => {
   return (
@@ -14,7 +15,7 @@ const DriverRegist1 = () => {
               <h3 className='font-bold'>Langkah - Langkah</h3>
               <div className='flex mt-9 mb-3  -translate-x-5'>
                 <div className='w-[50px] flex justify-center mr-5'>
-                  <Image src={'/images/Profilecard.svg'} width={48} height={37} alt={'Profile card'} />
+                  <Image src={'/images/ProfileCard.svg'} width={48} height={37} alt={'Profile card'} />
                 </div>
                 <p>Lengkapi identitas diri</p>
               </div>
@@ -42,9 +43,11 @@ const DriverRegist1 = () => {
               <div className='w-[100%] h-[1px] bg-slate-400'></div>
             </div>
             
-            <div className='w-[300px]'>
-              <Button text='Lanjutkan'/>
-            </div>
+            
+              <div className='w-[300px]'>
+                <Button text='Lanjutkan' href='/driver/registration-2'/>
+              </div>
+            
         </div>
     </>
 
