@@ -50,7 +50,7 @@ model Account {
 }
 
 model Session {
-  id           String   @id @map("_id") @db.ObjectId
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
   sessionToken String   @unique @map("session_token")
   userId       String   @map("user_id") @db.ObjectId
   expires      DateTime
@@ -81,7 +81,10 @@ model Owner {
   accountNumber String
   balance      Int?
   password     String     @map("hashed_password")
+  menus        Menu[]
   Merchant     Merchant[]
+
+  @@map("owners")
 }
 
 model Merchant {
@@ -92,6 +95,8 @@ model Merchant {
   coordinates String?
   benchmark   String?
   owner       Owner   @relation(fields: [ownerId], references: [id])
+
+  @@map("merchants")
 }
 
 model Driver {
@@ -113,6 +118,22 @@ model Driver {
   dailyTarget     Int     @default(20)
   password        String  @map("hashed_password")
   orders          Order[] 
+
+  @@map("drivers")
+}
+
+model Menu {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  ownerId     String  @map("owner_id") @db.ObjectId
+  name        String
+  price       Float
+  category    String? 
+  description String?
+  stock       Int?  @default(0)
+  image       String?
+  owner       Owner   @relation(fields: [ownerId], references: [id])
+
+  @@map("menus")
 }
 
 model Order {

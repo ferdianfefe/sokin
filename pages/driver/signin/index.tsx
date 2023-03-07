@@ -25,25 +25,35 @@ export default function SignIn() {
 
   const onSubmit = async (data: IFormInputs) => {
     console.log(data);
-    // try {
-    //   const res = await fetch("/api/signin/merchant", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(data),
-    //   });
-    //   const json = await res.json();
-    //   console.log(json);
-    //   if (!res.ok) throw Error(json.message);
-    //   router.push("/dashboard");
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    try {
+      const res = await fetch("/api/signin/merchant", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const json = await res.json();
+      if (!res.ok) throw Error(json.message);
+      router.push("/dashboard");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const submitHandler = async (e: any) => {
+    if (email == "" || password == "") {
+      return alert("Email dan password tidak boleh kosong");
+    }
+    // console.log(email + password);
+    e.preventDefault();
     const status = await signIn("credentials", {
       redirect: false,
-      email: data.email,
-      password: data.password,
+      email,
+      password,
       callbackUrl: "/merchant",
     });
 
@@ -53,29 +63,6 @@ export default function SignIn() {
     }
     router.push("/merchant");
   };
-
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
-
-  // const submitHandler = async (e: any) => {
-  //   if (email == "" || password == "") {
-  //     return alert("Email dan password tidak boleh kosong");
-  //   }
-  //   // console.log(email + password);
-  //   e.preventDefault();
-  //   const status = await signIn("credentials", {
-  //     redirect: false,
-  //     email,
-  //     password,
-  //     callbackUrl: "/merchant",
-  //   });
-
-  //   console.log(status);
-  //   if (status?.error) {
-  //     return alert(status.error);
-  //   }
-  //   router.push("/merchant");
-  // };
 
   return (
     <>
@@ -100,7 +87,7 @@ export default function SignIn() {
           className={`flex flex-col bg-white mt-[60px] w-full h-[425px] z-20 rounded-t-[35px] p-7`}
         >
           <h2 className="font-bold">Masuk ke Sokin</h2>
-          <p className="text-xs text-gray-500 mb-5">Sebagai <span className="text-black font-bold">Merchant</span></p>
+          <p className="text-xs text-gray-500 mb-5">Sebagai <span className="text-black font-bold">Driver</span></p>
           <div className="flex justify-center items-center mt-5 text-gray-500">
             <div className="h-[1px] w-full bg-gray-500"></div>
           </div>
@@ -133,17 +120,12 @@ export default function SignIn() {
               }}
             />
             <div className="mt-4">
-              <button
-                type="submit"
-                className="font-black justify-center rounded-[18px] shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)] bg-[#FE8304] text-white w-full h-[39px] text-[17px]"
-              >
-              Masuk
-              </button>
+              <Button text="Masuk" size="big" type="submit" isSubmit={true} />
             </div>
           </form>
           <p className="w-full flex justify-center font-medium">
             Belum memiliki akun?{" "}
-            <Link className="text-[#FE8304] font-semibold" href="/merchant/signup">
+            <Link className="text-[#FE8304] font-semibold" href="/driver/signup">
               &nbsp;Daftar Sekarang
             </Link>
           </p>
@@ -152,9 +134,9 @@ export default function SignIn() {
           <h3 className="font-semibold flex justify-center">
             Masuk kembali mitra Sokin
           </h3>
-          <div className="flex justify-evenly items-center w-full mt-2">
+          <div className="flex justify-evenly w-full mt-2">
             <Button text="Sebagai Customer" size="small" />
-            <Button text="Sebagai Driver" size="small" type="secondary" href="/driver/signin"/>
+            <Button text="Sebagai Merchant" size="small" type="secondary" href="/merchant/signin"/>
           </div>
         </div>
       </div>
