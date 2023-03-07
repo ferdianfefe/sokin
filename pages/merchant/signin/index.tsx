@@ -25,35 +25,25 @@ export default function SignIn() {
 
   const onSubmit = async (data: IFormInputs) => {
     console.log(data);
-    try {
-      const res = await fetch("/api/signin/merchant", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      const json = await res.json();
-      if (!res.ok) throw Error(json.message);
-      router.push("/dashboard");
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const submitHandler = async (e: any) => {
-    if (email == "" || password == "") {
-      return alert("Email dan password tidak boleh kosong");
-    }
-    // console.log(email + password);
-    e.preventDefault();
+    // try {
+    //   const res = await fetch("/api/signin/merchant", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(data),
+    //   });
+    //   const json = await res.json();
+    //   console.log(json);
+    //   if (!res.ok) throw Error(json.message);
+    //   router.push("/dashboard");
+    // } catch (error) {
+    //   console.log(error);
+    // }
     const status = await signIn("credentials", {
       redirect: false,
-      email,
-      password,
+      email: data.email,
+      password: data.password,
       callbackUrl: "/merchant",
     });
 
@@ -63,6 +53,29 @@ export default function SignIn() {
     }
     router.push("/merchant");
   };
+
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+
+  // const submitHandler = async (e: any) => {
+  //   if (email == "" || password == "") {
+  //     return alert("Email dan password tidak boleh kosong");
+  //   }
+  //   // console.log(email + password);
+  //   e.preventDefault();
+  //   const status = await signIn("credentials", {
+  //     redirect: false,
+  //     email,
+  //     password,
+  //     callbackUrl: "/merchant",
+  //   });
+
+  //   console.log(status);
+  //   if (status?.error) {
+  //     return alert(status.error);
+  //   }
+  //   router.push("/merchant");
+  // };
 
   return (
     <>
@@ -123,7 +136,12 @@ export default function SignIn() {
               }}
             />
             <div className="mt-4">
-              <Button text="Masuk" size="big" type="submit" isSubmit={true} />
+              <button
+                type="submit"
+                className="font-black justify-center rounded-[18px] shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)] bg-[#FE8304] text-white w-full h-[39px] text-[17px]"
+              >
+              Masuk
+              </button>
             </div>
           </form>
           <p className="w-full flex justify-center font-medium">
