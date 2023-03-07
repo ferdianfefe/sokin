@@ -87,10 +87,9 @@ export default function SignIn() {
           className={`flex flex-col bg-white mt-[60px] w-full h-[425px] z-20 rounded-t-[35px] p-7`}
         >
           <h2 className="font-bold">Masuk ke Sokin</h2>
-          <p className="text-xs text-gray-500 mb-5">Sebagai <span className="text-black font-bold">Driver</span></p>
-          <div className="flex justify-center items-center mt-5 text-gray-500">
-            <div className="h-[1px] w-full bg-gray-500"></div>
-          </div>
+          <p className="text-xs text-gray-500 mb-5">
+            Sebagai <span className="text-black font-bold">Driver</span>
+          </p>
           <form
             className="flex flex-col justify-evenly h-[225px]"
             onSubmit={handleSubmit(onSubmit)}
@@ -109,6 +108,7 @@ export default function SignIn() {
             />
             <Input
               text="Password"
+              type="password"
               side="/images/Lock.svg"
               formHookProps={{
                 ...register("password", {
@@ -125,7 +125,10 @@ export default function SignIn() {
           </form>
           <p className="w-full flex justify-center font-medium">
             Belum memiliki akun?{" "}
-            <Link className="text-[#FE8304] font-semibold" href="/driver/signup">
+            <Link
+              className="text-[#FE8304] font-semibold"
+              href="/driver/signup"
+            >
               &nbsp;Daftar Sekarang
             </Link>
           </p>
@@ -135,8 +138,13 @@ export default function SignIn() {
             Masuk kembali mitra Sokin
           </h3>
           <div className="flex justify-evenly w-full mt-2">
-            <Button text="Sebagai Customer" size="small" />
-            <Button text="Sebagai Merchant" size="small" type="secondary" href="/merchant/signin"/>
+            <Button text="Sebagai Customer" size="small" href="/signin" />
+            <Button
+              text="Sebagai Merchant"
+              size="small"
+              type="secondary"
+              href="/merchant/signin"
+            />
           </div>
         </div>
       </div>

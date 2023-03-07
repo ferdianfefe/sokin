@@ -86,6 +86,7 @@ export default function SignIn() {
             />
             <Input
               text="Password"
+              type="password"
               side="/images/Lock.svg"
               formHookProps={{
                 ...register("password", {
@@ -111,10 +112,19 @@ export default function SignIn() {
           </h3>
           <div className="flex justify-evenly w-full mt-2">
             <div>
-              <Button text="Sebagai Driver" size="small" />
+              <Button
+                text="Sebagai Driver"
+                size="small"
+                href="/driver/signin"
+              />
             </div>
             <div>
-              <Button text="Sebagai Merchant" size="small" type="secondary" href="/merchant/signin"/>
+              <Button
+                text="Sebagai Merchant"
+                size="small"
+                type="secondary"
+                href="/merchant/signin"
+              />
             </div>
           </div>
         </div>
