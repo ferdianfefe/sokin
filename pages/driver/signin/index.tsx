@@ -127,7 +127,7 @@ export default function SignIn() {
             Belum memiliki akun?{" "}
             <Link
               className="text-[#FE8304] font-semibold"
-              href="/driver/signup"
+              href="/driver/registration"
             >
               &nbsp;Daftar Sekarang
             </Link>
