@@ -24,6 +24,7 @@ const InputImage: React.FC<Props> = ({
   const pickPicture = (e: any) => {
     e.preventDefault();
     const file = e.target.files[0];
+    if(file) {
       setCurrentFile(file);
       setPreviewImage(URL.createObjectURL(file));
       handleUploadFile(name, file)
