@@ -31,7 +31,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
                             text="Daftar"
                             type="secondary"
                             size="small"
-                            href='/merchant/signup'
+                            href='/signup'
 
                         ></Button>
                     </div>  
