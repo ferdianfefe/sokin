@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 type OwnerCreateRequestBody = {
   name: string;
-  idCardNumber: string;
+  iDCardNumber: number;
   city: string;
   address: string;
   phoneNumber: string;
@@ -11,13 +11,13 @@ type OwnerCreateRequestBody = {
   password: string;
   bankName: string;
   accountNumber: string;
-  fotoBT: string;
-  merName: string;
+  accountBookPhoto: File;
+  merchantName: string;
   postalCode: string;
-  merAddress: string;
+  merchantAddress: string;
   coordinates: string;
   benchmark: string;
-  logoUsaha: string;
+  merchantLogo: string;
 };
 
 const prisma = new PrismaClient();
@@ -30,17 +30,15 @@ export default async function handler(
     console.log(req.body);
     const {
       name,
-      KTPNumber,
-      domicile,
+      iDCardNumber,
+      city,
       address,
       phoneNumber,
       email,
       password,
-      city,
       bankName,
       accountNumber,
       accountBookPhoto,
-
       merchantName,
       postalCode,
       merchantAddress,
@@ -60,7 +58,7 @@ export default async function handler(
     const newOwner = await prisma.owner.create({
       data: {
         name,
-        idCardNumber,
+        iDCardNumber,
         city,
         address,
         phoneNumber,
@@ -68,7 +66,7 @@ export default async function handler(
         password,
         bankName,
         accountNumber,
-        balance: 0,
+        accountBookPhoto,
       },
     });
 
@@ -79,7 +77,7 @@ export default async function handler(
     const newMerchant = await prisma.merchant.create({
       data: {
         ownerId: newOwner.id,
-        name: merName,
+        name: merchantName,
         postalCode,
         coordinates,
         benchmark,
@@ -90,12 +88,10 @@ export default async function handler(
       return res.status(400).json({ message: "Merchant creation failed" });
     }
 
-    return res
-      .status(200)
-      .json({
-        message: "success",
-        data: { owner: newOwner, merchant: newMerchant },
-      });
+    return res.status(200).json({
+      message: "success",
+      data: { owner: newOwner, merchant: newMerchant },
+    });
   }
 
   if (req.method === "GET") {
