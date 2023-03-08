@@ -1,6 +1,7 @@
 import Image from "next/image";
 import MerchantLayout from "components/layout/MerchantLayout";
 import Button from "components/elements/Button";
+import { useSession, UseSessionOptions, getSession, signOut } from "next-auth/react";
 import Navbar from "components/elements/Navbar";
 const OrderItem: React.FC<{
   orderNumber: number;
@@ -65,6 +66,16 @@ const orderData = [
 ];
 
 const Merchant: React.FC = () => {
+  const { data: session, status } = useSession();
+  // console.log(session?.user);
+  const user = session?.user;
+
+  console.log(user?.name);
+
+  const logoutHandler = () => {
+    signOut();
+  }
+
   return (
     <MerchantLayout location="home">
       <div className="p-8 h-full">
@@ -131,8 +142,25 @@ const Merchant: React.FC = () => {
             <Button text="Tutup Toko" />
           </div>
       </div>
+      <div onClick={logoutHandler}>logout</div>
     </MerchantLayout>
   );
 };
 
 export default Merchant;
+
+export const getServerSideProps = async ({req}) => {
+  const session = await getSession({req});
+  // console.log(session);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/merchant/signin",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: { session },
+  }
+}
