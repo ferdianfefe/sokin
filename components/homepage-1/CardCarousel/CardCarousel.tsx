@@ -15,7 +15,7 @@ import SwiperCore, { Autoplay } from 'swiper';
 
 
 export default function CardCarousel() {
-    SwiperCore.use([Autoplay]);
+    // SwiperCore.use([Autoplay]);
 
 
     const slides = [
@@ -23,28 +23,28 @@ export default function CardCarousel() {
         id: 1,
         namaToko: 'Warung Pak Haji',
         jarak: 2,
-        imageUrl: 'https://via.placeholder.com/400x200',
+        imageUrl: 'https://i.pinimg.com/originals/ed/07/6d/ed076de664d00efb55aa0cde9e869268.jpg',
         rating: 4.7,
       },
       {
         id: 2,
         namaToko: 'Ayam Geprek Pak Joko',
         jarak: 3,
-        imageUrl: 'https://via.placeholder.com/400x200',
+        imageUrl: 'https://1.bp.blogspot.com/-w9h2ogFgtYw/XUfZ0XDo_eI/AAAAAAAABeU/EjPWZo9DldwSy1HCd81RNEjk9E5wYh4ZACLcBGAs/s1600/Ayam%2BGeprek%2BWong%2BSugih%2B%2528qraved.com%2529.jpg',
         rating: 4.3,
       },
       {
         id: 3,
         namaToko: 'Warmindo Andeska',
         jarak: 0.5,
-        imageUrl: 'https://via.placeholder.com/400x200',
+        imageUrl: 'https://th.bing.com/th/id/OIP.wx2KdMx3JaWxv2NRdLVBXgHaD4?pid=ImgDet&rs=1',
         rating: 3,
       },
       {
         id: 4,
         namaToko: 'Nasi Goreng Abadi',
         jarak: 8,
-        imageUrl: 'https://via.placeholder.com/400x200',
+        imageUrl: 'https://bisnisukm.com/uploads/2020/07/bisnis-sampingan-malam-hari-jual-nasi-goreng-gerobak.png',
         rating: 5,
       },
     ];
@@ -55,9 +55,9 @@ export default function CardCarousel() {
       <Swiper
         grabCursor={true}
         freeMode={true}
+        spaceBetween={10}
         slidesPerView={2}
         loop
-        autoplay
         modules={[FreeMode]}
         className="mySwiper h-[110%] w-[420px]"
       >
@@ -67,7 +67,7 @@ export default function CardCarousel() {
             <div className="w-[160px] h-[252px] rounded-[20px] shadow-md shadow-[#FE8304]/20 overflow-hidden">
             {/* <div className="bg-slate-200 w-full h-[60%]"></div> */}
             
-            <img className='bg-slate-200 w-full h-[60%]'
+            <img className='bg-slate-200 w-full h-[60%] object-cover'
               src={slide.imageUrl}
             />
 

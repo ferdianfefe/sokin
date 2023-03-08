@@ -26,7 +26,7 @@ export default function SignIn() {
   const onSubmit = async (data: IFormInputs) => {
     console.log(data);
     try {
-      const res = await fetch("/api/signin/merchant", {
+      const res = await fetch("/api/signin/driver", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,7 +35,7 @@ export default function SignIn() {
       });
       const json = await res.json();
       if (!res.ok) throw Error(json.message);
-      router.push("/dashboard");
+      router.push("/driver/dashboard");
     } catch (error) {
       console.log(error);
     }
