@@ -22,6 +22,7 @@ export default function SignIn() {
   const router = useRouter();
 
   const onSubmit = async (data: any) => {
+    console.log(data)
     try {
       const res = await fetch("/api/signin", {
         method: "POST",
@@ -31,6 +32,7 @@ export default function SignIn() {
         body: JSON.stringify(data),
       });
       const json = await res.json();
+      console.log(json);
       if (!res.ok) throw Error(json.message);
       router.push("/home");
     } catch (error) {

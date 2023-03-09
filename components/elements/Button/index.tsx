@@ -29,7 +29,7 @@ const Button: React.FC<Props> = ({
         ${
           type === "secondary"
             ? "bg-gray-100 text-black"
-            : "bg-[#FE8304] text-white"
+            : "bg-[#FE8304] text-neutral-50"
         }
                   ${
                     size === "small"
