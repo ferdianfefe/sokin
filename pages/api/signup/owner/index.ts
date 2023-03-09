@@ -31,7 +31,6 @@ export default async function handler(
     const {
       name,
       iDCardNumber,
-      city,
       address,
       phoneNumber,
       email,

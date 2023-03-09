@@ -133,12 +133,11 @@ export default function SignIn() {
               }}
             />
             <div className="mt-4">
-              <button
+              <Button
                 type="submit"
-                className="font-black justify-center rounded-[18px] shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)] bg-[#FE8304] text-white w-full h-[39px] text-[17px]"
-              >
-                Masuk
-              </button>
+                text="Masuk"
+                className="justify-center rounded-[18px] shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)] bg-[#FE8304] text-white w-full h-[39px] text-[17px]"
+              />
             </div>
           </form>
           <p className="w-full flex justify-center font-medium">

@@ -82,8 +82,7 @@ model Owner {
   accountNumber String
   accountBookPhoto String
   balance      Int?     @default(0)
-  menus        Menu[]
-  Merchant     Merchant[]
+  menus        Menu[]  @default([])
 
   @@map("owners")
 }
