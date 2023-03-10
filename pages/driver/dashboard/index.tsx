@@ -12,7 +12,7 @@ import { useSession } from "next-auth/react";
 const DriverDashboard = () => {
   const [isActive, setIsActive] = useState(false);
   const [showPopUp, setShowPopup] = useState(false);
-
+  const { data: session} = useSession()
   const toggleSwitch = () => {
     setIsActive(!isActive);
   };

@@ -4,7 +4,11 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 export default NextAuth({
   providers: [
     CredentialsProvider({
-      name: "Credentials",
+      name: 'Credentials',
+      credentials: {
+        email: { label: 'email'},
+        password: {label: 'password', type: 'password' }
+      },
       async authorize(credentials: any, req: any) {
         const user = await prisma.owner.findFirst({
           where: {
@@ -24,24 +28,26 @@ export default NextAuth({
     }),
   ],
   session: {
-    jwt: true,
-    maxAge: 30 * 24 * 60 * 60,
+    strategy: "jwt"
   },
   jwt: {
-    signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,
+    maxAge: 30 * 24 * 60 * 60
+
+    //signingKey: {"kty":"oct","kid":"Dl893BEV-iVE-x9EC52TDmlJUgGm9oZ99_ZL025Hc5Q","alg":"HS512","k":"K7QqRmJOKRK2qcCKV_pi9PSBv3XP0fpTu30TP8xn4w01xR3ZMZM38yL2DnTVPVw6e4yhdh0jtoah-i4c_pZagA"},
   },
   callbacks: {
     async session({ session, token }) {
-      session.user = token.user;
+       session.accessToken = token.accessToken
+       session.user.id = token.id;
       return session;
     },
     async jwt({ token, user }) {
       if (user) {
-        token.user = user;
+        token.accessToken = user.accessToken
+        token.id = user.id
       }
-      return token;
+      return token
     },
-  },
 })
 
 // import { NextApiHandler } from "next";
