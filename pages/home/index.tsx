@@ -23,7 +23,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
                                 text="Login"
                                 type="secondary"
                                 size="small"
-                                href='/merchant/signin'
+                                href='/signin'
                             ></Button>
                         
 

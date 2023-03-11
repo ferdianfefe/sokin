@@ -63,7 +63,7 @@ export default function SignIn() {
           className={`flex flex-col bg-white mt-[60px] w-full h-[425px] z-20 rounded-t-[35px] p-7`}
         >
           <h2 className="font-bold">Masuk ke Sokin</h2>
-          <p className="text-xs text-gray-500 mb-5">Sebagai Customer</p>
+          <p className="text-gray-500 mb-5">Sebagai <span className="text-c-orange-800 text-lg font-semibold">Customer</span></p>
           <GoogleButton />
           <div className="flex justify-center items-center mt-5 text-gray-500">
             <div className="h-[1px] w-[20%] bg-gray-500"></div>
