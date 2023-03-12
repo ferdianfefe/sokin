@@ -14,6 +14,7 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     const { email, password } = req.body;
+    console.log(email, password)
 
     // console.log(email + password);
 
