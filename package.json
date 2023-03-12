@@ -19,6 +19,8 @@
     "@pankod/refine-react-table": "^4.9.0",
     "@pankod/refine-simple-rest": "^3.18.0",
     "@prisma/client": "^4.10.1",
+    "bcrypt": "^5.1.0",
+    "bcryptjs": "^2.4.3",
     "cloudinary": "^1.35.0",
     "cors": "^2.8.5",
     "mapbox-gl": "^2.13.0",
@@ -37,6 +39,7 @@
     "swiper": "^9.1.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/node": "^14.14.13",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
