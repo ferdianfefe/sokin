@@ -54,14 +54,14 @@ export default function SignIn() {
       redirect: false,
       email,
       password,
-      callbackUrl: "/merchant",
+      callbackUrl: "/",
     });
 
     console.log(status);
     if (status?.error) {
       return alert(status.error);
     }
-    router.push("/merchant");
+    router.push("/");
   };
 
   return (
@@ -96,7 +96,7 @@ export default function SignIn() {
           >
             <Input
               text="Email"
-              side="/images/profil.svg"
+              side="/images/Profil.svg"
               formHookProps={{
                 ...register("email", {
                   required: {

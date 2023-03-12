@@ -1,9 +1,10 @@
 import { PrismaClient, Prisma } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
+import bcrypt from "bcrypt";
 
 type OwnerCreateRequestBody = {
   name: string;
-  iDCardNumber: number;
+  idCardNumber: string;
   city: string;
   address: string;
   phoneNumber: string;
@@ -22,6 +23,16 @@ type OwnerCreateRequestBody = {
 
 const prisma = new PrismaClient();
 
+prisma.$use(async (params: Prisma.MiddlewareParams, next) => {
+  if (params.action == "create" && params.model == "Owner") {
+    let user = params.args.data;
+    let salt = bcrypt.genSaltSync(10);
+    let hash = bcrypt.hashSync(user.password, salt);
+    user.password = hash;
+  }
+  return await next(params);
+});
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -30,7 +41,7 @@ export default async function handler(
     console.log(req.body);
     const {
       name,
-      iDCardNumber,
+      idCardNumber,
       address,
       phoneNumber,
       email,
@@ -45,7 +56,7 @@ export default async function handler(
       coordinates,
       benchmark,
       merchantLogo,
-    } = JSON.parse(req.body); //as OwnerCreateRequestBody;
+    } = req.body as OwnerCreateRequestBody;
 
     const owner = await prisma.owner.findUnique({
       where: { email },
@@ -58,7 +69,7 @@ export default async function handler(
     const newOwner = await prisma.owner.create({
       data: {
         name,
-        iDCardNumber,
+        idCardNumber,
         city,
         address,
         phoneNumber,
@@ -66,7 +77,7 @@ export default async function handler(
         password,
         bankName,
         accountNumber,
-        accountBookPhoto,
+        accountBookPhoto: "",  // TODO: impl cloudinary
       },
     });
 

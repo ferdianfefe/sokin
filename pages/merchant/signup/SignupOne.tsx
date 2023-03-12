@@ -11,7 +11,7 @@ import { CldImage } from "next-cloudinary";
 
 interface IFormInputs {
   name: string;
-  iDCardNumber: number;
+  idCardNumber: number;
   city: string;
   address: string;
   phoneNumber: string;
@@ -215,14 +215,14 @@ export default function SignupOne() {
                   className="mb-3"
                   text="Nomor KTP"
                   formHookProps={{
-                    ...register("iDCardNumber", {
+                    ...register("idCardNumber", {
                       required: {
                         value: true,
-                        message: "iDCardNumber tidak boleh kosong",
+                        message: "idCardNumber tidak boleh kosong",
                       },
                     }),
                   }}
-                  error={errors.iDCardNumber?.message}
+                  error={errors.idCardNumber?.message}
                 />
                 <Input
                   className="mb-3"

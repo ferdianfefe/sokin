@@ -4,7 +4,9 @@ import Input from "components/elements/Input";
 import Button from "components/elements/Button";
 import GoogleButton from "components/elements/GoogleButton";
 import Link from "next/link";
+import { useState } from "react";
 import { useRouter } from "next/router";
+import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 
 interface IFormInputs {
@@ -13,18 +15,18 @@ interface IFormInputs {
 }
 
 export default function SignIn() {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<IFormInputs>();
 
-  const router = useRouter();
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: IFormInputs) => {
     console.log(data)
     try {
-      const res = await fetch("/api/signin", {
+      const res = await fetch("/api/signin/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -32,13 +34,34 @@ export default function SignIn() {
         body: JSON.stringify(data),
       });
       const json = await res.json();
-      console.log(json);
       if (!res.ok) throw Error(json.message);
       router.push("/home");
     } catch (error) {
       console.log(error);
     }
   };
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const submitHandler = async (e: any) => {
+    if (email == "" || password == "") {
+      return alert("Email dan password tidak boleh kosong");
+    }
+    // console.log(email + password);
+    e.preventDefault();
+    const status = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+      callbackUrl: "/",
+    });
+
+    console.log(status);
+    if (status?.error) {
+      return alert(status.error);
+    }
+    router.push("/");
+  };
+  
 
   return (
     <>
@@ -76,7 +99,7 @@ export default function SignIn() {
           >
             <Input
               text="Email"
-              side="/images/profil.svg"
+              side="/images/Profil.svg"
               formHookProps={{
                 ...register("email", {
                   required: {
