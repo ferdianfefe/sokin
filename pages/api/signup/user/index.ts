@@ -1,4 +1,5 @@
 import { PrismaClient, Prisma } from "@prisma/client";
+import bcrypt from "bcrypt";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 type SignupRequestBody = Omit<Prisma.OwnerCreateInput, "id"> & {
@@ -6,6 +7,16 @@ type SignupRequestBody = Omit<Prisma.OwnerCreateInput, "id"> & {
 };
 
 const prisma = new PrismaClient();
+
+prisma.$use(async (params: Prisma.MiddlewareParams, next) => {
+  if (params.action == 'create' && params.model== 'User'){
+    let user = params.args.data
+    let salt = bcrypt.genSaltSync(10)
+    let hash = bcrypt.hashSync(user.password, salt)
+    user.password = hash
+  }
+  return await next(params)
+})
 
 export default async function handler(
   req: NextApiRequest,

@@ -54,14 +54,14 @@ export default function SignIn() {
       redirect: false,
       email,
       password,
-      callbackUrl: "/merchant",
+      callbackUrl: "/",
     });
 
     console.log(status);
     if (status?.error) {
       return alert(status.error);
     }
-    router.push("/merchant");
+    router.push("/");
   };
 
   return (
@@ -87,8 +87,8 @@ export default function SignIn() {
           className={`flex flex-col bg-white mt-[60px] w-full h-[425px] z-20 rounded-t-[35px] p-7`}
         >
           <h2 className="font-bold">Masuk ke Sokin</h2>
-          <p className="text-xs text-gray-500 mb-5">
-            Sebagai <span className="text-black font-bold">Driver</span>
+          <p className="text-gray-500 mb-5">
+            Sebagai <span className="text-c-orange-800 font-semibold">Driver</span>
           </p>
           <form
             className="flex flex-col justify-evenly h-[225px]"
@@ -96,7 +96,7 @@ export default function SignIn() {
           >
             <Input
               text="Email"
-              side="/images/profil.svg"
+              side="/images/Profil.svg"
               formHookProps={{
                 ...register("email", {
                   required: {
@@ -127,7 +127,7 @@ export default function SignIn() {
             Belum memiliki akun?{" "}
             <Link
               className="text-[#FE8304] font-semibold"
-              href="/driver/signup"
+              href="/driver/registration"
             >
               &nbsp;Daftar Sekarang
             </Link>

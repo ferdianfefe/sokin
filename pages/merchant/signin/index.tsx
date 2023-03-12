@@ -100,8 +100,8 @@ export default function SignIn() {
           className={`flex flex-col bg-white mt-[60px] w-full h-[425px] z-20 rounded-t-[35px] p-7`}
         >
           <h2 className="font-bold">Masuk ke Sokin</h2>
-          <p className="text-xs text-gray-500 mb-5">
-            Sebagai <span className="text-black font-bold">Merchant</span>
+          <p className="text-gray-500 mb-5">
+            Sebagai <span className="text-c-orange-800 font-semibold">Merchant</span>
           </p>
           <form
             className="flex flex-col justify-evenly h-[225px]"
@@ -133,12 +133,11 @@ export default function SignIn() {
               }}
             />
             <div className="mt-4">
-              <button
+              <Button
                 type="submit"
-                className="font-black justify-center rounded-[18px] shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)] bg-[#FE8304] text-white w-full h-[39px] text-[17px]"
-              >
-                Masuk
-              </button>
+                text="Masuk"
+                className="justify-center rounded-[18px] shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)] bg-[#FE8304] text-white w-full h-[39px] text-[17px]"
+              />
             </div>
           </form>
           <p className="w-full flex justify-center font-medium">

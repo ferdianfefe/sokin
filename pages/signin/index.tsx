@@ -4,7 +4,9 @@ import Input from "components/elements/Input";
 import Button from "components/elements/Button";
 import GoogleButton from "components/elements/GoogleButton";
 import Link from "next/link";
+import { useState } from "react";
 import { useRouter } from "next/router";
+import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 
 interface IFormInputs {
@@ -13,17 +15,18 @@ interface IFormInputs {
 }
 
 export default function SignIn() {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<IFormInputs>();
 
-  const router = useRouter();
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: IFormInputs) => {
+    console.log(data)
     try {
-      const res = await fetch("/api/signin", {
+      const res = await fetch("/api/signin/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,6 +40,28 @@ export default function SignIn() {
       console.log(error);
     }
   };
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const submitHandler = async (e: any) => {
+    if (email == "" || password == "") {
+      return alert("Email dan password tidak boleh kosong");
+    }
+    // console.log(email + password);
+    e.preventDefault();
+    const status = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+      callbackUrl: "/",
+    });
+
+    console.log(status);
+    if (status?.error) {
+      return alert(status.error);
+    }
+    router.push("/");
+  };
+  
 
   return (
     <>
@@ -61,7 +86,7 @@ export default function SignIn() {
           className={`flex flex-col bg-white mt-[60px] w-full h-[425px] z-20 rounded-t-[35px] p-7`}
         >
           <h2 className="font-bold">Masuk ke Sokin</h2>
-          <p className="text-xs text-gray-500 mb-5">Sebagai Customer</p>
+          <p className="text-gray-500 mb-5">Sebagai <span className="text-c-orange-800 text-lg font-semibold">Customer</span></p>
           <GoogleButton />
           <div className="flex justify-center items-center mt-5 text-gray-500">
             <div className="h-[1px] w-[20%] bg-gray-500"></div>
@@ -74,7 +99,7 @@ export default function SignIn() {
           >
             <Input
               text="Email"
-              side="/images/profil.svg"
+              side="/images/Profil.svg"
               formHookProps={{
                 ...register("email", {
                   required: {

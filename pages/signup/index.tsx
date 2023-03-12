@@ -37,7 +37,7 @@ const SignUp: React.FC = (): JSX.Element => {
       }
 
       const responseData = await res.json();
-      console.log(responseData);
+      router.push("/signin");
     } catch (error) {
       console.error("Error:", error);
     }

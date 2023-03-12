@@ -6,6 +6,8 @@ import Vector from "public/images/driver/dashboard/vector-pesanan.png";
 import { useState } from "react";
 import Image from "next/image";
 import DriverLayout from "components/layout/DriverLayout";
+import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
 const DriverDashboard = () => {
   const [isActive, setIsActive] = useState(false);
@@ -19,11 +21,10 @@ const DriverDashboard = () => {
     setShowPopup(!showPopUp);
   };
   console.log(showPopUp);
-
   return (
     <DriverLayout location="home">
       <div className="p-0 m-0">
-        {showPopUp && <PopUpDriver togglePopup={togglePopup}/>}
+        {showPopUp && <PopUpDriver togglePopup={togglePopup} />}
 
         <div className="flex w-full h-20 bg-[#ffa967c9] justify-evenly items-center mt-8">
           <Image
@@ -256,10 +257,10 @@ const DriverDashboard = () => {
         </div>
       </div>
     </DriverLayout>
-  );
+  )
 };
 
-const PopUpDriver = ({togglePopup}: {togglePopup: () => void}) => {
+const PopUpDriver = ({ togglePopup }: { togglePopup: () => void }) => {
   return (
     <div className="fixed inset-0 flex flex-col justify-center items-center z-50 backdrop-blur-sm ">
       <div className="bg-white py-10 rounded-[12px] border-[#FE8304]/20 border-[1px] shadow-lg mx-6">
@@ -403,7 +404,7 @@ const PopUpDriver = ({togglePopup}: {togglePopup: () => void}) => {
           <div className="w-full flex gap-3">
             {/* <div className='w-1/2 flex' onClick={togglePopUp}> */}
             <div className="w-1/2 flex" onClick={togglePopup}>
-              <Button type="secondary" text="Tolak" href="/driver/dashboard"/>
+              <Button type="secondary" text="Tolak" href="/driver/dashboard" />
             </div>
 
             <div className="flex w-1/2 bg-slate-100">

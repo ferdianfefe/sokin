@@ -1,5 +1,6 @@
 import { PrismaClient, Prisma } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
+import bcrypt from "bcrypt";
 
 type DriverCreateRequestBody = {
   name: string;
@@ -15,6 +16,16 @@ type DriverCreateRequestBody = {
 };
 
 const prisma = new PrismaClient();
+prisma.$use(async (params: Prisma.MiddlewareParams, next) => {
+  if (params.action == 'create' && params.model== 'Driver'){
+    let user = params.args.data
+    let salt = bcrypt.genSaltSync(10)
+    let hash = bcrypt.hashSync(user.password, salt)
+    user.password = hash
+  }
+  return await next(params)
+})
+
 
 export default async function handler(
   req: NextApiRequest,
@@ -52,7 +63,6 @@ export default async function handler(
         email,
         licenseNumber,
         vehicle,
-        productionYear,
         password,
       },
     });
