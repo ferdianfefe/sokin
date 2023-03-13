@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import bcrypt from "bcrypt";
@@ -35,7 +35,19 @@ export default NextAuth({
         return user;
       }
     })
-  ]
+  ],
+  callbacks: {
+    async session({ session, token }) {
+      session.user = token.user;
+      return session;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.user = user;
+      }
+      return token;
+    },
+  },
 })
 
 
@@ -71,18 +83,18 @@ export default NextAuth({
 //   jwt: {
 //     signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,
 //   },
-//   callbacks: {
-//     async session({ session, token }) {
-//       session.user = token.user;
-//       return session;
-//     },
-//     async jwt({ token, user }) {
-//       if (user) {
-//         token.user = user;
-//       }
-//       return token;
-//     },
-//   },
+  // callbacks: {
+  //   async session({ session, token }) {
+  //     session.user = token.user;
+  //     return session;
+  //   },
+  //   async jwt({ token, user }) {
+  //     if (user) {
+  //       token.user = user;
+  //     }
+  //     return token;
+  //   },
+  // },
 // })
 
 // import { NextApiHandler } from "next";

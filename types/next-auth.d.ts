@@ -1,4 +1,6 @@
+import { User } from "@prisma/client";
 import NextAuth from "next-auth"
+import { AdapterUser } from "next-auth/adapters";
 
 declare module "next-auth/react" {
   /**
@@ -12,3 +14,13 @@ declare module "next-auth/react" {
     }
   }
 }
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    user: any;
+  }
+}
+
+// interface Session extends DefaultSession {
+//   user?: User;
+// }

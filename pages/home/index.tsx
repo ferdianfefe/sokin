@@ -17,7 +17,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
     }
 
     if (status === "unauthenticated") {
-        return <div>Unauthenticated</div>;
+        return <div>ke halaman signin dulu banh, masih ngetes, tenang saja :v <br></br> ini halaman utama sebenernya</div>;
     }
 
     const logout = async () => {
@@ -27,7 +27,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
 
     return(
         <>
-            <div onClick={logout}>logout</div>
+            <div onClick={logout}>Selamat Datang {data?.user?.name}, klik utk logout?</div>
             <div className="flex flex-col w-full h-full overflow-hidden">
                 <div className="p-7 flex flex-col gap-4">
                     {/* SEARCH BAR */}
