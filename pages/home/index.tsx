@@ -5,12 +5,29 @@ import SwiperCarouselCoupon from 'components/homepage-1/SwiperCarouselCoupon'
 import CardCarousel from 'components/homepage-1/CardCarousel/CardCarousel'
 import KategoriCarousel from 'components/homepage-1/Kategori/KategoriCarousel'
 import Navbar from 'components/elements/Navbar'
-import Link from 'next/link'
-
+import { signIn, signOut, useSession } from "next-auth/react";
 
 const Homepage: React.FunctionComponent = (): JSX.Element => {
+    const {data, status} = useSession();
+    
+    console.log(data);
+
+    if (status === "loading") {
+        return <div>Loading...</div>;
+    }
+
+    if (status === "unauthenticated") {
+        return <div>Unauthenticated</div>;
+    }
+
+    const logout = async () => {
+        const res = await signOut();
+        console.log(res);
+    }
+
     return(
         <>
+            <div onClick={logout}>logout</div>
             <div className="flex flex-col w-full h-full overflow-hidden">
                 <div className="p-7 flex flex-col gap-4">
                     {/* SEARCH BAR */}
@@ -116,9 +133,36 @@ const SearchBar: React.FunctionComponent = (): JSX.Element => {
     )
 }
 
+// import { signIn, signOut, useSession } from "next-auth/react";
 
+// export default function Home() {
+//   const {data, status} = useSession();
 
+//   console.log(data);
 
+//   // When rendering client side don't display anything until loading is complete.
+//   if (status == "loading") {
+//     return null;
+//   }
 
+//   // If no session exist, display a message to the user.
+//   if (status == "unauthenticated") {
+//     return (
+//       <>
+//         <div className="p-10 text-center text-3xl">
+//           <h1>You must be logged in to see this page content.</h1>
+//           <button onClick={() => signIn()}>Sign In</button>
+//         </div>
+//       </>
+//     );
+//   }
 
-
+//   // If the session exists, display content to
+//   return (
+//     <>
+//       <div className="p-10 text-center text-3xl">
+//         <h1>Welcome {data?.user.name}</h1>
+//       </div>
+//     </>
+//   );
+// }

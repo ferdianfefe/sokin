@@ -25,46 +25,57 @@ export default function SignIn() {
 
   const onSubmit = async (data: IFormInputs) => {
     console.log(data)
-    try {
-      const res = await fetch("/api/signin/user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      const json = await res.json();
-      if (!res.ok) throw Error(json.message);
-      router.push("/home");
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const submitHandler = async (e: any) => {
-    if (email == "" || password == "") {
-      return alert("Email dan password tidak boleh kosong");
-    }
+  //   try {
+  //     const res = await fetch("/api/signin/user", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(data),
+  //     });
+  //     const json = await res.json();
+  //     if (!res.ok) throw Error(json.message);
+  //     router.push("/home");
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+  // const submitHandler = async (e: any) => {
+  //   if (email == "" || password == "") {
+  //     return alert("Email dan password tidak boleh kosong");
+  //   }
     // console.log(email + password);
-    e.preventDefault();
-    const status = await signIn("credentials", {
+    // e.preventDefault();
+    const res = await signIn("credentials", {
       redirect: false,
-      email,
-      password,
-      callbackUrl: "/",
+      email: data.email,
+      password: data.password,
     });
-
-    console.log(status);
-    if (status?.error) {
-      return alert(status.error);
+    console.log(res);
+    if (res?.error) {
+      return alert(res.error);
     }
     router.push("/");
   };
-  
+
+  // const login = async () => {
+  //   const res = await signIn("credentials", {
+  //     redirect: false,
+  //     email: "user2@gmail.com",
+  //     password: "user2123",
+  //   });
+  //   console.log(res);
+  //   if (res?.error) {
+  //     return alert(res.error);
+  //   }
+  //   router.push("/");
+  // }  
 
   return (
     <>
+      {/* <div onClick={login}>login</div> */}
       <div className="relative flex-col items-center flex bg-[#F37D27]/25 w-full min-h-screen">
         <Image
           src="/images/SokinLogo.svg"

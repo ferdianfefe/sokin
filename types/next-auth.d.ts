@@ -1,6 +1,6 @@
 import NextAuth from "next-auth"
 
-declare module "next-auth" {
+declare module "next-auth/react" {
   /**
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */

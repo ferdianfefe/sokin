@@ -1,48 +1,89 @@
-import NextAuth from 'next-auth'
-import CredentialsProvider from 'next-auth/providers/credentials'
+import { PrismaClient } from "@prisma/client";
+import NextAuth from "next-auth"
+import CredentialsProvider from "next-auth/providers/credentials"
+import bcrypt from "bcrypt";
+
+const prisma = new PrismaClient();
 
 export default NextAuth({
   providers: [
     CredentialsProvider({
-      name: "Credentials",
-      async authorize(credentials: any, req: any) {
-        const user = await prisma.owner.findFirst({
+      name: 'Credentials',
+      credentials: {
+        email: { label: "Email", type: "text", placeholder: "jsmith" },
+        password: {  label: "Password", type: "password" }
+      },
+      async authorize(credentials, req) {
+        const user = await prisma.user.findFirst({
           where: {
-            email: credentials.email,
+            email: credentials?.email,
           },
         })
         if (!user) {
           throw new Error("No user found")
         }
 
-        if (user.password !== credentials.password) {
+        if (!credentials?.password || !user.password) {
+          throw new Error("An error occurred")
+        }
+
+        const passwordMatch = await bcrypt.compare(credentials.password, user.password)
+
+        if (!passwordMatch) {
           throw new Error("Password is incorrect")
         }
-        
         return user;
       }
-    }),
-  ],
-  session: {
-    jwt: true,
-    maxAge: 30 * 24 * 60 * 60,
-  },
-  jwt: {
-    signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,
-  },
-  callbacks: {
-    async session({ session, token }) {
-      session.user = token.user;
-      return session;
-    },
-    async jwt({ token, user }) {
-      if (user) {
-        token.user = user;
-      }
-      return token;
-    },
-  },
+    })
+  ]
 })
+
+
+// import NextAuth from 'next-auth'
+// import CredentialsProvider from 'next-auth/providers/credentials'
+
+// export default NextAuth({
+//   providers: [
+//     CredentialsProvider({
+//       name: "Credentials",
+//       async authorize(credentials: any, req: any) {
+//         const user = await prisma.owner.findFirst({
+//           where: {
+//             email: credentials.email,
+//           },
+//         })
+//         if (!user) {
+//           throw new Error("No user found")
+//         }
+
+//         if (user.password !== credentials.password) {
+//           throw new Error("Password is incorrect")
+//         }
+        
+//         return user;
+//       }
+//     }),
+//   ],
+//   session: {
+//     jwt: true,
+//     maxAge: 30 * 24 * 60 * 60,
+//   },
+//   jwt: {
+//     signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,
+//   },
+//   callbacks: {
+//     async session({ session, token }) {
+//       session.user = token.user;
+//       return session;
+//     },
+//     async jwt({ token, user }) {
+//       if (user) {
+//         token.user = user;
+//       }
+//       return token;
+//     },
+//   },
+// })
 
 // import { NextApiHandler } from "next";
 // import NextAuth, { Awaitable } from "next-auth";
