@@ -24,6 +24,7 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     const { name, email, password } = req.body as SignupRequestBody;
+    console.log(req.body);
     const user = await prisma.user.findUnique({
       where: { email },
     });
