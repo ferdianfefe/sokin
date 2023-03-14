@@ -7,9 +7,9 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        "login-daftar": "url('/public/img/homepage/bg-login-daftar.png')",
+        "login-daftar": "url('/images/img/homepage/bg-login-daftar.png')",
         "dashboard-driver":
-          "url('/public/images/driver/dashboard/bg-dashboard-driver.png')",
+          "url('/images/driver/dashboard/bg-dashboard-driver.png')",
       },
       fontSize: {
         xs: "10.42px",
@@ -47,7 +47,7 @@ module.exports = {
           900: "#E17301",
         },
         "c-red": {
-          700: "#FF6363",
+          700: "#FA0909",
         },
         "c-green": {
           700: "#20CB50",
