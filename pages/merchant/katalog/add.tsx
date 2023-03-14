@@ -1,6 +1,7 @@
 import Button from "components/elements/Button";
 import Input from "components/elements/Input";
 import MerchantLayout from "components/layout/MerchantLayout";
+import { getSession, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -16,6 +17,12 @@ interface IFormInputs {
 const Add: React.FC = (): JSX.Element => {
   const [currentFile, setCurrentFile] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  
+  const { data: session, status } = useSession();
+  // console.log(session?.user);
+  const user = session?.user;
+
+  console.log(user?.id);
 
   const {
     register,
@@ -35,10 +42,11 @@ const Add: React.FC = (): JSX.Element => {
   const submitHandler: SubmitHandler<IFormInputs> = async (
     data: IFormInputs
   ) => {
+    console.log("tambah");
     const { namaProduk, harga, kategori, deskripsi, stok } = data;
-    if (currentFile) {
+    if (true /*currentFile*/) {
       const formData = new FormData();
-      formData.append("file", currentFile);
+      // formData.append("file", currentFile);
       formData.append("name", namaProduk);
       formData.append("price", harga.toString());
       formData.append("category", kategori);
@@ -46,10 +54,10 @@ const Add: React.FC = (): JSX.Element => {
       formData.append("stock", stok.toString());
 
       const res = await fetch(
-        "/api/merchant//add",
+        "/api/menu/handler",
         {
           method: "POST",
-          body: formData,
+          body: JSON.stringify({...data, user: user?.id}),
         }
       );
       const json = await res.json();
@@ -142,7 +150,13 @@ const Add: React.FC = (): JSX.Element => {
             className="mb-3"
             error={errors.stok}
           />
-          <Button text="Tambahkan" isSubmit={true} />
+          <button
+                type="submit"
+                className="font-black justify-center rounded-[18px] shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)] bg-[#FE8304] text-white w-full h-[39px] text-[17px]"
+              >
+                Tambahkan
+              </button>
+          {/* <Button text="Tambahkan" isSubmit={true} /> */}
         </form>
       </div>
     </MerchantLayout>
@@ -150,3 +164,20 @@ const Add: React.FC = (): JSX.Element => {
 };
 
 export default Add;
+
+export const getServerSideProps = async ({req}) => {
+  const session = await getSession({req});
+  // console.log(session);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/merchant/signin",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: { session },
+  }
+}
+

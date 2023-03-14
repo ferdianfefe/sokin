@@ -4,7 +4,9 @@ import Input from "components/elements/Input";
 import Button from "components/elements/Button";
 import GoogleButton from "components/elements/GoogleButton";
 import Link from "next/link";
+import { useState } from "react";
 import { useRouter } from "next/router";
+import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 
 interface IFormInputs {
@@ -13,33 +15,67 @@ interface IFormInputs {
 }
 
 export default function SignIn() {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<IFormInputs>();
 
-  const router = useRouter();
 
-  const onSubmit = async (data: any) => {
-    try {
-      const res = await fetch("/api/signin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      const json = await res.json();
-      if (!res.ok) throw Error(json.message);
-      router.push("/home");
-    } catch (error) {
-      console.log(error);
+  const onSubmit = async (data: IFormInputs) => {
+    console.log(data)
+  //   try {
+  //     const res = await fetch("/api/signin/user", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(data),
+  //     });
+  //     const json = await res.json();
+  //     if (!res.ok) throw Error(json.message);
+  //     router.push("/home");
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+  // const submitHandler = async (e: any) => {
+  //   if (email == "" || password == "") {
+  //     return alert("Email dan password tidak boleh kosong");
+  //   }
+    // console.log(email + password);
+    // e.preventDefault();
+    const res = await signIn("credentials", {
+      redirect: false,
+      email: data.email,
+      password: data.password,
+    });
+    console.log(res);
+    if (res?.error) {
+      return alert(res.error);
     }
+    router.push("/");
   };
+
+  // const login = async () => {
+  //   const res = await signIn("credentials", {
+  //     redirect: false,
+  //     email: "user2@gmail.com",
+  //     password: "user2123",
+  //   });
+  //   console.log(res);
+  //   if (res?.error) {
+  //     return alert(res.error);
+  //   }
+  //   router.push("/");
+  // }  
 
   return (
     <>
+      {/* <div onClick={login}>login</div> */}
       <div className="relative flex-col items-center flex bg-[#F37D27]/25 w-full min-h-screen">
         <Image
           src="/images/SokinLogo.svg"
@@ -61,7 +97,7 @@ export default function SignIn() {
           className={`flex flex-col bg-white mt-[60px] w-full h-[425px] z-20 rounded-t-[35px] p-7`}
         >
           <h2 className="font-bold">Masuk ke Sokin</h2>
-          <p className="text-xs text-gray-500 mb-5">Sebagai Customer</p>
+          <p className="text-gray-500 mb-5">Sebagai <span className="text-c-orange-800 text-lg font-semibold">Customer</span></p>
           <GoogleButton />
           <div className="flex justify-center items-center mt-5 text-gray-500">
             <div className="h-[1px] w-[20%] bg-gray-500"></div>
@@ -74,7 +110,7 @@ export default function SignIn() {
           >
             <Input
               text="Email"
-              side="/images/profil.svg"
+              side="/images/Profil.svg"
               formHookProps={{
                 ...register("email", {
                   required: {
@@ -97,7 +133,8 @@ export default function SignIn() {
                 }),
               }}
             />
-            <Button text="Masuk" size="big" type="submit" isSubmit={true} />
+            <button type="submit" className="font-black justify-center rounded-[18px] shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)] bg-[#FE8304] text-neutral-50 w-full h-[39px] text-[17px]">Masuk</button>
+            {/* <Button text="Masuk" size="big" type="submit" isSubmit={true} /> */}
           </form>
           <p className="w-full flex justify-center font-medium">
             Belum memiliki akun?{" "}

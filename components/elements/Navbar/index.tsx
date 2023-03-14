@@ -11,7 +11,15 @@ const Navbar: React.FC<Props> = ({ location, role }: Props) => {
   return (
     <div className="sticky bottom-0 bg-white">
       <div className="flex w-auto h-[65px] shadow-[0_-1px_2px_0.1px_rgb(0,0,0,0.2)] justify-evenly p-3 rounded-t-2xl">
-        <Link href={`${role === "merchant" ? "/merchant" : "/"}`}>
+        <Link
+          href={`${
+            role === "merchant"
+              ? "/merchant"
+              : role === "driver"
+              ? "/driver/homepage"
+              : ""
+          }`}
+        >
           <div className="w-14 grid justify-items-center">
             <div className="w-14 grid justify-items-center">
               <svg
@@ -36,8 +44,12 @@ const Navbar: React.FC<Props> = ({ location, role }: Props) => {
             </div>
           </div>
         </Link>
-        {role === "merchant" && (
-          <Link href={"/merchant/riwayat"}>
+        {(role === "merchant" || role === "driver") && (
+          <Link
+            href={`${
+              role === "merchant" ? "/merchant/riwayat" : "/driver/riwayat"
+            }`}
+          >
             <div className="w-14 grid justify-items-center">
               <svg
                 width="30"
@@ -86,6 +98,32 @@ const Navbar: React.FC<Props> = ({ location, role }: Props) => {
             </div>
           </Link>
         )}
+        {role === "driver" && (
+          <Link href={"/driver/pendapatan"}>
+            <div className="w-14 grid justify-items-center">
+              <svg
+                width="29"
+                height="27"
+                viewBox="0 0 29 27"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M26.7368 22.2807V23.7661C26.7368 25.4 25.4 26.7368 23.7661 26.7368H2.97076C1.32199 26.7368 0 25.4 0 23.7661V2.97076C0 1.33684 1.32199 0 2.97076 0H23.7661C25.4 0 26.7368 1.33684 26.7368 2.97076V4.45614H13.3684C11.7196 4.45614 10.3977 5.79298 10.3977 7.4269V19.3099C10.3977 20.9439 11.7196 22.2807 13.3684 22.2807H26.7368ZM13.3684 19.3099H28.2222V7.4269H13.3684V19.3099ZM19.3099 15.5965C18.0771 15.5965 17.0819 14.6013 17.0819 13.3684C17.0819 12.1356 18.0771 11.1404 19.3099 11.1404C20.5428 11.1404 21.538 12.1356 21.538 13.3684C21.538 14.6013 20.5428 15.5965 19.3099 15.5965Z"
+                  fill={`${location === "pendapatan" ? "#FE8304" : "#FFD1A1"}`}
+                />
+              </svg>
+
+              <p
+                className={`font-bold text-sm ${
+                  location === "katalog" ? "text-black" : "text-[#817A7A]"
+                }`}
+              >
+                Pendapatan
+              </p>
+            </div>
+          </Link>
+        )}
         {role === "merchant" && (
           <Link href={"/merchant/katalog"}>
             <div className="w-14 grid justify-items-center">
@@ -98,7 +136,7 @@ const Navbar: React.FC<Props> = ({ location, role }: Props) => {
               >
                 <path
                   d="M11.1111 0L0 8.33333V25H22.2222V8.33333L11.1111 0ZM11.8056 13.1944C11.8056 14.3472 10.875 15.2778 9.72222 15.2778V20.8333H8.33333V15.2778C7.18056 15.2778 6.25 14.3472 6.25 13.1944V9.02778H7.63889V13.1944H8.33333V9.02778H9.72222V13.1944H10.4167V9.02778H11.8056V13.1944ZM15.2778 20.8333H13.8889V15.9722H12.5V11.8056C12.5 10.2778 13.75 9.02778 15.2778 9.02778V20.8333Z"
-                  fill="#FFD1A1"
+                  fill={`${location === "katalog" ? "#FE8304" : "#FFD1A1"}`}
                 />
               </svg>
 
@@ -149,7 +187,15 @@ const Navbar: React.FC<Props> = ({ location, role }: Props) => {
             </div>
           </Link>
         )}
-        <Link href={`${role === "merchant" ? "/merchant/akun" : "/akun"}`}>
+        <Link
+          href={`${
+            role === "merchant"
+              ? "/merchant/akun"
+              : role === "driver"
+              ? "/driver/akun"
+              : "/"
+          }`}
+        >
           <div className="w-14 grid justify-items-center">
             <svg
               width="27"

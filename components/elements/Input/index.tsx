@@ -10,6 +10,7 @@ type Props = {
   defaultValue?: string;
   error?: any;
   type?: string;
+  onValueChangeHandler?: Function;
 };
 
 const Input: React.FC<Props> = ({
@@ -20,6 +21,7 @@ const Input: React.FC<Props> = ({
   defaultValue = "",
   error = null,
   type = "text",
+  onValueChangeHandler,
 }: Props) => {
   const [value, setValue] = useState("");
 
@@ -29,6 +31,9 @@ const Input: React.FC<Props> = ({
 
   const onChangeHandler = (e: any) => {
     setValue(e.target.value);
+    if (onValueChangeHandler) {
+      onValueChangeHandler(e.target.value);
+    }
   };
 
   return (

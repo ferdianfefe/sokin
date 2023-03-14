@@ -1,36 +1,40 @@
-import Link from 'next/link'
-import React from 'react'
-import Image from 'next/image'
-import { useState } from 'react'
-import Input from 'components/elements/Input'
-import Button from 'components/elements/Button'
-import InputImage from 'components/elements/InputImage'
+import Link from "next/link";
+import React from "react";
+import Image from "next/image";
+import { useState } from "react";
+import Input from "components/elements/Input";
+import Button from "components/elements/Button";
+import InputImage from "components/elements/InputImage";
 import { useForm } from "react-hook-form";
+import MapContainer from "components/elements/MapContainer";
+import { CldImage } from "next-cloudinary";
+import { useRouter } from "next/router";
 
 interface IFormInputs {
+  name: string;
+  iDCardNumber: number;
+  city: string;
+  address: string;
+  phoneNumber: string;
   email: string;
   password: string;
-  name: string,
-  idCardNumber : string,
-  city : string,
-  address : string,
-  phoneNumber : string,
-  bankName : string,
-  accountNumber : string,
-  fotoKTP : string,
-  merName : string,
-  merAddress : string,
-  postalCode : string,
-  coordinates : string,
-  benchmark : string,
-  fotoBT : string,
-  logoUsaha : string,
+  bankName: string;
+  accountNumber: string;
+  merchantName: string;
+  postalCode: string;
+  merchantAddress: string;
+  coordinates: string;
+  benchmark: string;
 }
 
 export default function SignupOne() {
-
   const [currentStep, setCurrentStep] = useState(0);
-  const [style, setStyle] = useState(['block', 'hidden']);
+  const [style, setStyle] = useState(["block", "hidden"]);
+  const [accountBookPhoto, setAccountBookPhoto] = useState<File>();
+  const [merchantLogo, setMerchantLogo] = useState<File>();
+  const [coordinates, setCoordinates] = useState<number[]>([0, 0]);
+
+  const router = useRouter();
 
   const {
     register,
@@ -38,42 +42,85 @@ export default function SignupOne() {
     formState: { errors },
   } = useForm<IFormInputs>();
 
-  const onSubmit = async (data: IFormInputs) => {
-    // console.log(data);
-    setStyle(['hidden', 'hidden']);
+  const submitHandler = async (data: IFormInputs) => {
+    setStyle(["hidden", "hidden"]);
     setCurrentStep(currentStep + 1);
-    await fetch('/api/signup/owner', {
-      method: 'POST',
-      body: JSON.stringify(data),
+
+    let accountBookPhotoFd = new FormData();
+    accountBookPhotoFd.append("file", accountBookPhoto);
+    accountBookPhotoFd.append("upload_preset", "merchant-upload");
+
+    const accountBookPhotoUploaded = await fetch(
+      "https://api.cloudinary.com/v1_1/dhzuyy5bo/image/upload",
+      {
+        method: "POST",
+        body: accountBookPhotoFd,
+      }
+    ).then((res) => res.json());
+    
+    let merchantLogoFd = new FormData();
+    merchantLogoFd.append("file", merchantLogo);
+    merchantLogoFd.append("upload_preset", "merchant-upload");
+
+    const merchantLogoUploaded = await fetch(
+      "https://api.cloudinary.com/v1_1/dhzuyy5bo/image/upload",
+      {
+        method: "POST",
+        body: merchantLogoFd,
+      }
+    ).then((res) => res.json());
+    
+    let newData = {
+      ...data,
+      coordinates: coordinates.toString(),
+      accountBookPhoto: accountBookPhotoUploaded.secure_url,
+      merchantLogo: merchantLogoUploaded.secure_url,
+    };
+
+    console.log(newData)
+
+    await fetch("/api/signup/owner", {
+      method: "POST",
+      body: JSON.stringify(newData),
     }).then((res) => {
       if (res.status === 200) {
-        console.log('success');
+        console.log("success");
       } else {
-        console.log('error');
+        console.log("error");
       }
     });
-  }
+  };
+
+  const uploadImageHandler = async (key: string, file: File) => {
+    if (key === "accountBookPhoto") {
+      setAccountBookPhoto(file);
+    } else if (key === "merchantLogo") {
+      setMerchantLogo(file);
+    }
+  };
+
+  const [keyword, setKeyword] = useState("");
 
   const lanjut = () => {
     setCurrentStep(currentStep + 1);
     if (currentStep === 0) {
-      setStyle(['hidden', 'block']);
+      setStyle(["hidden", "block"]);
     }
     if (currentStep === 1) {
-      setStyle(['hidden', 'hidden']);
+      setStyle(["hidden", "hidden"]);
     }
-  }
+  };
 
   const kembali = () => {
     setCurrentStep(currentStep - 1);
     if (currentStep === 1) {
-      setStyle(['block', 'hidden']);
+      setStyle(["block", "hidden"]);
     }
-  }
+  };
 
   const lanjutkan = () => {
-    console.log('lanjutkan');
-  }
+    
+  };
 
   return (
     <>
@@ -149,7 +196,7 @@ export default function SignupOne() {
             </h1>
           )}
           <div className="bg-white mt-4 rounded-t-[40px] w-full px-9 py-12 flex flex-col">
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(submitHandler)}>
               {/* {(currentStep === 0) && ( */}
               <div className={style[0]}>
                 <div className="mb-3">
@@ -164,6 +211,7 @@ export default function SignupOne() {
                         },
                       }),
                     }}
+                    error={errors.name?.message}
                   />
                   <p className="text-xs text-gray-500 mt-1">
                     Nama harus ditulis persis seperti yang tertera pada KTP,
@@ -173,14 +221,16 @@ export default function SignupOne() {
                 <Input
                   className="mb-3"
                   text="Nomor KTP"
+                  type="number"
                   formHookProps={{
-                    ...register("idCardNumber", {
+                    ...register("iDCardNumber", {
                       required: {
                         value: true,
-                        message: "idCardNumber tidak boleh kosong",
+                        message: "iDCardNumber tidak boleh kosong",
                       },
                     }),
                   }}
+                  error={errors.idCardNumber?.message}
                 />
                 <Input
                   className="mb-3"
@@ -205,6 +255,7 @@ export default function SignupOne() {
                       },
                     }),
                   }}
+                  error={errors.address?.message}
                 />
                 <Input
                   className="mb-3"
@@ -217,6 +268,7 @@ export default function SignupOne() {
                       },
                     }),
                   }}
+                  error={errors.phoneNumber?.message}
                 />
                 <Input
                   className="mb-3"
@@ -229,9 +281,11 @@ export default function SignupOne() {
                       },
                     }),
                   }}
+                  error={errors.email?.message}
                 />
                 <div className="mb-3">
                   <Input
+                    type="password"
                     className=""
                     text="Password"
                     formHookProps={{
@@ -268,6 +322,7 @@ export default function SignupOne() {
                       },
                     }),
                   }}
+                  error={errors.bankName?.message}
                 />
                 <Input
                   className="mb-3"
@@ -282,18 +337,19 @@ export default function SignupOne() {
                   }}
                 />
                 <div className="mb-3">
-                  <Input
+                  {/* <Input
                     className=""
                     text="Foto Buku Tabungan"
                     formHookProps={{
-                      ...register("fotoBT", {
+                      ...register("accountBookPhoto", {
                         required: {
                           value: true,
-                          message: "fotoBT tidak boleh kosong",
+                          message: "accountBookPhoto tidak boleh kosong",
                         },
                       }),
                     }}
-                  />
+                  /> */}
+                  <InputImage key={0} className="" text="Foto Buku Tabungan" handleUploadFile={uploadImageHandler} name="accountBookPhoto"/>
                   <p className="text-xs text-gray-500 mt-1">
                     Foto yang terlampir merupakan halaman pertama dari buku
                     tabungan
@@ -307,13 +363,14 @@ export default function SignupOne() {
                   className="mb-3"
                   text="Nama Usaha"
                   formHookProps={{
-                    ...register("merName", {
+                    ...register("merchantName", {
                       required: {
                         value: true,
                         message: "name tidak boleh kosong",
                       },
                     }),
                   }}
+                  error={errors.merchantName?.message}
                 />
                 <Input
                   className="mb-3"
@@ -331,13 +388,14 @@ export default function SignupOne() {
                   className="mb-3"
                   text="Alamat Usaha"
                   formHookProps={{
-                    ...register("merAddress", {
+                    ...register("merchantAddress", {
                       required: {
                         value: true,
                         message: "address tidak boleh kosong",
                       },
                     }),
                   }}
+                  error={errors.merchantAddress?.message}
                 />
                 <Input
                   className="mb-3"
@@ -350,7 +408,14 @@ export default function SignupOne() {
                       },
                     }),
                   }}
+                  error={errors.coordinates?.message}
                 />
+                <Input
+                  className="mb-3"
+                  text="Cari lokasi"
+                  onValueChangeHandler={(value: any) => setKeyword(value)}
+                />
+                <MapContainer keywordProp={keyword} getCenterHandler={(coordinatesProp) => {setCoordinates(coordinatesProp)}}/>
                 <Input
                   className="mb-3"
                   text="Patokan"
@@ -362,18 +427,14 @@ export default function SignupOne() {
                       },
                     }),
                   }}
+                  error={errors.benchmark?.message}
                 />
-                <Input
+                <InputImage
+                  key={1}
+                  name="merchantLogo"
                   className="mb-3"
+                  handleUploadFile={uploadImageHandler}
                   text="Logo Usaha"
-                  formHookProps={{
-                    ...register("logoUsaha", {
-                      required: {
-                        value: true,
-                        message: "logoUsaha tidak boleh kosong",
-                      },
-                    }),
-                  }}
                 />
               </div>
               {/* )} */}
@@ -396,7 +457,6 @@ export default function SignupOne() {
                       <button
                         type="submit"
                         className="font-black justify-center rounded-[18px] shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)] bg-[#FE8304] text-white w-[154px] h-[33px] text-[14px]"
-                        onClick={lanjut}
                       >
                         Lanjutkan
                       </button>
@@ -422,8 +482,10 @@ export default function SignupOne() {
                   </p>
                 </div>
                 <div>
+                  <div onClick={kembali}>
+                    <Button text="kembali" size="small" type="secondary" />
+                  </div>
                   <button
-                    type="submit"
                     className="font-black justify-center rounded-[18px] shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)] bg-[#FE8304] text-white w-[154px] h-[33px] text-[14px]"
                     onClick={lanjut}
                   >

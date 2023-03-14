@@ -15,7 +15,7 @@ model User {
   name          String?
   email         String    @unique
   emailVerified DateTime? @map("email_verified")
-  password      String?   @map("hashed_password")
+  password      String?    @map("hashed_password")
   image         String?
   accounts      Account[]
   sessions      Session[]
@@ -41,7 +41,6 @@ model Account {
   scope             String?
   idToken           String? @map("id_token") @db.String
   sessionState      String? @map("session_state")
-
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -70,31 +69,33 @@ model VerificationToken {
 }
 
 model Owner {
-  id           String     @id @default(auto()) @map("_id") @db.ObjectId
-  name         String
-  idCardNumber String     @unique
-  city         String
-  address      String
-  phoneNumber  String
-  email        String     @unique
-  bankName     String
-  accountNumber String
-  balance      Int?
-  password     String     @map("hashed_password")
-  menus        Menu[]
-  Merchant     Merchant[]
+  id               String     @id @default(auto()) @map("_id") @db.ObjectId
+  name             String
+  idCardNumber     String     @unique
+  city             String
+  address          String
+  phoneNumber      String
+  email            String     @unique
+  password         String     @map("hashed_password")
+  bankName         String
+  accountNumber    String
+  accountBookPhoto String
+  balance          Int?       @default(0)
+  menus            Menu[]
+  Merchant         Merchant[]
 
   @@map("owners")
 }
 
 model Merchant {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  ownerId     String  @map("owner_id") @db.ObjectId
-  name        String?
-  postalCode  String?
-  coordinates String?
-  benchmark   String?
-  owner       Owner   @relation(fields: [ownerId], references: [id])
+  id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  ownerId      String  @map("owner_id") @db.ObjectId
+  name         String?
+  postalCode   String?
+  coordinates  String?
+  benchmark    String?
+  merchantLogo String?
+  owner        Owner   @relation(fields: [ownerId], references: [id])
 
   @@map("merchants")
 }
@@ -109,15 +110,14 @@ model Driver {
   email           String  @unique
   licenseNumber   String
   vehicle         String
-  productionYear  String
   balance         Float?
   isActive        Boolean @default(false)
   coordinates     String?
-  dailyIncome     Float?     @default(0)
-  distanceCovered Float?     @default(0)
+  dailyIncome     Float?  @default(0)
+  distanceCovered Float?  @default(0)
   dailyTarget     Int     @default(20)
   password        String  @map("hashed_password")
-  orders          Order[] 
+  orders          Order[]
 
   @@map("drivers")
 }
@@ -127,9 +127,9 @@ model Menu {
   ownerId     String  @map("owner_id") @db.ObjectId
   name        String
   price       Float
-  category    String? 
+  category    String?
   description String?
-  stock       Int?  @default(0)
+  stock       Int?    @default(0)
   image       String?
   owner       Owner   @relation(fields: [ownerId], references: [id])
 
@@ -137,21 +137,21 @@ model Menu {
 }
 
 model Order {
-  id              String  @id @default(auto()) @map("_id") @db.ObjectId
-  driverId        String  @map("owner_id") @db.ObjectId
-  userId          String  @map("user_id") @db.ObjectId
-  customerName    String
-  source          String 
-  destination     String
-  distance        Float
-  status          OrderStatus @default(PENDING)
-  creditScore     Float
-  menuOrder       String[]
-  eta             Int
-  isAccepted      Boolean @default(false)
-  isCompleted     Boolean @default(false)
-  fee             Float?
-  driver          Driver   @relation(fields: [driverId], references: [id])
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  driverId     String      @map("owner_id") @db.ObjectId
+  userId       String      @map("user_id") @db.ObjectId
+  customerName String
+  source       String
+  destination  String
+  distance     Float
+  status       OrderStatus @default(PENDING)
+  creditScore  Float
+  menuOrder    String[]
+  eta          Int
+  isAccepted   Boolean     @default(false)
+  isCompleted  Boolean     @default(false)
+  fee          Float?
+  driver       Driver      @relation(fields: [driverId], references: [id])
 }
 
 enum OrderStatus {
@@ -159,4 +159,3 @@ enum OrderStatus {
   ACCEPTED
   COMPLETED
 }
-

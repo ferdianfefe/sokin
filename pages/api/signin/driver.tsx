@@ -1,5 +1,6 @@
 import { PrismaClient, Prisma } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
+import bcrypt from "bcrypt";
 
 type SignupRequestBody = Omit<Prisma.OwnerCreateInput, "id"> & {
   name?: string;
@@ -24,7 +25,7 @@ export default async function handler(
       return res.status(400).json({ message: "Email not registered" });
     }
 
-    if (driver.password !== password) {
+    if (!bcrypt.compareSync(password, driver.password)) {
       return res.status(400).json({ message: "Password is incorrect" });
     }
 
