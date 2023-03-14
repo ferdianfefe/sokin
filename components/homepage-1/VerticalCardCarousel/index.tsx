@@ -8,28 +8,28 @@ const VerticalCardCarousel = () => {
       name: "Warung Pak Joko",
       jarak: 2.7,
       rating: 4,
-      img:'/img/homepage/kupon-solaria.jpg'
+      img:'/img/homepage/warung-pak-joko.jpg'
     },
     {
       id: 2,
       name: "Warmindo Andeska",
       jarak: 1,
       rating: 3,
-      img:'/img/homepage/kupon-solaria.jpg'
+      img:'/img/homepage/andeska.jpg'
     },
     {
       id: 3,
       name: "Ayam Geprek Bu Susi",
       jarak: 0.6,
       rating: 4,
-      img:'/img/homepage/kupon-solaria.jpg'
+      img:'/img/homepage/ayam-geprek.jfif'
     },
     {
       id: 4,
       name: "Nasi Goreng Mandiri",
       jarak: 2,
       rating: 5,
-      img:'/img/homepage/kupon-solaria.jpg'
+      img:'/img/homepage/nasgor-pinggir-jalan.jfif'
     },
   ]
   return (
@@ -60,7 +60,7 @@ const VerticalCard = ({ img, id, name, jarak, rating }: { img: string, id:number
                   alt=''
                   width={400}
                   height={300}
-                  className='object-clip'
+                  className='object-cover'
               />
             </div>
 

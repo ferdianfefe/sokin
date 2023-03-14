@@ -13,13 +13,13 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
     
     console.log(data);
 
-    // if (status === "loading") {
-    //     return <div>Loading...</div>;
-    // }
+    if (status === "loading") {
+        return <div>Loading...</div>;
+    }
 
-    // if (status === "unauthenticated") {
-    //     return <div>ke halaman signin dulu banh, masih ngetes, tenang saja :v <br></br> ini halaman utama sebenernya</div>;
-    // }
+    if (status === "unauthenticated") {
+        return <div>ke halaman signin dulu banh, masih ngetes, tenang saja :v <br></br> ini halaman utama sebenernya</div>;
+    }
 
     const logout = async () => {
         const res = await signOut();
@@ -28,7 +28,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
 
     return(
         <>
-            {/* <div onClick={logout}>Selamat Datang {data?.user?.name}, klik utk logout?</div> */}
+            <div onClick={logout}>Selamat Datang {data?.user?.name}, klik utk logout?</div>
             
             <div className="flex flex-col w-full h-full overflow-y-scroll">
                 <div className="mt-7 flex flex-col gap-4">
