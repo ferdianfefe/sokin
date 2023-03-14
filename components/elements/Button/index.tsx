@@ -29,6 +29,10 @@ const Button: React.FC<Props> = ({
         ${
           type === "secondary"
             ? "bg-gray-100 text-black"
+            : type == "red"
+            ? "bg-c-red-700 text-neutral-50"
+            : type == "green"
+            ? "bg-c-green-700 text-neutral-50"
             : "bg-[#FE8304] text-neutral-50"
         }
                   ${
