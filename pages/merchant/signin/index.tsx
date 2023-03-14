@@ -6,7 +6,7 @@ import GoogleButton from "components/elements/GoogleButton";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { signIn } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 import { useForm } from "react-hook-form";
 
 interface IFormInputs {
@@ -40,7 +40,7 @@ export default function SignIn() {
     // } catch (error) {
     //   console.log(error);
     // }
-    const status = await signIn("credentials", {
+    const status = await signIn("merchant", {
       redirect: false,
       email: data.email,
       password: data.password,
@@ -76,6 +76,11 @@ export default function SignIn() {
   //   }
   //   router.push("/merchant");
   // };
+
+  const logout = async () => {
+    const status = await signOut();
+    console.log(status);
+  }
 
   return (
     <>
@@ -133,12 +138,13 @@ export default function SignIn() {
               }}
             />
             <div className="mt-4">
-              <Button
+              <button type="submit" className="justify-center rounded-[18px] shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)] bg-[#FE8304] text-white w-full h-[39px] text-[17px]">Masuk</button>
+              {/* <Button
                 type="submit"
                 text="Masuk"
                 className="justify-center rounded-[18px] shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)] bg-[#FE8304] text-white w-full h-[39px] text-[17px]"
                 isSubmit={true}
-              />
+              /> */}
             </div>
           </form>
           <p className="w-full flex justify-center font-medium">
@@ -166,6 +172,7 @@ export default function SignIn() {
           </div>
         </div>
       </div>
+      <div onClick={logout}>logout</div>
     </>
   );
 }

@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 
 type OwnerCreateRequestBody = {
   name: string;
-  iDCardNumber: number;
+  idCardNumber: string;
   city: string;
   address: string;
   phoneNumber: string;
@@ -12,7 +12,7 @@ type OwnerCreateRequestBody = {
   password: string;
   bankName: string;
   accountNumber: string;
-  accountBookPhoto: File;
+  accountBookPhoto: string;
   merchantName: string;
   postalCode: string;
   merchantAddress: string;
@@ -41,7 +41,7 @@ export default async function handler(
     console.log(req.body);
     const {
       name,
-      iDCardNumber,
+      idCardNumber,
       address,
       phoneNumber,
       email,
@@ -69,7 +69,7 @@ export default async function handler(
     const newOwner = await prisma.owner.create({
       data: {
         name,
-        iDCardNumber,
+        idCardNumber,
         city,
         address,
         phoneNumber,
@@ -77,7 +77,7 @@ export default async function handler(
         password,
         bankName,
         accountNumber,
-        accountBookPhoto: "", // TODO: impl cloudinary
+        accountBookPhoto: '', // TODO: impl cloudinary
       },
     });
 

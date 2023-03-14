@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 
 interface IFormInputs {
   name: string;
-  iDCardNumber: number;
+  idCardNumber: number;
   city: string;
   address: string;
   phoneNumber: string;
@@ -25,6 +25,8 @@ interface IFormInputs {
   merchantAddress: string;
   coordinates: string;
   benchmark: string;
+  accountBookPhoto: string,
+  merchantLogo: string,
 }
 
 export default function SignupOne() {
@@ -223,7 +225,7 @@ export default function SignupOne() {
                   text="Nomor KTP"
                   type="number"
                   formHookProps={{
-                    ...register("iDCardNumber", {
+                    ...register("idCardNumber", {
                       required: {
                         value: true,
                         message: "iDCardNumber tidak boleh kosong",

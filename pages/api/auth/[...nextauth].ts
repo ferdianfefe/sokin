@@ -8,6 +8,7 @@ const prisma = new PrismaClient();
 export default NextAuth({
   providers: [
     CredentialsProvider({
+      id: 'credentials',
       name: 'Credentials',
       credentials: {
         email: { label: "Email", type: "text", placeholder: "jsmith" },
@@ -33,6 +34,64 @@ export default NextAuth({
           throw new Error("Password is incorrect")
         }
         return user;
+      }
+    }),
+    CredentialsProvider({
+      id: 'merchant',
+      name: 'Merchant',
+      credentials: {
+        email: { label: "Email", type: "text", placeholder: "jsmith" },
+        password: {  label: "Password", type: "password" }
+      },
+      async authorize(credentials, req) {
+        const owner = await prisma.owner.findFirst({
+          where: {
+            email: credentials?.email,
+          },
+        })
+        if (!owner) {
+          throw new Error("No merchant found")
+        }
+
+        if (!credentials?.password || !owner.password) {
+          throw new Error("An error occurred")
+        }
+
+        const passwordMatch = await bcrypt.compare(credentials.password, owner.password)
+
+        if (!passwordMatch) {
+          throw new Error("Password is incorrect")
+        }
+        return owner;
+      }
+    }),
+    CredentialsProvider({
+      id: 'driver',
+      name: 'Driver',
+      credentials: {
+        email: { label: "Email", type: "text", placeholder: "jsmith" },
+        password: {  label: "Password", type: "password" }
+      },
+      async authorize(credentials, req) {
+        const driver = await prisma.driver.findFirst({
+          where: {
+            email: credentials?.email,
+          },
+        })
+        if (!driver) {
+          throw new Error("No driver found")
+        }
+
+        if (!credentials?.password || !driver.password) {
+          throw new Error("An error occurred")
+        }
+
+        const passwordMatch = await bcrypt.compare(credentials.password, driver.password)
+
+        if (!passwordMatch) {
+          throw new Error("Password is incorrect")
+        }
+        return driver;
       }
     })
   ],
