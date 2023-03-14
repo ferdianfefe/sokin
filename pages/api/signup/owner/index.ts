@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 
 type OwnerCreateRequestBody = {
   name: string;
-  idCardNumber: string;
+  iDCardNumber: number;
   city: string;
   address: string;
   phoneNumber: string;
@@ -41,7 +41,7 @@ export default async function handler(
     console.log(req.body);
     const {
       name,
-      idCardNumber,
+      iDCardNumber,
       address,
       phoneNumber,
       email,
@@ -56,9 +56,9 @@ export default async function handler(
       coordinates,
       benchmark,
       merchantLogo,
-    } = req.body as OwnerCreateRequestBody;
+    } = JSON.parse(req.body) as OwnerCreateRequestBody;
 
-    const owner = await prisma.owner.findUnique({
+    const owner = await prisma.owner.findFirst({
       where: { email },
     });
 
@@ -69,7 +69,7 @@ export default async function handler(
     const newOwner = await prisma.owner.create({
       data: {
         name,
-        idCardNumber,
+        iDCardNumber,
         city,
         address,
         phoneNumber,
@@ -77,7 +77,7 @@ export default async function handler(
         password,
         bankName,
         accountNumber,
-        accountBookPhoto: "",  // TODO: impl cloudinary
+        accountBookPhoto: "", // TODO: impl cloudinary
       },
     });
 

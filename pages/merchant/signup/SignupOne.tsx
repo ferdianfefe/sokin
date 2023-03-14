@@ -8,10 +8,11 @@ import InputImage from "components/elements/InputImage";
 import { useForm } from "react-hook-form";
 import MapContainer from "components/elements/MapContainer";
 import { CldImage } from "next-cloudinary";
+import { useRouter } from "next/router";
 
 interface IFormInputs {
   name: string;
-  idCardNumber: number;
+  iDCardNumber: number;
   city: string;
   address: string;
   phoneNumber: string;
@@ -31,6 +32,9 @@ export default function SignupOne() {
   const [style, setStyle] = useState(["block", "hidden"]);
   const [accountBookPhoto, setAccountBookPhoto] = useState<File>();
   const [merchantLogo, setMerchantLogo] = useState<File>();
+  const [coordinates, setCoordinates] = useState<number[]>([0, 0]);
+
+  const router = useRouter();
 
   const {
     register,
@@ -68,9 +72,12 @@ export default function SignupOne() {
     
     let newData = {
       ...data,
+      coordinates: coordinates.toString(),
       accountBookPhoto: accountBookPhotoUploaded.secure_url,
       merchantLogo: merchantLogoUploaded.secure_url,
     };
+
+    console.log(newData)
 
     await fetch("/api/signup/owner", {
       method: "POST",
@@ -112,7 +119,7 @@ export default function SignupOne() {
   };
 
   const lanjutkan = () => {
-    console.log("lanjutkan");
+    
   };
 
   return (
@@ -214,11 +221,12 @@ export default function SignupOne() {
                 <Input
                   className="mb-3"
                   text="Nomor KTP"
+                  type="number"
                   formHookProps={{
-                    ...register("idCardNumber", {
+                    ...register("iDCardNumber", {
                       required: {
                         value: true,
-                        message: "idCardNumber tidak boleh kosong",
+                        message: "iDCardNumber tidak boleh kosong",
                       },
                     }),
                   }}
@@ -407,7 +415,7 @@ export default function SignupOne() {
                   text="Cari lokasi"
                   onValueChangeHandler={(value: any) => setKeyword(value)}
                 />
-                <MapContainer keywordProp={keyword} />
+                <MapContainer keywordProp={keyword} getCenterHandler={(coordinatesProp) => {setCoordinates(coordinatesProp)}}/>
                 <Input
                   className="mb-3"
                   text="Patokan"
