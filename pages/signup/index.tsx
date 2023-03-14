@@ -126,7 +126,8 @@ const SignUp: React.FC = (): JSX.Element => {
               }}
             />
             <small className="text-[#FF0000]">{errors.password?.message}</small>
-            <Button text="Daftar" size="big" type="primary" isSubmit={true} />
+            <button type="submit" className="font-black justify-center rounded-[18px] shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)] bg-[#FE8304] text-neutral-50 w-full h-[39px] text-[17px]">Daftar</button>
+            {/* <Button text="Daftar" size="big" type="primary" isSubmit={true} /> */}
           </form>
           <p className="w-full flex justify-center font-medium">
             Sudah memiliki akun?{" "}
