@@ -1,9 +1,6 @@
 import Image from 'next/image'
 import Search from "public/img/homepage/icon-search.png"
 import Button from 'components/elements/Button'
-import SwiperCarouselCoupon from 'components/homepage-1/SwiperCarouselCoupon'
-import CardCarousel from 'components/homepage-1/CardCarousel/CardCarousel'
-import KategoriCarousel from 'components/homepage-1/Kategori/KategoriCarousel'
 import Navbar from 'components/elements/Navbar'
 import BackgroundLoginDaftar from 'public/img/homepage/bg-login-daftar.png'
 import { signIn, signOut, useSession } from "next-auth/react";

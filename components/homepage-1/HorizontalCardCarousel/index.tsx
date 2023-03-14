@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Kupon from 'public/img/homepage/kupon-solaria.jpg'
 
 const HorizontalCardCarousel = () => {
+  
   return (
     <div className='w-full h-full overflow-auto flex no-scrollbar'>
         <div className='w-full pl-7 h-[140px] flex'>
