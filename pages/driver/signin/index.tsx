@@ -23,45 +23,45 @@ export default function SignIn() {
     formState: { errors },
   } = useForm<IFormInputs>();
 
-  const onSubmit = async (data: IFormInputs) => {
-    console.log(data);
-    try {
-      const res = await fetch("/api/signin/driver", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      const json = await res.json();
-      if (!res.ok) throw Error(json.message);
-      router.push("/driver/dashboard");
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const onSubmit = async (data: IFormInputs) => {
+  //   console.log(data);
+  //   try {
+  //     const res = await fetch("/api/signin/driver", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(data),
+  //     });
+  //     const json = await res.json();
+  //     if (!res.ok) throw Error(json.message);
+  //     router.push("/driver/dashboard");
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
 
-  const submitHandler = async (e: any) => {
-    if (email == "" || password == "") {
-      return alert("Email dan password tidak boleh kosong");
-    }
+  const submitHandler = async (data: IFormInputs) => {
+    // if (email == "" || password == "") {
+    //   return alert("Email dan password tidak boleh kosong");
+    // }
     // console.log(email + password);
-    e.preventDefault();
-    const status = await signIn("credentials", {
+    // e.preventDefault();
+    const status = await signIn("driver", {
       redirect: false,
-      email,
-      password,
-      callbackUrl: "/",
+      email: data.email,
+      password: data.password,
+      callbackUrl: "/driver/dashboard",
     });
 
     console.log(status);
     if (status?.error) {
       return alert(status.error);
     }
-    router.push("/");
+    router.push("/driver/dashboard");
   };
 
   return (
@@ -92,7 +92,7 @@ export default function SignIn() {
           </p>
           <form
             className="flex flex-col justify-evenly h-[225px]"
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(submitHandler)}
           >
             <Input
               text="Email"
@@ -120,7 +120,8 @@ export default function SignIn() {
               }}
             />
             <div className="mt-4">
-              <Button text="Masuk" size="big" type="submit" isSubmit={true} />
+            <button type="submit" className="justify-center rounded-[18px] shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)] bg-[#FE8304] text-white w-full h-[39px] text-[17px]">Masuk</button>
+              {/* <Button text="Masuk" size="big" type="submit" isSubmit={true} /> */}
             </div>
           </form>
           <p className="w-full flex justify-center font-medium">

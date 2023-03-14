@@ -7,7 +7,7 @@ import { useState } from "react";
 import Image from "next/image";
 import DriverLayout from "components/layout/DriverLayout";
 import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
+import { getSession, useSession, signOut } from "next-auth/react";
 
 const DriverDashboard = () => {
   const [isActive, setIsActive] = useState(false);
@@ -26,6 +26,12 @@ const DriverDashboard = () => {
     setReservation(!Reservation);
   };
 
+  
+  const logout = async () => {
+    const status = await signOut();
+    console.log(status);
+  }
+  
   console.log(showPopUp);
   return (
     <DriverLayout location="home">
@@ -273,6 +279,7 @@ const DriverDashboard = () => {
           )} */}
         </div>
       </div>
+      <div onClick={logout}>logout</div>
     </DriverLayout>
   );
 };
@@ -514,3 +521,19 @@ const OrderReservation = () => {
 };
 
 export default DriverDashboard;
+
+export const getServerSideProps = async ({req}:{req: any}) => {
+  const session = await getSession({req});
+  // console.log(session);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/driver/signin",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: { session },
+  }
+}

@@ -10,7 +10,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 const Homepage: React.FunctionComponent = (): JSX.Element => {
     const {data, status} = useSession();
     
-    console.log(data);
+    console.log(data?.user);
 
     if (status === "loading") {
         return <div>Loading...</div>;
