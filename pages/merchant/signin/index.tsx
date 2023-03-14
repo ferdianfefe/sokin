@@ -137,6 +137,7 @@ export default function SignIn() {
                 type="submit"
                 text="Masuk"
                 className="justify-center rounded-[18px] shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)] bg-[#FE8304] text-white w-full h-[39px] text-[17px]"
+                isSubmit={true}
               />
             </div>
           </form>

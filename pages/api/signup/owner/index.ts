@@ -56,9 +56,9 @@ export default async function handler(
       coordinates,
       benchmark,
       merchantLogo,
-    } = req.body as OwnerCreateRequestBody;
+    } = JSON.parse(req.body) as OwnerCreateRequestBody;
 
-    const owner = await prisma.owner.findUnique({
+    const owner = await prisma.owner.findFirst({
       where: { email },
     });
 
@@ -77,7 +77,7 @@ export default async function handler(
         password,
         bankName,
         accountNumber,
-        accountBookPhoto: "",  // TODO: impl cloudinary
+        accountBookPhoto: "", // TODO: impl cloudinary
       },
     });
 

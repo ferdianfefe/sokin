@@ -7,32 +7,40 @@ mapboxgl.accessToken =
 interface MapContainerProps {
   children?: React.ReactNode;
   keywordProp?: string;
+  getCenterHandler?: (center: number[]) => void;
 }
 
 const MapContainer: React.FC<MapContainerProps> = ({
   children,
   keywordProp = "",
+  getCenterHandler = () => {},
 }) => {
   const mapContainer = useRef(null);
   const map = useRef(null);
   const [lng, setLng] = useState(-70.9);
   const [lat, setLat] = useState(42.35);
   const [zoom, setZoom] = useState(9);
-
-  const [keyword, setKeyword] = useState(keywordProp);
+  const [keyword, setKeyword] = useState("Yogyakarta");
 
   useEffect(() => {
     const fetchAPI = async () => {
-      console.log("keyword", keywordProp);
+      setKeyword(keywordProp != "" ? keywordProp : "Yogyakarta");
       const result = await fetch(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${keyword}.json?access_token=${mapboxgl.accessToken}`,
         { method: "GET" }
       );
-      const json = await result.json();
-      //   setLng(json.features[0].center[0]);
-      //   setLat(json.features[0].center[1]);
-      setZoom(9);
-      console.log(json);
+      const data = await result.json();
+      console.log(data);
+      setLng(data.features[0].center[0]);
+      setLat(data.features[0].center[1]);
+      map.current?.jumpTo({
+        center: [data.features[0].center[0], data.features[0].center[1]],
+        zoom: 15,
+      });
+      getCenterHandler([
+        data.features[0].center[0],
+        data.features[0].center[1],
+      ]);
     };
     fetchAPI();
   }, [keywordProp]);
@@ -45,7 +53,7 @@ const MapContainer: React.FC<MapContainerProps> = ({
       center: [lng, lat],
       zoom: zoom,
     });
-  });
+  }, [lng, lat, zoom]);
 
   return (
     <div className="relative">
