@@ -1,5 +1,6 @@
+import Button from "components/elements/Button";
 import Input from "components/elements/Input";
-import { getSession } from "next-auth/react";
+import { getSession, signOut } from "next-auth/react";
 
 export async function getServerSideProps(context: any) {
   const session = await getSession(context);
@@ -21,6 +22,9 @@ export async function getServerSideProps(context: any) {
 }
 
 const Profile: React.FC = (): JSX.Element => {
+  const handleLogout = async () => {
+    await signOut()
+  }
   return (
     <>
       <div className="relative h-screen py-10 px-8">
@@ -35,6 +39,7 @@ const Profile: React.FC = (): JSX.Element => {
         />
         <Input text="Email" className="mb-6" />
         <Input text="Password" className="mb-6" />
+        <Button text="Keluar" onClickHandler={() => handleLogout()}/>
       </div>
     </>
   );

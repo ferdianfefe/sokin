@@ -27,9 +27,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
     }
 
     return(
-        <>
-            <div onClick={logout}>Selamat Datang {data?.user?.name}, klik utk logout?</div>
-            
+        <>            
             <div className="flex flex-col w-full h-full overflow-y-scroll">
                 <div className="mt-7 flex flex-col gap-4">
                     {/* SEARCH BAR */}
