@@ -11,6 +11,7 @@ type Props = {
   error?: any;
   type?: string;
   onValueChangeHandler?: Function;
+  imagePosition?: string;
 };
 
 const Input: React.FC<Props> = ({
@@ -21,6 +22,7 @@ const Input: React.FC<Props> = ({
   defaultValue = "",
   error = null,
   type = "text",
+  imagePosition = "left",
   onValueChangeHandler,
 }: Props) => {
   const [value, setValue] = useState("");
@@ -50,7 +52,9 @@ const Input: React.FC<Props> = ({
         ></input>
         {side ? (
           <Image
-            className="absolute top-[8px] left-3"
+            className={`absolute top-[8px] ${
+              imagePosition == "left" ? "left-8" : "right-8"
+            }`}
             src={`${side}`}
             alt="person"
             width={16}
