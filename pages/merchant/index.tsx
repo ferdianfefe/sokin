@@ -149,7 +149,7 @@ const Merchant: React.FC = () => {
 
 export default Merchant;
 
-export const getServerSideProps = async ({req}) => {
+export const getServerSideProps = async ({req}:{req: any}) => {
   const session = await getSession({req});
   // console.log(session);
   if (!session) {

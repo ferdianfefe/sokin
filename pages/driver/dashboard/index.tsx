@@ -7,11 +7,12 @@ import { useState } from "react";
 import Image from "next/image";
 import DriverLayout from "components/layout/DriverLayout";
 import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
+import { getSession, useSession, signOut } from "next-auth/react";
 
 const DriverDashboard = () => {
   const [isActive, setIsActive] = useState(false);
   const [showPopUp, setShowPopup] = useState(false);
+  const [Reservation, setReservation] = useState(false);
 
   const toggleSwitch = () => {
     setIsActive(!isActive);
@@ -20,13 +21,29 @@ const DriverDashboard = () => {
   const togglePopup = () => {
     setShowPopup(!showPopUp);
   };
+
+  const toggleReservation = () => {
+    setReservation(!Reservation);
+  };
+
+  
+  const logout = async () => {
+    const status = await signOut();
+    console.log(status);
+  }
+  
   console.log(showPopUp);
   return (
     <DriverLayout location="home">
       <div className="p-0 m-0">
-        {showPopUp && <PopUpDriver togglePopup={togglePopup} />}
+        {showPopUp && (
+          <PopUpDriver
+            togglePopup={togglePopup}
+            toggleReservation={toggleReservation}
+          />
+        )}
 
-        <div className="flex w-full h-20 bg-[#ffa967c9] justify-evenly items-center mt-8">
+        <div className="flex w-full h-20 bg-dashboard-driver justify-evenly items-center mt-8">
           <Image
             src={`/images/regis/Person.svg`}
             width={52}
@@ -122,12 +139,14 @@ const DriverDashboard = () => {
             {isActive === true ? (
               <div
                 className={`'bg-white h-[25px] w-[120px] border-2 rounded-full border-[#E4A76F] text-[#20CB50] font-extrabold drop-shadow-md flex justify-center items-center'`}
+                onClick={toggleSwitch}
               >
                 Aktif
               </div>
             ) : (
               <div
                 className={`'bg-white h-[25px] w-[120px] border-2 rounded-full border-[#E4A76F] text-[#FD1212] font-extrabold drop-shadow-md flex justify-center items-center'`}
+                onClick={toggleSwitch}
               >
                 Tidak Aktif
               </div>
@@ -146,7 +165,7 @@ const DriverDashboard = () => {
           <div className="mt-2 w-full h-[76px] bg-slate-200"></div>
         </div>
 
-        <div className="py-8 flex flex-col px-8 gap-6">
+        <div className="py-8 flex flex-col px-6 gap-6">
           {isActive && (
             <div className="mb-12">
               <div className="flex flex-col">
@@ -160,14 +179,18 @@ const DriverDashboard = () => {
                 </p>
               </div>
 
-              <div className="flex flex-col px-2 justify-center">
-                <Image className="mt-5 mx-auto" src={Vector} alt=""></Image>
-                <p className="justify-center flex mt-5">
-                  <span className="text-[#818181] font-medium text-md">
-                    Saat ini belum ada orderan yang masuk
-                  </span>
-                </p>
-              </div>
+              {Reservation === false ? (
+                <div className="justify-center px-2 flex flex-col">
+                  <Image className="mt-5 mx-auto" src={Vector} alt=""></Image>
+                  <p className="justify-center flex mt-5">
+                    <span className="text-[#818181] font-medium text-md">
+                      Saat ini belum ada orderan yang masuk
+                    </span>
+                  </p>
+                </div>
+              ) : (
+                <OrderReservation />
+              )}
             </div>
           )}
           <div className="flex justify-between">
@@ -245,7 +268,7 @@ const DriverDashboard = () => {
             map
           </div>
 
-          {isActive === true ? (
+          {/* {isActive === true ? (
             <div onClick={toggleSwitch}>
               <Button type="primary" text="Selesai Bekerja" />
             </div>
@@ -253,14 +276,21 @@ const DriverDashboard = () => {
             <div onClick={toggleSwitch}>
               <Button type="primary" text="Mulai Bekerja" />
             </div>
-          )}
+          )} */}
         </div>
       </div>
+      <div onClick={logout}>logout</div>
     </DriverLayout>
-  )
+  );
 };
 
-const PopUpDriver = ({ togglePopup }: { togglePopup: () => void }) => {
+const PopUpDriver = ({
+  togglePopup,
+  toggleReservation,
+}: {
+  togglePopup: () => void;
+  toggleReservation: () => void;
+}) => {
   return (
     <div className="fixed inset-0 flex flex-col justify-center items-center z-50 backdrop-blur-sm ">
       <div className="bg-white py-10 rounded-[12px] border-[#FE8304]/20 border-[1px] shadow-lg mx-6">
@@ -404,11 +434,17 @@ const PopUpDriver = ({ togglePopup }: { togglePopup: () => void }) => {
           <div className="w-full flex gap-3">
             {/* <div className='w-1/2 flex' onClick={togglePopUp}> */}
             <div className="w-1/2 flex" onClick={togglePopup}>
-              <Button type="secondary" text="Tolak" href="/driver/dashboard" />
+              <Button type="red" text="Tolak" href="/driver/dashboard" />
             </div>
 
-            <div className="flex w-1/2 bg-slate-100">
-              <Button type="primary" text="Terima" />
+            <div
+              className="flex w-1/2 bg-slate-100"
+              onClick={() => {
+                togglePopup();
+                toggleReservation();
+              }}
+            >
+              <Button type="green" text="Terima" />
             </div>
           </div>
         </div>
@@ -416,4 +452,88 @@ const PopUpDriver = ({ togglePopup }: { togglePopup: () => void }) => {
     </div>
   );
 };
+
+const OrderReservation = () => {
+  return (
+    <>
+      <div className="w-full h-60 border-[1px] border-c-orange-200 rounded-2xl mt-3">
+        <div className="flex justify-between py-2 px-4 items-center">
+          <div className="">
+            <p>Pemesan</p>
+            <p className="font-extrabold">Muhammad Irfan</p>
+          </div>
+          <div className="flex rounded-full bg-[#FFF0E0] w-16 px-1 h-7 drop-shadow-lg items-center justify-center gap-2 drop-shadow-[#FE8304]/20">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 18 18"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M8.29096 1.51217C8.5488 0.829277 9.52137 0.829277 9.77921 1.51217L11.4426 6.15141C11.5589 6.45948 11.8554 6.66358 12.1867 6.66358H16.2739C17.0286 6.66358 17.3583 7.61045 16.7649 8.07356L13.8561 10.709C13.5883 10.918 13.4844 11.2733 13.5977 11.5923L14.6596 16.1259C14.9182 16.8534 14.0804 17.4793 13.4484 17.0308L9.49702 14.5073C9.22069 14.3113 8.84947 14.3113 8.57315 14.5073L4.62186 17.0308C3.98976 17.4793 3.152 16.8534 3.41053 16.1259L4.47245 11.5923C4.58582 11.2733 4.48188 10.918 4.21403 10.709L1.30529 8.07356C0.711831 7.61045 1.04156 6.66358 1.79628 6.66358H5.88346C6.21474 6.66358 6.51126 6.45948 6.62758 6.15141L8.29096 1.51217Z"
+                fill="#FE8304"
+                stroke="#FE8304"
+                stroke-width="0.803675"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            <h2>
+              <span className="font-black">98</span>
+            </h2>
+          </div>
+          <div className="text-sm text-right">
+            <p className="font-extrabold">Rp47.500</p>
+            <p className="">Soket</p>
+          </div>
+        </div>
+        <div className="w-full h-[1px] bg-c-orange-700"></div>
+        <div className="py-3 flex px-4 text-sm justify-between">
+          <div className="flex">
+            <Image
+              src="/Images/driver/dashboard/Destination.svg"
+              width={26}
+              height={77}
+              alt=""
+              className="mr-2 mt-1"
+            />
+            <div>
+              <p>Pengambilan pesanan</p>
+              <h3 className="font-extrabold">McDonalds cabang Kaliurang</h3>
+              <p className="mt-5">Tujuan akhir</p>
+              <h3 className="font-extrabold">JL.Sendowo no. 120</h3>
+            </div>
+          </div>
+          <div className="text-right">
+            <p className="font-bold">Estimasi</p>
+            <h3 className="font-bold text-gray-500">8:45</h3>
+            <h3 className="mt-9 font-bold text-gray-500">9:32</h3>
+          </div>
+        </div>
+        <div className="justify-center flex mt-1">
+          <Button text="Detail" size="small" className="w-1/3"/>
+        </div>
+      </div>
+    </>
+  );
+};
+
 export default DriverDashboard;
+
+export const getServerSideProps = async ({req}:{req: any}) => {
+  const session = await getSession({req});
+  // console.log(session);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/driver/signin",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: { session },
+  }
+}
