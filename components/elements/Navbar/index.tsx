@@ -8,6 +8,7 @@ type Props = {
 };
 
 const Navbar: React.FC<Props> = ({ location, role }: Props) => {
+
   return (
     <div className="sticky bottom-0 bg-white">
       <div className="flex w-auto h-[65px] shadow-[0_-1px_2px_0.1px_rgb(0,0,0,0.2)] justify-evenly p-3 rounded-t-2xl">
@@ -74,7 +75,7 @@ const Navbar: React.FC<Props> = ({ location, role }: Props) => {
           </Link>
         )}
         {role === "customer" && (
-          <Link href={"/pesan"}>
+          <Link href={"#"} >
             <div className="w-14 grid justify-items-center">
               <svg
                 width="26"
