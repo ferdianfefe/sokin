@@ -53,7 +53,7 @@ const Input: React.FC<Props> = ({
         {side ? (
           <Image
             className={`absolute top-[8px] ${
-              imagePosition == "left" ? "left-8" : "right-8"
+              imagePosition == "left" ? "left-3" : "right-8"
             }`}
             src={`${side}`}
             alt="person"

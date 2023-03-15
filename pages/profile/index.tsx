@@ -1,5 +1,6 @@
 import Button from "components/elements/Button";
 import Input from "components/elements/Input";
+import DefaultLayout from "components/layout/DefaultLayout";
 import { getSession, signOut } from "next-auth/react";
 
 export async function getServerSideProps(context: any) {
@@ -21,12 +22,12 @@ export async function getServerSideProps(context: any) {
   };
 }
 
-const Profile: React.FC = (): JSX.Element => {
+const Profile: React.FC = (session): JSX.Element => {
   const handleLogout = async () => {
-    await signOut()
-  }
+    await signOut();
+  };
   return (
-    <>
+    <DefaultLayout location="akun">
       <div className="relative h-screen py-10 px-8">
         <h1 className="mb-6 font-bold">Informasi Akun</h1>
 
@@ -37,11 +38,15 @@ const Profile: React.FC = (): JSX.Element => {
           side="/images/icons/pencil.svg"
           imagePosition="right"
         />
-        <Input text="Email" className="mb-6" />
+        <Input text="Email" className="mb-6"/>
         <Input text="Password" className="mb-6" />
-        <Button text="Keluar" onClickHandler={() => handleLogout()}/>
+        <Button
+          text="Keluar"
+          type="red"
+          onClickHandler={() => handleLogout()}
+        />
       </div>
-    </>
+    </DefaultLayout>
   );
 };
 
