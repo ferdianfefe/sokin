@@ -1,11 +1,12 @@
 import Image from 'next/image'
 import Search from "public/img/homepage/icon-search.png"
 import Button from 'components/elements/Button'
-import SwiperCarouselCoupon from 'components/homepage-1/SwiperCarouselCoupon'
-import CardCarousel from 'components/homepage-1/CardCarousel/CardCarousel'
-import KategoriCarousel from 'components/homepage-1/Kategori/KategoriCarousel'
 import Navbar from 'components/elements/Navbar'
+import BackgroundLoginDaftar from 'public/img/homepage/bg-login-daftar.png'
 import { signIn, signOut, useSession } from "next-auth/react";
+import HorizontalCardCarousel from 'components/homepage-1/HorizontalCardCarousel'
+import VerticalCardCarousel from 'components/homepage-1/VerticalCardCarousel'
+import SquareCardCarousel from 'components/homepage-1/SquareCardCarousel'
 
 const Homepage: React.FunctionComponent = (): JSX.Element => {
     const {data, status} = useSession();
@@ -26,34 +27,47 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
     }
 
     return(
-        <>
-            <div onClick={logout}>Selamat Datang {data?.user?.name}, klik utk logout?</div>
-            <div className="flex flex-col w-full h-full overflow-hidden">
-                <div className="p-7 flex flex-col gap-4">
+        <>            
+            <div className="flex flex-col w-full h-full overflow-y-scroll">
+                <div className="mt-7 flex flex-col gap-4">
                     {/* SEARCH BAR */}
-                    <SearchBar />
+                    <div className='px-7'>
+                        <SearchBar />
+                    </div>
                     
                     {/* Login/Daftar */}
-                    <div className="bg-login-daftar rounded-[30px] w-full flex object-clip bg-cover py-6 px-8 justify-center items-center gap-6">
+                    <div className='px-7'>
+
+                        <div className="bg-slate-200 rounded-[30px] w-full flex py-8 px-8 justify-center items-center gap-6 relative overflow-hidden">
                         
-                            <Button
-                                text="Login"
-                                type="secondary"
-                                size="small"
-                                href='/signin'
-                            ></Button>
-                        
+                            <Image 
+                                src={BackgroundLoginDaftar}
+                                alt=''
+                                className='absolute object-cover w-full h-full z-0'
+                            />
 
-                        <Button
-                            text="Daftar"
-                            type="secondary"
-                            size="small"
-                            href='/signup'
+                            <div className='z-20 px-auto'>
+                                <Button
+                                    text="Login"
+                                    type="secondary"
+                                    size="small"
+                                    href='/signin'
+                                ></Button>
+                            </div>
+                            
+                            <div className='z-20'>
+                                <Button
+                                    text="Daftar"
+                                    type="secondary"
+                                    size="small"
+                                    href='/signup'
+                                ></Button>
 
-                        ></Button>
-                    </div>  
+                            </div>
+                        </div>  
+                    </div>
 
-                    <div className='mt-4 w-full h-full flex flex-col gap-3'>
+                    <div className='mt-4 w-full h-full flex flex-col gap-3 px-7'>
                         <div className='flex justify-between'>
                             <h2 className='font-bold'>Penawaran Kami</h2>
                             
@@ -71,37 +85,45 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
 
                         {/* <div className='overflow-visible'>
                             <SwiperCarousel />
-                           
+
                         </div> */}
-                        <div className='flex '>
-                            <SwiperCarouselCoupon />
-                        </div>
-                        
-
-                        <div className='mt-4 flex'>
-                            <div className='flex-col flex gap-3'>
-                                <h2 className='font-bold'>Paling Laris</h2>
-                                <div className='flex gap-4 overflow-visible'>
-                                    <CardCarousel />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className='mt-4 flex'>
-                            <div className='flex-col flex gap-3'>
-                                <h2 className='font-bold'>Kategori</h2>
-                                <div className='flex overflow-visible z-0'>
-                                    <KategoriCarousel />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className='h-10 w-full'></div>
-
                         
                     </div>
 
+                    <div className='flex -mt-4'>
+                        {/* <SwiperCarouselCoupon /> */}
+                        <HorizontalCardCarousel />
+                    </div>
+                    
+
+                    <div className='mt-4 flex px-7'>
+                        <div className='flex-col flex gap-3'>
+                            <h2 className='font-bold'>Paling Laris</h2>
+                        </div>
+                    </div> 
+                    
+                    <div className='flex -mt-2'>
+                        {/* <CardCarousel /> */}
+                        <VerticalCardCarousel />
+                    </div>
+
+                    <div className='mt-4 flex px-7'>
+                        <div className='flex-col flex gap-3'>
+                            <h2 className='font-bold'>Kategori</h2>
+                        </div>
+                    </div>
+
+                    {/* <div className='flex overflow-visible z-0'>
+                        <KategoriCarousel />
+                    </div>  */}
+
+                    <div className='flex -mt-2'>
+                        {/* <CardCarousel /> */}
+                        <SquareCardCarousel />
+                    </div>
                 </div>
+
+                <div className='w-full h-28'></div>
 
                 <div className='fixed bottom-0 w-full bg-white'>
                     <Navbar role='customer' location='home'/>    
