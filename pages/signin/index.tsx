@@ -6,12 +6,30 @@ import GoogleButton from "components/elements/GoogleButton";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 
 interface IFormInputs {
   email: string;
   password: string;
+}
+
+export async function getServerSideProps(context: any) {
+  const session = await getSession(context);
+  console.log("session", session)
+
+  if (session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {  },
+  };
 }
 
 export default function SignIn() {
@@ -22,9 +40,7 @@ export default function SignIn() {
     formState: { errors },
   } = useForm<IFormInputs>();
 
-
   const onSubmit = async (data: IFormInputs) => {
-    console.log(data)
   //   try {
   //     const res = await fetch("/api/signin/user", {
   //       method: "POST",

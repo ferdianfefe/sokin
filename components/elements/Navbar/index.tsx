@@ -18,7 +18,7 @@ const Navbar: React.FC<Props> = ({ location, role }: Props) => {
               ? "/merchant"
               : role === "driver"
               ? "/driver/homepage"
-              : ""
+              : "/"
           }`}
         >
           <div className="w-14 grid justify-items-center">
@@ -191,10 +191,10 @@ const Navbar: React.FC<Props> = ({ location, role }: Props) => {
         <Link
           href={`${
             role === "merchant"
-              ? "/merchant/akun"
+              ? "/merchant/profile"
               : role === "driver"
-              ? "/driver/akun"
-              : "/"
+              ? "/driver/profile"
+              : "/profile"
           }`}
         >
           <div className="w-14 grid justify-items-center">
