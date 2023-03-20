@@ -1,6 +1,9 @@
 import React from 'react'
 import Image from 'next/image'
+<<<<<<< Updated upstream
 import Kupon from 'public/img/homepage/kupon-solaria.jpg'
+=======
+>>>>>>> Stashed changes
 
 const HorizontalCardCarousel = () => {
   const slides = [
