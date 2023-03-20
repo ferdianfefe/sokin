@@ -16,28 +16,17 @@ export default async function handle(
   res: NextApiResponse
 ) {
   if (req.method === "GET") {
-    const menu = await prisma.menu.findMany();
+    // get menu with pagination 
+    const { page, limit } = req.query;
+    const menu = await prisma.menu.findMany({
+      take: limit,
+      skip: page,
+    });
     return res.json(menu);
+
   }
   if (req.method === "POST") {
     const { namaProduk, harga, kategori, deskripsi, stok, user } = JSON.parse(req.body) //req.body as MenuCreateRequestBody;
-    
-      // console.log(JSON.parse(req.body));
-
-    // const owner = await prisma.owner.findFirst({
-    //   where: {
-    //     id: user,
-    //   }
-    // });
-
-    // console.log(updateUser);
-
-    // const menu = await prisma.menu.findFirst({
-    //   where: { name },
-    // });
-    // if (menu) {
-    //   return res.status(400).json({ message: "menu already exists" });
-    // }
 
     const newMenu = await prisma.menu.create({
       data: {
@@ -66,8 +55,16 @@ export default async function handle(
       },
     })
 
-    // console.log(newMenu);
 
     return res.json("sukses");
+  }
+  if(req.method == "DELETE"){
+    const { id } = req.body;
+    const deleteMenu = await prisma.menu.delete({
+      where: {
+        id: id
+      }
+    })
+    return res.json(deleteMenu);
   }
 }
