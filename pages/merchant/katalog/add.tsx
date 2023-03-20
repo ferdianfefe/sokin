@@ -17,7 +17,7 @@ interface IFormInputs {
 const Add: React.FC = (): JSX.Element => {
   const [currentFile, setCurrentFile] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  
+
   const { data: session, status } = useSession();
   // console.log(session?.user);
   const user = session?.user;
@@ -57,7 +57,7 @@ const Add: React.FC = (): JSX.Element => {
         "/api/menu/handler",
         {
           method: "POST",
-          body: JSON.stringify({...data, user: user?.id}),
+          body: JSON.stringify({ ...data, user: user?.id }),
         }
       );
       const json = await res.json();
@@ -67,11 +67,11 @@ const Add: React.FC = (): JSX.Element => {
 
   return (
     <MerchantLayout location="katalog">
-      <div className="flex flex-col gap-4 min-h-screen p-4">
-        <h1 className="text-center font-bold mb-3">
+      <div className="flex flex-col gap-4 min-h-screen px-10 py-20">
+        <h1 className="text-center font-extrabold mb-3">
           Preksu: Ayam Geprek dan Susu
         </h1>
-        <h1 className="text-center mb-2">Foto Produk</h1>
+        <h1 className="text-center mb-2 font-medium">Foto Produk</h1>
         <form onSubmit={handleSubmit(submitHandler)}>
           {previewImage ? (
             <div className="rounded-full relative w-24 h-24 overflow-hidden">
@@ -83,7 +83,8 @@ const Add: React.FC = (): JSX.Element => {
               />
             </div>
           ) : (
-            <div className="rounded-full w-24 h-24 bg-[#C4C4C4]"></div>
+            // <div className="rounded-full w-24 h-24 bg-[#C4C4C4]"></div>
+            <div></div>
           )}
           <input
             type="file"
@@ -120,17 +121,26 @@ const Add: React.FC = (): JSX.Element => {
             className="mb-3"
             error={errors.harga}
           />
+          <div className="relative w-full h-full">
+            <Input
+              text="Kategori"
+              formHookProps={{
+                ...register("kategori", {
+                  required: "Kategori tidak boleh kosong",
+                }),
+              }}
+              className="mb-3"
+              error={errors.kategori}
+            />
+            {/* SEMENTARA */}
+            {/* <svg className="absolute top-8 right-4" width="19" height="9" viewBox="0 0 19 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 1L9.5 7.885L18 1" stroke="#FE8304" stroke-width="1.72125" stroke-linecap="round" stroke-linejoin="round" />
+            </svg> */}
+
+
+          </div>
           <Input
-            text="Kategori"
-            formHookProps={{
-              ...register("kategori", {
-                required: "Kategori tidak boleh kosong",
-              }),
-            }}
-            className="mb-3"
-            error={errors.kategori}
-          />
-          <Input
+            type="comment"
             text="Deskripsi"
             formHookProps={{
               ...register("deskripsi", {
@@ -142,6 +152,7 @@ const Add: React.FC = (): JSX.Element => {
           />
           <Input
             text="Stok"
+            type="dropdown"
             formHookProps={{
               ...register("stok", {
                 required: "Stok tidak boleh kosong",
@@ -150,12 +161,14 @@ const Add: React.FC = (): JSX.Element => {
             className="mb-3"
             error={errors.stok}
           />
+
+          <div className="h-8"></div>
           <button
-                type="submit"
-                className="font-black justify-center rounded-[18px] shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)] bg-[#FE8304] text-white w-full h-[39px] text-[17px]"
-              >
-                Tambahkan
-              </button>
+            type="submit"
+            className="font-black justify-center rounded-[18px] shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)] bg-[#FE8304] text-white w-full h-[39px] text-[17px] mt-65"
+          >
+            Tambahkan
+          </button>
           {/* <Button text="Tambahkan" isSubmit={true} /> */}
         </form>
       </div>
@@ -165,8 +178,8 @@ const Add: React.FC = (): JSX.Element => {
 
 export default Add;
 
-export const getServerSideProps = async ({req}) => {
-  const session = await getSession({req});
+export const getServerSideProps = async ({ req }) => {
+  const session = await getSession({ req });
   // console.log(session);
   if (!session) {
     return {
