@@ -1,5 +1,6 @@
 import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 
 type Props = {
@@ -21,6 +22,8 @@ const Button: React.FC<Props> = ({
   className,
   onClickHandler = () => {},
 }: Props) => {
+  const router = useRouter();
+
   return (
     <button
       type={isSubmit ? "submit" : "button"}
@@ -41,11 +44,14 @@ const Button: React.FC<Props> = ({
                       : "w-full h-[39px] text-[17px]"
                   }
                   `}
-      onClick={(e) => onClickHandler(e)}
+      onClick={(e) => {
+        onClickHandler(e);
+        if (href !== "#") {
+          router.push(href);
+        }
+      }}
     >
-      <Link href={`${href}`} className="">
-        {text}
-      </Link>
+      {text}
     </button>
   );
 };
