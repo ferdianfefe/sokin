@@ -82,18 +82,18 @@ const Katalog: React.FC = (): JSX.Element => {
 
 export default Katalog;
 
-// export const getServerSideProps = async ({req}) => {
-//   const session = await getSession({req});
-//   // console.log(session);
-//   if (!session) {
-//     return {
-//       redirect: {
-//         destination: "/merchant/signin",
-//         permanent: false,
-//       },
-//     };
-//   }
-//   return {
-//     props: { session },
-//   }
-// }
+export const getServerSideProps = async ({req}) => {
+  const session = await getSession({req});
+  // console.log(session);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/merchant/signin",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: { session },
+  }
+}
