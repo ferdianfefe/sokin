@@ -3,6 +3,7 @@ import Button from 'components/elements/Button'
 import Navbar from 'components/elements/Navbar'
 import Input from 'components/elements/Input'
 import ProductCard from 'components/elements/ProductCard'
+import ItemMerchant from 'components/elements/ItemMerchant'
 
 export default function TestComponents() {
   return (
@@ -21,7 +22,7 @@ export default function TestComponents() {
         <Input text='Password' side='/images/Lock.svg'/>
       </div>
       <div>
-        <ProductCard />
+        <ItemMerchant title={''} price={0} description={''} stock={0} />
       </div>
 
     </>
