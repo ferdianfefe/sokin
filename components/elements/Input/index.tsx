@@ -59,7 +59,6 @@ const Input: React.FC<Props> = ({
 
         <div>
           <textarea
-            type={type}
             {...formHookProps}
             value={value}
             onChange={onChangeHandler}
