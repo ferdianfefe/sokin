@@ -22,7 +22,7 @@ export default function TestComponents() {
         <Input text='Password' side='/images/Lock.svg'/>
       </div>
       <div>
-        <ItemMerchant title={''} price={0} description={''} stock={0} />
+        <ItemMerchant title={'Title Title tit'} price={10000} description={'Lorem ipsum lorem ipsum leorem ispshdf askjgsa fadskj ghasifo'} stock={0} />
       </div>
 
     </>
