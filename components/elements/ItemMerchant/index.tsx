@@ -16,12 +16,12 @@ const ItemMerchant: React.FC<{
     <div
       className={`${className} w-full h-32 shadow-[0_0_10px_2px_rgb(400,100,0,0.2)] items-center justify-between flex rounded-xl pr-2`}
     >
-      <div className="w-32 h-28 p-1">
+      <div className="w-36 h-28 p-1">
         <Image
           src={image}
           height={90}
           width={90}
-          className="h-full object-cover rounded-xl ml-2 shadow-[0_0_10px_1px_rgb(400,100,0,0.2)]"
+          className="h-full w-full object-cover rounded-xl ml-2 shadow-[0_0_10px_1px_rgb(400,100,0,0.2)]"
         />
       </div>
       <div className="h-full w-full ml-3">
