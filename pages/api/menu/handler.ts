@@ -27,6 +27,7 @@ export default async function handle(
   }
   if (req.method === "POST") {
     const { id, namaProduk, harga, kategori, deskripsi, stok, user } = JSON.parse(req.body) //req.body as MenuCreateRequestBody;
+    console.log(JSON.parse(req.body));
 
     if (id) {
       const updatedMenu = await prisma.menu.update({
@@ -35,10 +36,10 @@ export default async function handle(
         },
         data: {
           name: namaProduk,
-          price: harga,
+          price: parseFloat(harga),
           category: kategori,
           description: deskripsi,
-          stock: stok,
+          stock: parseInt(stok),
         },
       });
 
@@ -47,20 +48,22 @@ export default async function handle(
       }
     }
 
-    const newMenu = await prisma.menu.create({
-      data: {
-        ownerId: user,
-        name: namaProduk,
-        price: parseFloat(harga),
-        category: kategori,
-        description: deskripsi,
-        image: "image",
-        stock: parseInt(stok),
-      },
-    });
+    else {
+      const newMenu = await prisma.menu.create({
+        data: {
+          ownerId: user,
+          name: namaProduk,
+          price: parseFloat(harga),
+          category: kategori,
+          description: deskripsi,
+          image: "image",
+          stock: parseInt(stok),
+        },
+      });
 
-    if (!newMenu) {
-      return res.status(400).json({ message: "failed to create menu" });
+      if (!newMenu) {
+        return res.status(400).json({ message: "failed to create menu" });
+      }
     }
 
     // const updateOwner = await prisma.owner.update({
@@ -78,12 +81,16 @@ export default async function handle(
     return res.json("sukses");
   }
   if(req.method == "DELETE"){
-    const { id } = req.body;
+    const { id } = JSON.parse(req.body);
+    console.log(id);
     const deleteMenu = await prisma.menu.delete({
       where: {
         id: id
       }
     })
-    return res.json(deleteMenu);
+    if (!deleteMenu) {
+      return res.status(400).json({ message: "failed to delete menu" });
+    }
+    return res.status(200).json({ message: "success delete menu" });
   }
 }

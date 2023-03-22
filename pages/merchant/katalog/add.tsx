@@ -8,6 +8,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 
 interface IFormInputs {
+  id: string;
   namaProduk: string;
   harga: number;
   kategori: string;
@@ -21,13 +22,13 @@ const Add: React.FC = (): JSX.Element => {
 
   const router = useRouter();
 
-  let id: string | string[] | null | undefined = null;
+  let id: any = null;
 
-  if (router.query) {
+  if (router.query.id) {
     id = router.query.id;
   }
 
-  console.log(id);
+  // console.log(id + 'halo');
 
   const { data: session, status } = useSession();
   // console.log(session?.user);
@@ -36,7 +37,7 @@ const Add: React.FC = (): JSX.Element => {
   console.log(user?.id);
 
   useEffect(() => {
-    if (router.query) {
+    if (router.query.id) {
       fetch("/api/menu/edit", { method: "POST", body: JSON.stringify( {id} ) })
         .then((res) => res.json())
         .then((data) => {
@@ -45,6 +46,7 @@ const Add: React.FC = (): JSX.Element => {
           setValue("kategori", data.category);
           setValue("deskripsi", data.description);
           setValue("stok", data.stock);
+          setValue("id", id);
         })
         .catch((e) => console.log(e));
     }
@@ -75,7 +77,8 @@ const Add: React.FC = (): JSX.Element => {
     if (true /*currentFile*/) {
       const formData = new FormData();
       // formData.append("file", currentFile);
-      if (router.query) {
+      if (router.query.id) {
+        console.log("masuk");
         formData.append("id", id);
       }
       formData.append("name", namaProduk);
@@ -98,9 +101,16 @@ const Add: React.FC = (): JSX.Element => {
     }
   };
 
-  // const test = () => {
-  //   setValue("namaProduk", "test");
-  // }
+  const hapus = async () => {
+    const res = await fetch("/api/menu/handler", {
+      method: "DELETE",
+      body: JSON.stringify({ id }),
+    });
+    const json = await res.json();
+    console.log(json);
+    if (!res.ok) throw Error(json.message);
+    router.push("/merchant/katalog");
+  }
 
   return (
     <MerchantLayout location="katalog">
@@ -139,6 +149,13 @@ const Add: React.FC = (): JSX.Element => {
               />
             </div>
           </label>
+          <Input
+            text="id"
+            formHookProps={{
+              ...register("id"),
+            }}
+            className="hidden"
+          />
           <Input
             text="Nama Produk"
             formHookProps={{
@@ -212,6 +229,13 @@ const Add: React.FC = (): JSX.Element => {
           />
 
           <div className="h-8"></div>
+          <div className={router.query.id? "" : "hidden"} onClick={hapus}>
+            <Button
+              text="Hapus Menu"
+              type="red"
+            />
+          </div>
+          <br></br>
           <button
             type="submit"
             className="font-black justify-center rounded-[18px] shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)] bg-[#FE8304] text-white w-full h-[39px] text-[17px] mt-65"
