@@ -69,7 +69,7 @@ const Katalog = (props: {menu: any}): JSX.Element => {
             </Menu.Items>
           </Menu>
         </div>
-        <Searchbar />
+        <Searchbar props={props.menu}/>
         {props?.menu.map((item: any) => {
           return (
             <ItemMerchant title={item.name} price={item.price} description={item.description} stock={item.stock} />
