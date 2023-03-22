@@ -1,5 +1,6 @@
 import { Fragment, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
+import Image from "next/image";
 const people = [
   { id: 1, name: "Wade Cooper" },
   { id: 2, name: "Arlene Mccoy" },
@@ -27,9 +28,10 @@ export default function Example() {
     <>
       <Combobox value={selected} onChange={setSelected}>
         <div className="w-full h-8 rounded-full">
-          <div className="w-full overflow-hidden border-[1px] border-c-orange-700 rounded-full text-left shadow-md items-center">
+          <div className="w-full justify-center overflow-hidden border-[1px] border-c-orange-700 rounded-full text-left shadow-md items-center flex">
+            <Image src="/images/Search.svg" width={14} height={14} alt="" className="absolute left-8"/>
             <Combobox.Input
-              className="w-full pl-3 pt-[7px] pr-10 text-sm rounded-full text-gray-900 outline-none"
+              className="w-11/12 pl-3 h-7 text-sm rounded-full text-gray-900 outline-none ml-4"
               displayValue={(person) => person.name}
               onChange={(event) => setQuery(event.target.value)}
             />
@@ -52,7 +54,7 @@ export default function Example() {
                     key={person.id}
                     className={({ active }) =>
                       `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                        active ? "bg-teal-600 text-white" : "text-gray-900"
+                        active ? "bg-c-orange-600 text-white" : "text-gray-900"
                       }`
                     }
                     value={person}
