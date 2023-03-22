@@ -1,16 +1,29 @@
 import EditButton from "components/elements/EditButton";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 const ItemMerchant: React.FC<{
+  id: string;
   title: string;
   price: number;
   description: string;
   stock: number;
   image?: string;
   className?: string;
-}> = ({ title, price, description, stock, image, className }): JSX.Element => {
+}> = ({ id, title, price, description, stock, image, className }): JSX.Element => {
   const [count, setCount] = useState(stock);
+
+  const router = useRouter();
+
+  const edit = (e: any) => {
+    e.preventDefault();
+    router.push({
+      pathname: `/merchant/katalog/add`,
+      query: { id },
+    });
+    console.log("edit" + id);
+  }
   
     return (
     <div
@@ -18,7 +31,8 @@ const ItemMerchant: React.FC<{
     >
       <div className="w-36 h-28 p-1">
         <Image
-          src={image}
+          src={'https://cdn-icons-png.flaticon.com/512/1205/1205761.png'}
+          alt={title}
           height={100}
           width={100}
           className="object-cover rounded-xl ml-2 shadow-[0_0_8px_2px_rgb(400,100,0,0.1)]"
@@ -31,7 +45,16 @@ const ItemMerchant: React.FC<{
               <h3>{title}</h3>
               <p className="text-sm">Rp{price}</p>
             </div>
-            <EditButton className="mt-1" />
+            <div onClick={(e) => edit(e)}>
+              {/* <EditButton className="mt-1" /> */}
+              <Image
+                src={'/images/EditCircle.svg'}
+                alt={'edit'}
+                height={30}
+                width={30}
+                className="mt-1"
+              />
+            </div>
           </div>
           <p className="text-sm text-gray-500">{description}</p>
         </div>

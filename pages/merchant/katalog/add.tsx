@@ -3,7 +3,7 @@ import Input from "components/elements/Input";
 import MerchantLayout from "components/layout/MerchantLayout";
 import { getSession, useSession } from "next-auth/react";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 
@@ -21,15 +21,39 @@ const Add: React.FC = (): JSX.Element => {
 
   const router = useRouter();
 
+  let id: string | string[] | null | undefined = null;
+
+  if (router.query) {
+    id = router.query.id;
+  }
+
+  console.log(id);
+
   const { data: session, status } = useSession();
   // console.log(session?.user);
   const user = session?.user;
 
   console.log(user?.id);
 
+  useEffect(() => {
+    if (router.query) {
+      fetch("/api/menu/edit", { method: "POST", body: JSON.stringify( {id} ) })
+        .then((res) => res.json())
+        .then((data) => {
+          setValue("namaProduk", data.name);
+          setValue("harga", data.price);
+          setValue("kategori", data.category);
+          setValue("deskripsi", data.description);
+          setValue("stok", data.stock);
+        })
+        .catch((e) => console.log(e));
+    }
+  }, []);
+
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<IFormInputs>();
 
@@ -51,6 +75,9 @@ const Add: React.FC = (): JSX.Element => {
     if (true /*currentFile*/) {
       const formData = new FormData();
       // formData.append("file", currentFile);
+      if (router.query) {
+        formData.append("id", id);
+      }
       formData.append("name", namaProduk);
       formData.append("price", harga.toString());
       formData.append("category", kategori);
@@ -71,8 +98,13 @@ const Add: React.FC = (): JSX.Element => {
     }
   };
 
+  // const test = () => {
+  //   setValue("namaProduk", "test");
+  // }
+
   return (
     <MerchantLayout location="katalog">
+      {/* <div onClick={test}>tes</div> */}
       <div className="flex flex-col gap-4 min-h-screen px-10 py-20">
         <h1 className="text-center font-extrabold mb-3">
           {session?.user?.name}
@@ -184,7 +216,7 @@ const Add: React.FC = (): JSX.Element => {
             type="submit"
             className="font-black justify-center rounded-[18px] shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)] bg-[#FE8304] text-white w-full h-[39px] text-[17px] mt-65"
           >
-            Tambahkan
+            {router.query ? "Simpan" : "Tambahkan"}
           </button>
           {/* <Button text="Tambahkan" isSubmit={true} /> */}
         </form>
@@ -195,7 +227,7 @@ const Add: React.FC = (): JSX.Element => {
 
 export default Add;
 
-export const getServerSideProps = async ({ req }) => {
+export const getServerSideProps = async ({req}:{req: any}) => {
   const session = await getSession({ req });
   // console.log(session);
   if (!session) {

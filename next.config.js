@@ -27,6 +27,9 @@ const nextConfig = withPWA({
 
     return config;
   },
+  images: {
+    domains: ['cdn-icons-png.flaticon.com'],
+  },
 });
 
 module.exports = nextConfig;

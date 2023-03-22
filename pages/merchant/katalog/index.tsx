@@ -14,7 +14,7 @@ const Katalog = (props: { menu: any }): JSX.Element => {
   // console.log(session?.user);
   const user = session?.user;
 
-  console.log(user?.name);
+  console.log(props.menu);
 
   const [customerView, setcustomerView] = useState(false);
 
@@ -25,13 +25,14 @@ const Katalog = (props: { menu: any }): JSX.Element => {
           <h1 className="font-extrabold mb-2">Preksu: Ayam Geprek & Susu</h1>
         </div>
         <div className="w-full h-20 bg-c-orange-600 justify-between px-7 flex items-center">
-          <Image
+          {/* <Image
             src={""}
             height={80}
             width={80}
             alt={""}
             className="rounded-full bg-white"
-          />
+          /> */}
+          <Image alt="preksu-logo" src={"/images/preksu.png"} width={80} height={80} className="rounded-full bg-white"></Image>
           <div className="w-3/5 flex justify-between">
             <div className="w-[45%] h-16 bg-white rounded-lg flex-col flex justify-center items-center">
               <div className="flex">
@@ -114,6 +115,7 @@ const Katalog = (props: { menu: any }): JSX.Element => {
                   />
                 ) : (
                   <ItemMerchant
+                    id={item.id}
                     title={item.name}
                     price={item.price}
                     description={item.description}
@@ -142,7 +144,7 @@ const Katalog = (props: { menu: any }): JSX.Element => {
 
 export default Katalog;
 
-export const getServerSideProps = async ({req}) => {
+export const getServerSideProps = async ({req}:{req: any}) => {
   const session = await getSession({req});
   // console.log(session);
   if (!session) {
@@ -153,7 +155,14 @@ export const getServerSideProps = async ({req}) => {
       },
     };
   }
+
+  const data = await prisma.menu.findMany({
+    where: {
+      ownerId: session?.user.id
+    }
+  });
+
   return {
-    props: { session },
+    props: { menu: data }
   }
 }

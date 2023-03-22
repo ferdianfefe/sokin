@@ -26,7 +26,26 @@ export default async function handle(
 
   }
   if (req.method === "POST") {
-    const { namaProduk, harga, kategori, deskripsi, stok, user } = JSON.parse(req.body) //req.body as MenuCreateRequestBody;
+    const { id, namaProduk, harga, kategori, deskripsi, stok, user } = JSON.parse(req.body) //req.body as MenuCreateRequestBody;
+
+    if (id) {
+      const updatedMenu = await prisma.menu.update({
+        where: {
+          id: id,
+        },
+        data: {
+          name: namaProduk,
+          price: harga,
+          category: kategori,
+          description: deskripsi,
+          stock: stok,
+        },
+      });
+
+      if (!updatedMenu) {
+        return res.status(400).json({ message: "failed to update menu" });
+      }
+    }
 
     const newMenu = await prisma.menu.create({
       data: {
