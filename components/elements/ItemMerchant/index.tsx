@@ -14,17 +14,17 @@ const ItemMerchant: React.FC<{
   
     return (
     <div
-      className={`${className} w-full h-32 shadow-[0_0_10px_2px_rgb(400,100,0,0.2)] items-center justify-between flex rounded-xl pr-2`}
+      className={`${className} w-full h-32 shadow-[0_1px_4px_1px_rgb(300,75,0,0.13)] items-center justify-between flex rounded-xl pr-2`}
     >
       <div className="w-36 h-28 p-1">
         <Image
           src={image}
-          height={90}
-          width={90}
-          className="h-full w-full object-cover rounded-xl ml-2 shadow-[0_0_10px_1px_rgb(400,100,0,0.2)]"
+          height={100}
+          width={100}
+          className="object-cover rounded-xl ml-2 shadow-[0_0_8px_2px_rgb(400,100,0,0.1)]"
         />
       </div>
-      <div className="h-full w-full ml-3">
+      <div className="h-full w-full ml-3 mb-2">
         <div className="w-full h-24 p-2">
           <div className="flex justify-between">
             <div className="font-semibold flex flex-col">
@@ -35,7 +35,7 @@ const ItemMerchant: React.FC<{
           </div>
           <p className="text-sm text-gray-500">{description}</p>
         </div>
-        <div className="h-7 w-[94%] mx-auto bg-c-orange-200 items-center flex py-1 px-3 rounded-xl justify-between">
+        <div className="h-7 w-[94%] mx-auto bg-c-orange-200 items-center flex py-1 px-3 rounded-xl justify-between ">
           <h3 className="font-semibold text-center ml-3">Stok</h3>
           <div className="flex items-center justify-evenly w-4/6 mr-4">
             <button className="w-8 h-5 bg-white text-sm font-semibold rounded" onClick={() => setCount(count - 1)}>

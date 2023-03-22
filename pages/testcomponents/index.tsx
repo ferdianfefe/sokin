@@ -4,6 +4,7 @@ import Navbar from 'components/elements/Navbar'
 import Input from 'components/elements/Input'
 import ProductCard from 'components/elements/ProductCard'
 import ItemMerchant from 'components/elements/ItemMerchant'
+import ItemCustomer from 'components/elements/ItemCustomer'
 
 export default function TestComponents() {
   return (
@@ -23,6 +24,7 @@ export default function TestComponents() {
       </div>
       <div>
         <ItemMerchant title={'Title Title tit'} price={10000} description={'Lorem ipsum lorem ipsum leorem ispshdf askjgsa fadskj ghasifo'} stock={0} />
+        <ItemCustomer title={'Title Title tit'} price={0} description={''} />
       </div>
 
     </>

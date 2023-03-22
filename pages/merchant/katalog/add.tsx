@@ -195,8 +195,8 @@ const Add: React.FC = (): JSX.Element => {
 
 export default Add;
 
-export const getServerSideProps = async ({req}:{req: any}) => {
-  const session = await getSession({req});
+export const getServerSideProps = async ({ req }) => {
+  const session = await getSession({ req });
   // console.log(session);
   if (!session) {
     return {
@@ -210,3 +210,4 @@ export const getServerSideProps = async ({req}:{req: any}) => {
     props: { session },
   }
 }
+

@@ -45,12 +45,12 @@ export default function Example(props: any) {
             afterLeave={() => setQuery("")}
           >
             <Combobox.Options className="absolute mt-1 left-0 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 sm:text-sm">
-              {filteredMenus.length === 0 && query !== "" ? (
+              {filteredMenus?.length === 0 && query !== "" ? (
                 <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
                   Nothing found.
                 </div>
               ) : (
-                filteredMenus.map((menu: any) => (
+                filteredMenus?.map((menu: any) => (
                   <Combobox.Option
                     key={menu.id}
                     className={({ active }) =>
