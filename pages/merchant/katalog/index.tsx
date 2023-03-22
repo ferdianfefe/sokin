@@ -104,27 +104,29 @@ const Katalog = (props: { menu: any }): JSX.Element => {
             </Menu>
           </div>
           <Searchbar props={props.menu} />
-          {props?.menu?.map((item: any) => {
-            return (
-              <>
-                {customerView ? (
-                  <ItemCustomer
-                    title={item.name}
-                    price={item.price}
-                    description={item.description}
-                  />
-                ) : (
-                  <ItemMerchant
-                    id={item.id}
-                    title={item.name}
-                    price={item.price}
-                    description={item.description}
-                    stock={item.stock}
-                  />
-                )}
-              </>
-            );
-          })}
+          <div className={customerView? "grid grid-cols-2 gap-4" : ""}>
+            {props?.menu?.map((item: any) => {
+              return (
+                <div className="">
+                  {customerView ? (
+                    <ItemCustomer
+                      title={item.name}
+                      price={item.price}
+                      description={item.description}
+                    />
+                  ) : (
+                    <ItemMerchant
+                      id={item.id}
+                      title={item.name}
+                      price={item.price}
+                      description={item.description}
+                      stock={item.stock}
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </div>
           {/* <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} />
         <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} />
         <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} />
