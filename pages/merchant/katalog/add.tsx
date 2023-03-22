@@ -5,6 +5,7 @@ import { getSession, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useRouter } from "next/router";
 
 interface IFormInputs {
   namaProduk: string;
@@ -17,6 +18,8 @@ interface IFormInputs {
 const Add: React.FC = (): JSX.Element => {
   const [currentFile, setCurrentFile] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+
+  const router = useRouter();
 
   const { data: session, status } = useSession();
   // console.log(session?.user);
@@ -42,6 +45,7 @@ const Add: React.FC = (): JSX.Element => {
   const submitHandler: SubmitHandler<IFormInputs> = async (
     data: IFormInputs
   ) => {
+    let id = (session) ? session.user.id : '';
     console.log("tambah");
     const { namaProduk, harga, kategori, deskripsi, stok } = data;
     if (true /*currentFile*/) {
@@ -62,6 +66,8 @@ const Add: React.FC = (): JSX.Element => {
       );
       const json = await res.json();
       console.log(json);
+      if (!res.ok) throw Error(json.message);
+      router.push("/merchant/katalog");
     }
   };
 
@@ -69,7 +75,7 @@ const Add: React.FC = (): JSX.Element => {
     <MerchantLayout location="katalog">
       <div className="flex flex-col gap-4 min-h-screen px-10 py-20">
         <h1 className="text-center font-extrabold mb-3">
-          Preksu: Ayam Geprek dan Susu
+          {session?.user?.name}
         </h1>
         <h1 className="text-center mb-2 font-medium">Foto Produk</h1>
         <form onSubmit={handleSubmit(submitHandler)}>
@@ -124,6 +130,7 @@ const Add: React.FC = (): JSX.Element => {
           <div className="relative w-full h-full">
             <Input
               text="Kategori"
+              // type="dropdown"
               formHookProps={{
                 ...register("kategori", {
                   required: "Kategori tidak boleh kosong",
@@ -150,9 +157,19 @@ const Add: React.FC = (): JSX.Element => {
             className="mb-3"
             error={errors.deskripsi}
           />
-          <Input
+          {/* <Input
             text="Stok"
             type="dropdown"
+            formHookProps={{
+              ...register("stok", {
+                required: "Stok tidak boleh kosong",
+              }),
+            }}
+            className="mb-3"
+            error={errors.stok}
+          /> */}
+          <Input
+            text="Stok"
             formHookProps={{
               ...register("stok", {
                 required: "Stok tidak boleh kosong",

@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../lib/prisma";
 
 type MenuCreateRequestBody = {
-  merchantId: number;
+  ownerId: number;
   name: string;
   price: number;
   category: string;
@@ -19,8 +19,8 @@ export default async function handle(
     // get menu with pagination 
     const { page, limit } = req.query;
     const menu = await prisma.menu.findMany({
-      take: limit,
-      skip: page,
+      take: (limit? parseInt(limit.toString()) : 0) as number,
+      skip: (page? parseInt(page.toString()) : 0) as number,
     });
     return res.json(menu);
 
@@ -44,16 +44,16 @@ export default async function handle(
       return res.status(400).json({ message: "failed to create menu" });
     }
 
-    const updateOwner = await prisma.owner.update({
-      where: {
-        id: user,
-      },
-      data: {
-        menus: {
-          push: newMenu,
-        },
-      },
-    })
+    // const updateOwner = await prisma.owner.update({
+    //   where: {
+    //     id: user,
+    //   },
+    //   data: {
+    //     menus: {
+    //       push: newMenu,
+    //     },
+    //   },
+    // })
 
 
     return res.json("sukses");

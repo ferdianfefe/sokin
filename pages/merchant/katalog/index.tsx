@@ -7,8 +7,9 @@ import MerchantLayout from "components/layout/MerchantLayout";
 import { getSession, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useState } from "react";
+import prisma from "lib/prisma";
 
-const Katalog: React.FC = (): JSX.Element => {
+const Katalog = (props: {menu: any}): JSX.Element => {
   const { data: session, status } = useSession();
   // console.log(session?.user);
   const user = session?.user;
@@ -83,51 +84,18 @@ const Katalog: React.FC = (): JSX.Element => {
             </Menu.Items>
           </Menu>
         </div>
-        <Searchbar />
-        {customerView ? (
-          <div className="flex flex-wrap gap-9 justify-evenly after:flex-auto">
-            <ItemCustomer title={"....."} price={0} description={""} />
-            <ItemCustomer title={"....."} price={0} description={""} />
-            <ItemCustomer title={"....."} price={0} description={""} />
-            <ItemCustomer title={"....."} price={0} description={""} />
-            <ItemCustomer title={"....."} price={0} description={""} />
-            <ItemCustomer title={"....."} price={0} description={""} />
-            <ItemCustomer title={"....."} price={0} description={""} />
-          </div>
-        ) : (
-          <>
-            <ItemMerchant
-              title={"Title Title tit"}
-              price={10000}
-              description={""}
-              stock={0}
-            />
-            <ItemMerchant
-              title={"Title Title tit"}
-              price={10000}
-              description={""}
-              stock={0}
-            />
-            <ItemMerchant
-              title={"Title Title tit"}
-              price={10000}
-              description={""}
-              stock={0}
-            />
-            <ItemMerchant
-              title={"Title Title tit"}
-              price={10000}
-              description={""}
-              stock={0}
-            />
-          </>
-        )}
-        <Button
-          text="+"
-          href="/merchant/katalog/add"
-          size="small"
-          className="fixed right-4 bottom-20"
-        />
+        <Searchbar props={props.menu}/>
+        {props?.menu.map((item: any) => {
+          return (
+            <ItemMerchant title={item.name} price={item.price} description={item.description} stock={item.stock} />
+          )
+        })}
+        {/* <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} />
+        <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} />
+        <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} />
+        <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} /> */}
+
+        <Button text="+" href="/merchant/katalog/add" size="small" className="fixed right-4 bottom-20" />
       </div>
     </MerchantLayout>
   );

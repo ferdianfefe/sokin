@@ -24,7 +24,7 @@ export default function TestComponents() {
       </div>
       <div>
         <ItemMerchant title={'Title Title tit'} price={10000} description={'Lorem ipsum lorem ipsum leorem ispshdf askjgsa fadskj ghasifo'} stock={0} />
-        <ItemCustomer title={'Title Title tit'} price={0} />
+        <ItemCustomer title={'Title Title tit'} price={0} description={''} />
       </div>
 
     </>
