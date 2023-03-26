@@ -16,17 +16,17 @@ export default async function handle(
   res: NextApiResponse
 ) {
   if (req.method === "GET") {
-    // get menu with pagination 
+    // get menu with pagination
     const { page, limit } = req.query;
     const menu = await prisma.menu.findMany({
-      take: (limit? parseInt(limit.toString()) : 0) as number,
-      skip: (page? parseInt(page.toString()) : 0) as number,
+      take: (limit ? parseInt(limit.toString()) : 0) as number,
+      skip: (page ? parseInt(page.toString()) : 0) as number,
     });
     return res.json(menu);
-
   }
   if (req.method === "POST") {
-    const { id, namaProduk, harga, kategori, deskripsi, stok, user } = JSON.parse(req.body) //req.body as MenuCreateRequestBody;
+    const { id, namaProduk, harga, kategori, deskripsi, stok, user, image } =
+      JSON.parse(req.body); //req.body as MenuCreateRequestBody;
     console.log(JSON.parse(req.body));
 
     if (id) {
@@ -40,15 +40,14 @@ export default async function handle(
           category: kategori,
           description: deskripsi,
           stock: parseInt(stok),
+          image: image,
         },
       });
 
       if (!updatedMenu) {
         return res.status(400).json({ message: "failed to update menu" });
       }
-    }
-
-    else {
+    } else {
       const newMenu = await prisma.menu.create({
         data: {
           ownerId: user,
@@ -56,7 +55,7 @@ export default async function handle(
           price: parseFloat(harga),
           category: kategori,
           description: deskripsi,
-          image: "image",
+          image: image,
           stock: parseInt(stok),
         },
       });
@@ -66,27 +65,15 @@ export default async function handle(
       }
     }
 
-    // const updateOwner = await prisma.owner.update({
-    //   where: {
-    //     id: user,
-    //   },
-    //   data: {
-    //     menus: {
-    //       push: newMenu,
-    //     },
-    //   },
-    // })
-
-
     return res.json("sukses");
   }
-  if(req.method == "DELETE"){
+  if (req.method == "DELETE") {
     const { id } = JSON.parse(req.body);
     const deleteMenu = await prisma.menu.delete({
       where: {
-        id: id
-      }
-    })
+        id: id,
+      },
+    });
     if (!deleteMenu) {
       return res.status(400).json({ message: "failed to delete menu" });
     }

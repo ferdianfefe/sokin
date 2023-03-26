@@ -32,7 +32,13 @@ const Katalog = (props: { menu: any }): JSX.Element => {
             alt={""}
             className="rounded-full bg-white"
           /> */}
-          <Image alt="preksu-logo" src={"/images/preksu.png"} width={80} height={80} className="rounded-full bg-white"></Image>
+          <Image
+            alt="preksu-logo"
+            src={"/images/preksu.png"}
+            width={80}
+            height={80}
+            className="rounded-full bg-white"
+          ></Image>
           <div className="w-3/5 flex justify-between">
             <div className="w-[45%] h-16 bg-white rounded-lg flex-col flex justify-center items-center">
               <div className="flex">
@@ -104,15 +110,16 @@ const Katalog = (props: { menu: any }): JSX.Element => {
             </Menu>
           </div>
           <Searchbar props={props.menu} />
-          <div className={customerView? "grid grid-cols-2 gap-4" : ""}>
-            {props?.menu?.map((item: any) => {
+          <div className={customerView ? "grid grid-cols-2 gap-4" : ""}>
+            {props?.menu?.map((item: any, index: number) => {
               return (
-                <div className="">
+                <div className="" key={index}>
                   {customerView ? (
                     <ItemCustomer
                       title={item.name}
                       price={item.price}
                       description={item.description}
+                      image={item.image}
                     />
                   ) : (
                     <ItemMerchant
@@ -121,6 +128,7 @@ const Katalog = (props: { menu: any }): JSX.Element => {
                       price={item.price}
                       description={item.description}
                       stock={item.stock}
+                      image={item.image}
                     />
                   )}
                 </div>
@@ -146,8 +154,8 @@ const Katalog = (props: { menu: any }): JSX.Element => {
 
 export default Katalog;
 
-export const getServerSideProps = async ({req}:{req: any}) => {
-  const session = await getSession({req});
+export const getServerSideProps = async ({ req }: { req: any }) => {
+  const session = await getSession({ req });
   // console.log(session);
   if (!session) {
     return {
@@ -160,11 +168,11 @@ export const getServerSideProps = async ({req}:{req: any}) => {
 
   const data = await prisma.menu.findMany({
     where: {
-      ownerId: session?.user.id
-    }
+      ownerId: session?.user.id,
+    },
   });
 
   return {
-    props: { menu: data }
-  }
-}
+    props: { menu: data },
+  };
+};

@@ -69,7 +69,7 @@ export default async function handler(
     const newOwner = await prisma.owner.create({
       data: {
         name,
-        idCardNumber,
+        idCardNumber: idCardNumber.toString(),
         city,
         address,
         phoneNumber,
