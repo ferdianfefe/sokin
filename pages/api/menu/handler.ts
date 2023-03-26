@@ -7,7 +7,7 @@ type MenuCreateRequestBody = {
   price: number;
   category: string;
   description: string;
-  image: File;
+  image: string;
   stock: number;
 };
 
@@ -26,7 +26,7 @@ export default async function handle(
 
   }
   if (req.method === "POST") {
-    const { id, namaProduk, harga, kategori, deskripsi, stok, user } = JSON.parse(req.body) //req.body as MenuCreateRequestBody;
+    const { id, namaProduk, harga, kategori, deskripsi, stok, user, image } = JSON.parse(req.body) //req.body as MenuCreateRequestBody;
     console.log(JSON.parse(req.body));
 
     if (id) {
@@ -39,6 +39,7 @@ export default async function handle(
           price: parseFloat(harga),
           category: kategori,
           description: deskripsi,
+          image,
           stock: parseInt(stok),
         },
       });
@@ -56,7 +57,7 @@ export default async function handle(
           price: parseFloat(harga),
           category: kategori,
           description: deskripsi,
-          image: "image",
+          image,
           stock: parseInt(stok),
         },
       });
