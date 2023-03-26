@@ -7,7 +7,7 @@ type MenuCreateRequestBody = {
   price: number;
   category: string;
   description: string;
-  image: File;
+  image: string;
   stock: number;
 };
 
@@ -39,8 +39,8 @@ export default async function handle(
           price: parseFloat(harga),
           category: kategori,
           description: deskripsi,
+          image,
           stock: parseInt(stok),
-          image: image,
         },
       });
 
@@ -55,7 +55,7 @@ export default async function handle(
           price: parseFloat(harga),
           category: kategori,
           description: deskripsi,
-          image: image,
+          image,
           stock: parseInt(stok),
         },
       });
