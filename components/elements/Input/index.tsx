@@ -43,13 +43,42 @@ const Input: React.FC<Props> = ({
       <p className="font-semibold text-xs">{text}</p>
 
       <div className="mt-1 relative">
-        <input
-          type={type}
-          {...formHookProps}
-          value={value}
-          onChange={onChangeHandler}
-          className={` bg-[#FFF0E0] text-orange-800 font-semibold px-8 w-full rounded-[20px] h-8 shadow-[-2px_2px_3px_0.1px_rgb(100,100,0,0.3)]`}
-        ></input>
+        {type === 'dropdown' ?
+
+        <div className={`shadow-[-2px_2px_3px_0.1px_rgb(100,100,0,0.3)] rounded-[20px]`}>
+          <select name="menu-category" id="merchant-category" className="className={` bg-[#FFF0E0] text-orange-800 font-semibold pl-8 w-full rounded-[20px] h-8 `}">
+            <option value="makanan">Makanan</option>
+            <option value="minuman">Minuman</option>
+            <option value="camilan">Camilan</option>
+          </select>
+        </div>
+
+        :
+
+        type === 'comment' ?
+
+        <div>
+          <textarea
+            {...formHookProps}
+            value={value}
+            onChange={onChangeHandler}
+            className={` bg-[#FFF0E0] text-orange-800 resize-y font-semibold py-2 px-8 w-full rounded-[20px] h-28 shadow-[-2px_2px_3px_0.1px_rgb(100,100,0,0.3)]`}
+          ></textarea>
+
+        </div>
+
+        :(
+        <div>
+          <input
+            type={type}
+            {...formHookProps}
+            value={value}
+            onChange={onChangeHandler}
+            className={` bg-[#FFF0E0] text-orange-800 font-semibold px-8 w-full rounded-[20px] h-8 shadow-[-2px_2px_3px_0.1px_rgb(100,100,0,0.3)]`}
+          ></input>
+        </div>
+        )
+      }
         {side ? (
           <Image
             className={`absolute top-[8px] ${

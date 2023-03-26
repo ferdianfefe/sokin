@@ -91,6 +91,7 @@ model Merchant {
   id           String  @id @default(auto()) @map("_id") @db.ObjectId
   ownerId      String  @map("owner_id") @db.ObjectId
   name         String?
+  address      String?
   postalCode   String?
   coordinates  String?
   benchmark    String?
