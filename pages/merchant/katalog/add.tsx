@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/router";
+import InputImageRound from "components/elements/InputImageRound";
 
 interface IFormInputs {
   id: string;
@@ -19,6 +20,7 @@ interface IFormInputs {
 const Add: React.FC = (): JSX.Element => {
   const [currentFile, setCurrentFile] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [menuImage, setMenuImage] = useState<File | null>(null);
 
   const router = useRouter();
 
@@ -38,7 +40,7 @@ const Add: React.FC = (): JSX.Element => {
 
   useEffect(() => {
     if (router.query.id) {
-      fetch("/api/menu/edit", { method: "POST", body: JSON.stringify( {id} ) })
+      fetch("/api/menu/edit", { method: "POST", body: JSON.stringify({ id }) })
         .then((res) => res.json())
         .then((data) => {
           setValue("namaProduk", data.name);
@@ -68,17 +70,31 @@ const Add: React.FC = (): JSX.Element => {
     }
   };
 
+  const uploadImageHandler = async (key: string, file: File) => {
+    setMenuImage(file);
+  };
+
   const submitHandler: SubmitHandler<IFormInputs> = async (
     data: IFormInputs
   ) => {
-    let id = (session) ? session.user.id : '';
-    console.log("tambah");
+    let id = session ? session.user.id : "";
     const { namaProduk, harga, kategori, deskripsi, stok } = data;
     if (true /*currentFile*/) {
+      const menuLogoFd = new FormData();
+      menuLogoFd.append("file", menuImage);
+      menuLogoFd.append("upload_preset", "menu-upload");
+
+      const menuLogoUploaded = await fetch(
+        "https://api.cloudinary.com/v1_1/dhzuyy5bo/image/upload",
+        {
+          method: "POST",
+          body: menuLogoFd,
+        }
+      ).then((res) => res.json());
+      console.log("gambar", menuLogoUploaded.secure_url)
       const formData = new FormData();
-      // formData.append("file", currentFile);
+
       if (router.query.id) {
-        console.log("masuk");
         formData.append("id", id);
       }
       formData.append("name", namaProduk);
@@ -86,14 +102,12 @@ const Add: React.FC = (): JSX.Element => {
       formData.append("category", kategori);
       formData.append("description", deskripsi);
       formData.append("stock", stok.toString());
+      formData.append("image", menuLogoUploaded.secure_url);
 
-      const res = await fetch(
-        "/api/menu/handler",
-        {
-          method: "POST",
-          body: JSON.stringify({ ...data, user: user?.id }),
-        }
-      );
+      const res = await fetch("/api/menu/handler", {
+        method: "POST",
+        body: JSON.stringify({ ...data, user: user?.id, image: menuLogoUploaded.secure_url }),
+      });
       const json = await res.json();
       console.log(json);
       if (!res.ok) throw Error(json.message);
@@ -110,7 +124,7 @@ const Add: React.FC = (): JSX.Element => {
     console.log(json);
     if (!res.ok) throw Error(json.message);
     router.push("/merchant/katalog");
-  }
+  };
 
   return (
     <MerchantLayout location="katalog">
@@ -121,34 +135,10 @@ const Add: React.FC = (): JSX.Element => {
         </h1>
         <h1 className="text-center mb-2 font-medium">Foto Produk</h1>
         <form onSubmit={handleSubmit(submitHandler)}>
-          {previewImage ? (
-            <div className="rounded-full relative w-24 h-24 overflow-hidden">
-              <Image
-                src={previewImage}
-                alt="preview"
-                layout="fill"
-                objectFit="contain"
-              />
-            </div>
-          ) : (
-            // <div className="rounded-full w-24 h-24 bg-[#C4C4C4]"></div>
-            <div></div>
-          )}
-          <input
-            type="file"
-            id="picture"
-            className="hidden"
-            onChange={pickPicture}
+          <InputImageRound
+            name="menuImage"
+            handleUploadFile={uploadImageHandler}
           />
-          <label htmlFor="picture">
-            <div className="relative h-32 w-32 mx-auto mb-2">
-              <Image
-                alt="camera icon"
-                src={"/images/icons/camera-primary.svg"}
-                fill
-              />
-            </div>
-          </label>
           <Input
             text="id"
             formHookProps={{
@@ -192,8 +182,6 @@ const Add: React.FC = (): JSX.Element => {
             {/* <svg className="absolute top-8 right-4" width="19" height="9" viewBox="0 0 19 9" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M1 1L9.5 7.885L18 1" stroke="#FE8304" stroke-width="1.72125" stroke-linecap="round" stroke-linejoin="round" />
             </svg> */}
-
-
           </div>
           <Input
             type="comment"
@@ -229,11 +217,8 @@ const Add: React.FC = (): JSX.Element => {
           />
 
           <div className="h-8"></div>
-          <div className={router.query.id? "" : "hidden"} onClick={hapus}>
-            <Button
-              text="Hapus Menu"
-              type="red"
-            />
+          <div className={router.query.id ? "" : "hidden"} onClick={hapus}>
+            <Button text="Hapus Menu" type="red" />
           </div>
           <br></br>
           <button
@@ -251,7 +236,7 @@ const Add: React.FC = (): JSX.Element => {
 
 export default Add;
 
-export const getServerSideProps = async ({req}:{req: any}) => {
+export const getServerSideProps = async ({ req }: { req: any }) => {
   const session = await getSession({ req });
   // console.log(session);
   if (!session) {
@@ -264,6 +249,5 @@ export const getServerSideProps = async ({req}:{req: any}) => {
   }
   return {
     props: { session },
-  }
-}
-
+  };
+};

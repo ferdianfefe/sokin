@@ -11,7 +11,15 @@ const ItemMerchant: React.FC<{
   stock: number;
   image?: string;
   className?: string;
-}> = ({ id, title, price, description, stock, image, className }): JSX.Element => {
+}> = ({
+  id,
+  title,
+  price,
+  description,
+  stock,
+  image,
+  className,
+}): JSX.Element => {
   const [count, setCount] = useState(stock);
 
   const router = useRouter();
@@ -23,15 +31,15 @@ const ItemMerchant: React.FC<{
       query: { id },
     });
     console.log("edit" + id);
-  }
-  
-    return (
+  };
+
+  return (
     <div
       className={`${className} w-full h-32 shadow-[0_1px_4px_1px_rgb(300,75,0,0.13)] items-center justify-between flex rounded-xl pr-2`}
     >
       <div className="w-36 h-28 p-1">
         <Image
-          src={'https://cdn-icons-png.flaticon.com/512/1205/1205761.png'}
+          src={image}
           alt={title}
           height={100}
           width={100}
@@ -48,8 +56,8 @@ const ItemMerchant: React.FC<{
             <div onClick={(e) => edit(e)}>
               {/* <EditButton className="mt-1" /> */}
               <Image
-                src={'/images/EditCircle.svg'}
-                alt={'edit'}
+                src={"/images/EditCircle.svg"}
+                alt={"edit"}
                 height={30}
                 width={30}
                 className="mt-1"
@@ -61,11 +69,17 @@ const ItemMerchant: React.FC<{
         <div className="h-7 w-[94%] mx-auto bg-c-orange-200 items-center flex py-1 px-3 rounded-xl justify-between ">
           <h3 className="font-semibold text-center ml-3">Stok</h3>
           <div className="flex items-center justify-evenly w-4/6 mr-4">
-            <button className="w-8 h-5 bg-white text-sm font-semibold rounded" onClick={() => setCount(count - 1)}>
+            <button
+              className="w-8 h-5 bg-white text-sm font-semibold rounded"
+              onClick={() => setCount(count - 1)}
+            >
               -
             </button>
             <h3 className="font-semibold">{count}</h3>
-            <button className="w-8 h-5 bg-white text-sm font-semibold rounded" onClick={() => setCount(count + 1)}>
+            <button
+              className="w-8 h-5 bg-white text-sm font-semibold rounded"
+              onClick={() => setCount(count + 1)}
+            >
               +
             </button>
           </div>
