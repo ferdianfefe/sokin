@@ -69,7 +69,7 @@ export default async function handler(
     const newOwner = await prisma.owner.create({
       data: {
         name,
-        idCardNumber,
+        idCardNumber: idCardNumber.toString(),
         city,
         address,
         phoneNumber,
@@ -77,7 +77,7 @@ export default async function handler(
         password,
         bankName,
         accountNumber,
-        accountBookPhoto: '', // TODO: impl cloudinary
+        accountBookPhoto,
       },
     });
 
@@ -89,9 +89,11 @@ export default async function handler(
       data: {
         ownerId: newOwner.id,
         name: merchantName,
+        address: merchantAddress,
         postalCode,
         coordinates,
         benchmark,
+        merchantLogo,
       },
     });
 

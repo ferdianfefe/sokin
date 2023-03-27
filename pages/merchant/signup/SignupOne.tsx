@@ -528,7 +528,7 @@ export default function SignupOne() {
             {currentStep === 3 && (
               <>
                 <div onClick={lanjutkan}>
-                  <Button text="Lanjutkan" size="small" />
+                  <Button text="Lanjutkan" size="small" href="/"/>
                 </div>
               </>
             )}
