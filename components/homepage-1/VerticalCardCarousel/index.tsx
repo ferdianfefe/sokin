@@ -7,10 +7,10 @@ const VerticalCardCarousel = (data: any) => {
   const slides = [
     {
       id: "641f454af632f91b866b4805",
-      name: "Warung Pak Joko",
+      name: "Seblak Pasta Deresan",
       jarak: 2.7,
       rating: 4,
-      img:'/img/homepage/warung-pak-joko.jpg'
+      img:'/img/homepage/seblak-pasta.jpg'
     },
     {
       id: "2",
