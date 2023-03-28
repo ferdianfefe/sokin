@@ -1,7 +1,8 @@
 import React from 'react'
 import Image from 'next/image'
 
-const VerticalCardCarousel = () => {
+const VerticalCardCarousel = (data: any) => {
+  console.log(data)
   const slides = [
     {
       id: 1,
@@ -39,6 +40,12 @@ const VerticalCardCarousel = () => {
                 {slides.map((slide) => (
                   <div key={slide.id}>
                     <VerticalCard img={slide.img} id={slide.id} name={slide.name} jarak={slide.jarak} rating={slide.rating} />
+
+                  </div>
+                ))}
+                {( data.data ) && data.data.map((item: any) => (
+                  <div key={item.id}>
+                    <VerticalCard img={item.img} id={item.id} name={item.name} jarak={Math.round(Math.random() * (10 - 1) + 1)} rating={Math.round(Math.random() * (5 - 1) + 1)} />
 
                   </div>
                 ))}
