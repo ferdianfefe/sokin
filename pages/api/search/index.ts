@@ -13,15 +13,15 @@ export default async function handler(
 
     // console.log(keyword);
 
-    // const merchant = await prisma.merchant.findMany({
-    //     where: {
-    //         OR: [
-    //             { name: { contains: keyword, mode: "insensitive" } },
-    //         ],
-    //     }
-    // });
+    const merchant = await prisma.merchant.findMany({
+        where: {
+            OR: [
+                { name: { contains: keyword, mode: "insensitive" } },
+            ],
+        }
+    });
 
-    const merchant = await prisma.merchant.findMany({})
+    // const merchant = await prisma.merchant.findMany({})
 
     if (!merchant) {
       return res.status(400).json({ message: "Merchant not found" });
