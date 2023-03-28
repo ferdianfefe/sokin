@@ -45,7 +45,7 @@ const VerticalCardCarousel = (data: any) => {
                 ))}
                 {( data.data ) && data.data.map((item: any) => (
                   <div key={item.id}>
-                    <VerticalCard img={item.img} id={item.id} name={item.name} jarak={Math.round(Math.random() * (10 - 1) + 1)} rating={Math.round(Math.random() * (5 - 1) + 1)} />
+                    <VerticalCard img={item.merchantLogo} id={item.id} name={item.name} jarak={Math.round(Math.random() * (10 - 1) + 1)} rating={Math.round(Math.random() * (5 - 1) + 1)} />
 
                   </div>
                 ))}
@@ -65,7 +65,7 @@ const VerticalCard = ({ img, id, name, jarak, rating }: { img: string, id:number
               {img && (
                 <Image 
                     src={img}
-                    alt=''
+                    alt='Logo'
                     width={400}
                     height={300}
                     className='object-cover'
