@@ -14,6 +14,7 @@ import { useState } from "react";
 const Homepage: React.FunctionComponent = (): JSX.Element => {
   const [keyword, setKeyword] = useState("");
   const [searchResult, setSearchResult] = useState([]);
+  const [similar, setSimilar] = useState([]);
   const { data, status } = useSession();
 
   // console.log(data?.user);
@@ -48,6 +49,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
       }).then(res => res.json()).then(data => {
         console.log(data.data);
         setSearchResult(data.data);
+        setSimilar(data.data2);
       })
     }
   }
@@ -340,16 +342,16 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
                         </div>  */}
 
               <div className="w-full flex flex-col items-center">
-                {searchResult.map((item: any) => {
+                {similar.map((item: any) => {
                   return (
                     <div className="w-[87.5%] flex justify-center shadow-card mb-4 rounded-[20px] bg-[#FFF] shadow-[-3px 2px 5px 1px rgba(255, 183, 109, 0.37)] border-[1px] border-[#FE8304]/10">
                       <div className="w-[25%] p-2">
                         <Image 
-                            src={'https://cdn-icons-png.flaticon.com/512/1205/1205761.png'}
+                            src={item.merchantLogo}
                             alt=''
                             width={75}
                             height={75}
-                            // className='object-cover'
+                            className='aspect-square'
                         />
                       </div>
                       <div className="w-[75%] flex flex-col justify-evenly p-2">
