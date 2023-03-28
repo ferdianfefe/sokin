@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient, Prisma } from "@prisma/client";
+import prisma from "lib/prisma";
 
 type MerchantGetRequestBody = {
     ownerId: string;
@@ -22,7 +22,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         // console.log(id);
         const merchant = await prisma.merchant.findFirst({
             where: {
-                id: id
+                id: id,
             }
         })
 
