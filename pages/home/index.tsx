@@ -349,7 +349,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
                             alt=''
                             width={75}
                             height={75}
-                            className='object-cover'
+                            className='aspect-square'
                         />
                       </div>
                       <div className="w-[75%] flex flex-col justify-evenly p-2">

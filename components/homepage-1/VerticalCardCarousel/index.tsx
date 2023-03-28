@@ -68,7 +68,7 @@ const VerticalCard = ({ img, id, name, jarak, rating }: { img: string, id:number
                     alt='Logo'
                     width={400}
                     height={300}
-                    className='object-cover'
+                    className='aspect-square'
                 />
               )}
               {!img && (
