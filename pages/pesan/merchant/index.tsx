@@ -15,6 +15,7 @@ const Merchant = (props: { menu: any }): JSX.Element => {
 
   const [menu, setMenu] = useState([]);
   const [name, setName] = useState("");
+  const [logo, setLogo] = useState("");
 
   const { data: session, status } = useSession();
   // console.log(session?.user);
@@ -29,6 +30,7 @@ const Merchant = (props: { menu: any }): JSX.Element => {
     }).then((res) => res.json()).then((data) => {
       setMenu(data.data);
       setName(data.name);
+      setLogo(data.logo);
     })
   }, []);
 
@@ -50,7 +52,7 @@ const Merchant = (props: { menu: any }): JSX.Element => {
           /> */}
           <Image
             alt="preksu-logo"
-            src={"/images/preksu.png"}
+            src={logo}
             width={80}
             height={80}
             className="rounded-full bg-white"
