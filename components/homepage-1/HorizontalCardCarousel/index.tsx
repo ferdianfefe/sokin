@@ -27,9 +27,9 @@ const HorizontalCardCarousel = () => {
 
   ]
   return (
-    <div className='w-full h-full overflow-auto flex no-scrollbar'>
+    <div className='w-full h-full overflow-auto flex no-scrollbar mt-2'>
         <div className='w-full pl-7 h-[140px] flex'>
-            <div className='flex items-center gap-4'>
+            <div className='flex items-center gap-3'>
                 
                 {slides.map((slide) => (
                   <div key={slide.id}>
