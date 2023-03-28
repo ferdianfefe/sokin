@@ -1,32 +1,33 @@
 import React from 'react'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 
 const VerticalCardCarousel = (data: any) => {
   console.log(data)
   const slides = [
     {
-      id: 1,
+      id: "641f454af632f91b866b4805",
       name: "Warung Pak Joko",
       jarak: 2.7,
       rating: 4,
       img:'/img/homepage/warung-pak-joko.jpg'
     },
     {
-      id: 2,
+      id: "2",
       name: "Warmindo Andeska",
       jarak: 1,
       rating: 3,
       img:'/img/homepage/andeska.jpg'
     },
     {
-      id: 3,
+      id: "3",
       name: "Ayam Geprek Bu Susi",
       jarak: 0.6,
       rating: 4,
       img:'/img/homepage/ayam-geprek.jfif'
     },
     {
-      id: 4,
+      id: "4",
       name: "Nasi Goreng Mandiri",
       jarak: 2,
       rating: 5,
@@ -57,9 +58,17 @@ const VerticalCardCarousel = (data: any) => {
 
 export default VerticalCardCarousel
 
-const VerticalCard = ({ img, id, name, jarak, rating }: { img: string, id:number, name:string, jarak:number, rating:number }) => {
+const VerticalCard = ({ img, id, name, jarak, rating }: { img: string, id:string, name:string, jarak:number, rating:number }) => {
+  const router = useRouter();
+
+  const goTo = () => {
+    router.push({
+      pathname: '/pesan/merchant',
+      query: { id: id },
+    })
+  }
   return (
-    <div>
+    <div onClick={goTo}>
         <div className='flex flex-col w-[160px] min-h-[262px] max-h-[282px] rounded-[20px] bg-[#FFF] shadow-[-3px 2px 5px 1px rgba(255, 183, 109, 0.37)] border-[1px] border-[#FE8304]/10 overflow-hidden shadow-card'>
             <div className='flex h-[178px] w-full overflow-hidden'>
               {img && (

@@ -2,19 +2,33 @@ import { Menu, Switch, Transition, Combobox } from "@headlessui/react";
 import Button from "components/elements/Button";
 import ItemCustomer from "components/elements/ItemCustomer";
 import ItemMerchant from "components/elements/ItemMerchant";
-import Searchbar from "components/elements/Searchbar";
 import MerchantLayout from "components/layout/MerchantLayout";
 import { getSession, useSession } from "next-auth/react";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import prisma from "lib/prisma";
+import Search from "public/img/homepage/icon-search.png";
+import { useRouter } from "next/router";
 
-const Katalog = (props: { menu: any }): JSX.Element => {
+const Merchant = (props: { menu: any }): JSX.Element => {
+  const router = useRouter();
+
+  const [menu, setMenu] = useState([]);
+
   const { data: session, status } = useSession();
   // console.log(session?.user);
   const user = session?.user;
 
-  console.log(props.menu);
+  // console.log(router.query);
+
+  useEffect(() => {
+    fetch("/api/profile/merchant", {
+      method: "POST",
+      body: JSON.stringify({ id: router.query.id }),
+    }).then((res) => res.json()).then((data) => {
+      setMenu(data.data);
+    })
+  }, []);
 
   const [customerView, setcustomerView] = useState(false);
 
@@ -66,24 +80,11 @@ const Katalog = (props: { menu: any }): JSX.Element => {
             </div>
           </div>
         </div>
+        <div className="mt-4 px-4">
+          <SearchBar />
+        </div>
         <div className="flex flex-col gap-4 px-4 py-6">
-          <div className="flex justify-between">
-            <div className="w-44 h-8 bg-c-orange-100 flex rounded-full justify-center items-center shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)]">
-              <p className="text-c-orange-700 text-sm">Customer View</p>
-              <Switch
-                checked={customerView}
-                onChange={setcustomerView}
-                className={`${
-                  customerView ? "bg-c-green-700" : "bg-c-red-700"
-                } relative inline-flex items-center h-6 rounded-full w-12 shadow-[inset_0_6px_10px_7px_rgb(500,500,500,0.4)] ml-3`}
-              >
-                <span
-                  className={`${
-                    customerView ? "translate-x-1" : "translate-x-7"
-                  } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-                />
-              </Switch>
-            </div>
+          <div className="flex justify-end">
             <Menu as="div" className="relative inline-block">
               <Menu.Button className="w-20 h-8 relative bg-c-orange-100 flex rounded-full justify-center items-center shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)] text-sm text-c-orange-700">
                 Sort By
@@ -109,70 +110,80 @@ const Katalog = (props: { menu: any }): JSX.Element => {
               </Menu.Items>
             </Menu>
           </div>
-          <Searchbar props={props.menu} />
-          <div className={customerView ? "grid grid-cols-2 gap-4" : ""}>
-            {props?.menu?.map((item: any, index: number) => {
+          <div className={"grid grid-cols-2 gap-4"}>
+            {menu.length != 0 && menu.map((item: any, index: number) => (
+              <div className="" key={index}>
+                  <ItemCustomer
+                    title={item.name}
+                    price={item.price}
+                    description={item.description}
+                    image={item.image}
+                  />
+              </div>
+            ))}
+            {/* {props?.menu?.map((item: any, index: number) => {
               return (
                 <div className="" key={index}>
-                  {customerView ? (
                     <ItemCustomer
                       title={item.name}
                       price={item.price}
                       description={item.description}
                       image={item.image}
                     />
-                  ) : (
-                    <ItemMerchant
-                      id={item.id}
-                      title={item.name}
-                      price={item.price}
-                      description={item.description}
-                      stock={item.stock}
-                      image={item.image}
-                    />
-                  )}
                 </div>
               );
-            })}
+            })} */}
           </div>
           {/* <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} />
         <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} />
         <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} />
         <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} /> */}
-
-          <Button
-            text="+"
-            href="/merchant/katalog/add"
-            size="small"
-            className="fixed right-4 bottom-20"
-          />
         </div>
       </div>
     </MerchantLayout>
   );
 };
 
-export default Katalog;
+export default Merchant;
 
-export const getServerSideProps = async ({ req }: { req: any }) => {
-  const session = await getSession({ req });
-  // console.log(session);
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/merchant/signin",
-        permanent: false,
-      },
-    };
-  }
-
-  const data = await prisma.menu.findMany({
-    where: {
-      ownerId: session?.user.id,
-    },
-  });
-
-  return {
-    props: { menu: data },
-  };
+const SearchBar: React.FunctionComponent = (): JSX.Element => {
+  return (
+    <>
+      <div className="relative flex">
+        {/* ICON */}
+        <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+          <Image src={Search} alt={""} />
+        </span>
+        <input
+          placeholder="Cari makananmu"
+          type="text"
+          className="bg-[#FE8304] rounded-full bg-opacity-40 w-full py-[6px] px-14 font-bold text-sm placeholder-[#817A7A] bg-auto focus:outline-none"
+        ></input>
+      </div>
+    </>
+  );
 };
+
+// export const getServerSideProps = async ({ req }: { req: any }) => {
+//   // const router = useRouter();
+//   const session = await getSession({ req });
+//   // console.log(session);
+//   if (!session) {
+//     return {
+//       redirect: {
+//         destination: "/merchant/signin",
+//         permanent: false,
+//       },
+//     };
+//   }
+
+//   const data = await prisma.menu.findMany({
+//     where: {
+//       ownerId: router.query.id,
+//     }
+//   })
+
+//   return {
+//     props: { menu: data },
+//   };
+// };
