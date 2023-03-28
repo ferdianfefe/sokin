@@ -154,25 +154,25 @@ const Katalog = (props: { menu: any }): JSX.Element => {
 
 export default Katalog;
 
-export const getServerSideProps = async ({ req }: { req: any }) => {
-  const session = await getSession({ req });
-  // console.log(session);
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/merchant/signin",
-        permanent: false,
-      },
-    };
-  }
+// export const getServerSideProps = async ({ req }: { req: any }) => {
+//   const session = await getSession({ req });
+//   // console.log(session);
+//   if (!session) {
+//     return {
+//       redirect: {
+//         destination: "/merchant/signin",
+//         permanent: false,
+//       },
+//     };
+//   }
 
-  const data = await prisma.menu.findMany({
-    where: {
-      ownerId: session?.user.id,
-    },
-  });
+//   const data = await prisma.menu.findMany({
+//     where: {
+//       ownerId: session?.user.id,
+//     },
+//   });
 
-  return {
-    props: { menu: data },
-  };
-};
+//   return {
+//     props: { menu: data },
+//   };
+// };

@@ -35,9 +35,9 @@ const VerticalCardCarousel = (data: any) => {
   ]
   return (
     <div className='w-full h-full overflow-auto flex no-scrollbar'>
-        <div className='w-full pl-7 h-[295px] flex '>
-            <div className='flex items-center gap-6'>
-                {( !data.data ) && slides.map((slide) => (
+        <div className='w-full pl-7 h-[286px] flex '>
+            <div className='flex items-center gap-3 h-[286px]'>
+                {slides.map((slide) => (
                   <div key={slide.id}>
                     <VerticalCard img={slide.img} id={slide.id} name={slide.name} jarak={slide.jarak} rating={slide.rating} />
 
@@ -60,28 +60,15 @@ export default VerticalCardCarousel
 const VerticalCard = ({ img, id, name, jarak, rating }: { img: string, id:number, name:string, jarak:number, rating:number }) => {
   return (
     <div>
-        <div className='flex flex-col w-[160px] min-h-[262px] max-h-[282px] rounded-[20px] bg-[#FFF] shadow-[-3px 2px 5px 1px rgba(255, 183, 109, 0.37)] border-[1px] border-[#FE8304]/10 overflow-hidden shadow-card'>
-            <div className='flex h-[178px] w-full overflow-hidden'>
-              {img && (
-                <Image 
-                    src={img}
-                    alt=''
-                    width={400}
-                    height={300}
-                    className='object-cover'
-                />
-              )}
-              {!img && (
-                <div className='w-[190px] h-[190px]'>
-                  <Image 
-                      src={'https://cdn-icons-png.flaticon.com/512/1205/1205761.png'}
-                      alt=''
-                      width={400}
-                      height={300}
-                      className='object-cover'
-                  />
-                </div>
-              )}
+        <div className='flex flex-col w-[160px] min-h-[255px] max-h-[282px] rounded-[20px] bg-[#FFF] shadow-[-3px 2px 5px 1px rgba(255, 183, 109, 0.37)] border-[1px] border-[#FE8304]/10 overflow-hidden shadow-card'>
+            <div className='flex h-[168px] w-full overflow-hidden'>
+              <Image 
+                  src={img}
+                  alt=''
+                  width={400}
+                  height={300}
+                  className='object-cover'
+              />
             </div>
 
             {/* <div className='flex flex-col w-full bg-slate-200 p-3'> */}
