@@ -1,24 +1,38 @@
 import { Switch } from "@headlessui/react";
 import Button from "components/elements/Button";
 import MapContainer from "components/elements/MapContainer";
-import SearchBar from "components/elements/Searchbar";
 import HorizontalCardCarousel from "components/homepage-1/HorizontalCardCarousel";
 import SquareCardCarousel from "components/homepage-1/SquareCardCarousel";
 import VerticalCardCarousel from "components/homepage-1/VerticalCardCarousel";
 import DefaultLayout from "components/layout/DefaultLayout";
 import Image from "next/image";
 import React, { useState } from "react";
+import Search from "public/img/homepage/icon-search.png";
 
 export default function Pesan() {
   const [showLocation, setShowLocation] = useState(false);
-  const [showPopUp, setShowPopup] = useState(false);
+  const [showPopUp, setShowPopup] = useState("z-50 backdrop-blur-sm fixed w-full h-full translate-y-10 transition duration-300 hidden");
 
   const toggleShowLocation = () => {
     setShowLocation(!showLocation);
   };
   const togglePopUp = () => {
-    setShowPopup(!showPopUp);
+    if (showPopUp === "z-50 backdrop-blur-sm fixed w-full h-full translate-y-10 transition duration-300 hidden") {
+      setShowPopup("z-50 backdrop-blur-sm fixed w-full h-full transition duration-300");
+    } else {
+        setShowPopup("z-50 backdrop-blur-sm fixed w-full h-full translate-y-10 transition duration-300 hidden");
+    }
+    // setShowPopup(!showPopUp);
   };
+
+  const tes = async () => {
+    await fetch('api/profile/merchant', {
+      method: 'GET',
+    }).then((res) => 
+      res.json()).then((data) => {
+        console.log(data);
+    })
+  }
   return (
     <DefaultLayout location="pesan">
       <div className="min-h-screen py-4">
@@ -27,6 +41,7 @@ export default function Pesan() {
             showLocation={showLocation}
             setShowLocation={setShowLocation}
             togglePopup={togglePopUp}
+            showPopUp={showPopUp}
           />
         )}
         <div className="pl-5 flex items-center">
@@ -166,21 +181,42 @@ export default function Pesan() {
           <SquareCardCarousel />
         </div>
       </div>
+      <div onClick={tes}>tes</div>
     </DefaultLayout>
   );
 }
+
+const SearchBar: React.FunctionComponent = (): JSX.Element => {
+    return (
+      <>
+        <div className="relative flex">
+          {/* ICON */}
+          <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+            <Image src={Search} alt={""} />
+          </span>
+          <input
+            placeholder="Cari makananmu"
+            type="text"
+            className="bg-[#FE8304] rounded-full bg-opacity-40 w-full py-[6px] px-14 font-bold text-sm placeholder-[#817A7A] bg-auto focus:outline-none"
+          ></input>
+        </div>
+      </>
+    );
+  };
 
 const PopupLocation = ({
   setShowLocation,
   showLocation,
   togglePopup,
+  showPopUp,
 }: {
   setShowLocation: any;
   showLocation: boolean;
   togglePopup: () => void;
+  showPopUp: string;
 }) => {
   return (
-    <div className="z-50 backdrop-blur-sm fixed inset-0">
+    <div className={showPopUp}>
       <div className="w-full px-5 pt-5 h-[650px] bg-white rounded-b-3xl drop-shadow-lg">
         <div className="w-full h-20 bg-white justify-between items-center flex px-5 rounded-2xl shadow-[0_0_5px_1px_rgb(400,100,0,0.3)]">
           <div className="flex">
