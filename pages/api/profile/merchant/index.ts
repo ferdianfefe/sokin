@@ -42,7 +42,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         console.log(menu);
 
-        return res.status(200).json({ data: menu });
+        return res.status(200).json({ data: menu, name: merchant.name });
     }
     
     return res.status(405).json({ message: "Method unallowed" });

@@ -14,6 +14,7 @@ const Merchant = (props: { menu: any }): JSX.Element => {
   const router = useRouter();
 
   const [menu, setMenu] = useState([]);
+  const [name, setName] = useState("");
 
   const { data: session, status } = useSession();
   // console.log(session?.user);
@@ -27,6 +28,7 @@ const Merchant = (props: { menu: any }): JSX.Element => {
       body: JSON.stringify({ id: router.query.id }),
     }).then((res) => res.json()).then((data) => {
       setMenu(data.data);
+      setName(data.name);
     })
   }, []);
 
@@ -36,7 +38,7 @@ const Merchant = (props: { menu: any }): JSX.Element => {
     <MerchantLayout location="katalog">
       <div className="min-h-screen">
         <div className="flex flex-col gap-4 px-4 pt-9">
-          <h1 className="font-extrabold mb-2">Preksu: Ayam Geprek & Susu</h1>
+          <h1 className="font-extrabold mb-2">{name}</h1>
         </div>
         <div className="w-full h-20 bg-c-orange-600 justify-between px-7 flex items-center">
           {/* <Image
