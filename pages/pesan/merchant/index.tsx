@@ -16,6 +16,9 @@ const Merchant = (props: { menu: any }): JSX.Element => {
   const [menu, setMenu] = useState([]);
   const [name, setName] = useState("");
   const [logo, setLogo] = useState("");
+  const [keyword, setKeyword] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
+  const [similar, setSimilar] = useState([]);
 
   const { data: session, status } = useSession();
   // console.log(session?.user);
@@ -36,6 +39,29 @@ const Merchant = (props: { menu: any }): JSX.Element => {
 
   const [customerView, setcustomerView] = useState(false);
 
+  const change = (e: any) => {
+    setKeyword(e.target.value);
+    // console.log(keyword);
+  }
+
+  const search = async (e: any) => {
+    if (e.key === "Enter" || e === "Enter") {
+      // setFixKeyword(keyword);
+      // Router.push(`/search?keyword=${keyword}`);
+      console.log(keyword);
+      e.target.value = "";
+      setKeyword("");
+      await fetch(`/api/search`, {
+        method: "POST",
+        body: JSON.stringify({keyword: keyword})
+      }).then(res => res.json()).then(data => {
+        console.log(data.data);
+        setSearchResult(data.data);
+        setSimilar(data.data2);
+      })
+    }
+  }
+
   return (
     <MerchantLayout location="katalog">
       <div className="min-h-screen">
@@ -51,7 +77,7 @@ const Merchant = (props: { menu: any }): JSX.Element => {
             className="rounded-full bg-white"
           /> */}
           <Image
-            alt="preksu-logo"
+            alt="logo"
             src={logo}
             width={80}
             height={80}
@@ -85,7 +111,19 @@ const Merchant = (props: { menu: any }): JSX.Element => {
           </div>
         </div>
         <div className="mt-4 px-4">
-          <SearchBar />
+        <div className="relative flex">
+              {/* ICON */}
+              <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                <Image src={Search} alt={""} />
+              </span>
+              <input
+                placeholder="Cari makananmu"
+                type="text"
+                className="bg-[#FE8304] rounded-full bg-opacity-40 w-full py-[6px] px-14 font-bold text-sm placeholder-[#817A7A] bg-auto focus:outline-none"
+                onChange={change}
+                onKeyDown={search}
+              ></input>
+            </div>
         </div>
         <div className="flex flex-col gap-4 px-4 py-6">
           <div className="flex justify-end">
@@ -150,23 +188,25 @@ const Merchant = (props: { menu: any }): JSX.Element => {
 
 export default Merchant;
 
-const SearchBar: React.FunctionComponent = (): JSX.Element => {
-  return (
-    <>
-      <div className="relative flex">
-        {/* ICON */}
-        <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-          <Image src={Search} alt={""} />
-        </span>
-        <input
-          placeholder="Cari makananmu"
-          type="text"
-          className="bg-[#FE8304] rounded-full bg-opacity-40 w-full py-[6px] px-14 font-bold text-sm placeholder-[#817A7A] bg-auto focus:outline-none"
-        ></input>
-      </div>
-    </>
-  );
-};
+// const SearchBar: React.FunctionComponent = (): JSX.Element => {
+//   return (
+//     <>
+//       <div className="relative flex">
+//         {/* ICON */}
+//         <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+//           <Image src={Search} alt={""} />
+//         </span>
+//         <input
+//           placeholder="Cari makananmu"
+//           type="text"
+//           className="bg-[#FE8304] rounded-full bg-opacity-40 w-full py-[6px] px-14 font-bold text-sm placeholder-[#817A7A] bg-auto focus:outline-none"
+//           //onChange={change}
+//           //onKeyDown={search}
+//         ></input>
+//       </div>
+//     </>
+//   );
+// };
 
 // export const getServerSideProps = async ({ req }: { req: any }) => {
 //   // const router = useRouter();
