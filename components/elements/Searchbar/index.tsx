@@ -1,5 +1,6 @@
 import { Fragment, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
+import Image from "next/image";
 // const people = [
 //   { id: 1, name: "Wade Cooper" },
 //   { id: 2, name: "Arlene Mccoy" },
@@ -9,9 +10,9 @@ import { Combobox, Transition } from "@headlessui/react";
 //   { id: 6, name: "Hellen Schmidt" },
 // ];
 
-export default function Example(props: any) {
+export default function SearchBar(props: any) {
   // console.log(props.props);
-  const [selected, setSelected] = useState({name: ""});
+  const [selected, setSelected] = useState({ name: "" });
   const [query, setQuery] = useState("");
 
   const menus = props.props;
@@ -27,13 +28,13 @@ export default function Example(props: any) {
         );
 
   return (
-    <>
       <Combobox value={selected} onChange={setSelected}>
-        <div className="w-full h-8 rounded-full">
-          <div className="w-full overflow-hidden border-[1px] border-c-orange-700 rounded-full text-left shadow-md items-center">
+        <div className={`w-full h-7 rounded-full shadow-[-2px_2px_3px_1px_rgb(30,30,30,0.2)]`}>
+          <div className="w-full h-full overflow-hidden border-[1px] border-c-orange-700 rounded-full text-left shadow-md items-center">
+            <Image src="/images/Search.svg" height={15} width={14} className="absolute left-8 top-[88px]" alt={""}/>
             <Combobox.Input
-              className="w-full pl-3 pt-[7px] pr-10 text-sm rounded-full text-gray-900 outline-none"
-              displayValue={(menu: { name: any}) => menu?.name}
+              className="w-full h-full items-center flex pl-10 pr-3 text-sm rounded-full text-gray-900 outline-none"
+              displayValue={(menu: { name: any }) => menu?.name}
               onChange={(event) => setQuery(event.target.value)}
             />
           </div>
@@ -74,8 +75,7 @@ export default function Example(props: any) {
                             className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
                               active ? "text-white" : "text-teal-600"
                             }`}
-                          >
-                          </span>
+                          ></span>
                         ) : null}
                       </>
                     )}
@@ -86,6 +86,5 @@ export default function Example(props: any) {
           </Transition>
         </div>
       </Combobox>
-    </>
   );
-}
+};
