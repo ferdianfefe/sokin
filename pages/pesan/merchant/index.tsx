@@ -9,13 +9,14 @@ import { useState, useEffect } from "react";
 import prisma from "lib/prisma";
 import Search from "public/img/homepage/icon-search.png";
 import { useRouter } from "next/router";
+import Navbar from "components/elements/Navbar";
 
 const Merchant = (props: { menu: any }): JSX.Element => {
   const router = useRouter();
 
   const [menu, setMenu] = useState([]);
   const [name, setName] = useState("");
-  const [logo, setLogo] = useState("");
+  const [logo, setLogo] = useState(""); 
   const [keyword, setKeyword] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [similar, setSimilar] = useState([]);
@@ -92,7 +93,6 @@ const Merchant = (props: { menu: any }): JSX.Element => {
   };
 
   return (
-    <MerchantLayout location="katalog">
       <div className="min-h-screen">
         <AddMenuPopUp
           show={addMenuIsOpen}
@@ -227,9 +227,12 @@ const Merchant = (props: { menu: any }): JSX.Element => {
         <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} />
         <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} />
         <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} /> */}
+        <div className="fixed bottom-0 w-full bg-white">
+          <Navbar role="customer" location="home" />
+        </div>
         </div>
       </div>
-    </MerchantLayout>
+  
   );
 };
 
