@@ -37,7 +37,7 @@ const VerticalCardCarousel = (data: any) => {
   return (
     <div className='w-full h-full overflow-auto flex no-scrollbar'>
         <div className='w-full pl-7 h-[286px] flex '>
-            <div className='flex items-center gap-3 h-[286px]'>
+            <div className='flex items-center gap-3 h-[280px]'>
                 {(!data.data) && slides.map((slide) => (
                   <div key={slide.id}>
                     <VerticalCard img={slide.img} id={slide.id} name={slide.name} jarak={slide.jarak} rating={slide.rating} />
@@ -69,7 +69,7 @@ const VerticalCard = ({ img, id, name, jarak, rating }: { img: string, id:string
   }
   return (
     <div onClick={goTo}>
-        <div className='flex flex-col w-[160px] min-h-[262px] max-h-[282px] rounded-[20px] bg-[#FFF] shadow-[-3px 2px 5px 1px rgba(255, 183, 109, 0.37)] border-[1px] border-[#FE8304]/10 overflow-hidden shadow-card'>
+        <div className='flex flex-col w-[160px] h-[275px] rounded-[20px] bg-[#FFF] shadow-[-3px 2px 5px 1px rgba(255, 183, 109, 0.37)] border-[1px] border-[#FE8304]/10 overflow-hidden shadow-card'>
             <div className='flex h-[178px] w-full overflow-hidden'>
               {img && (
                 <Image 
