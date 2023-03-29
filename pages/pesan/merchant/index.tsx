@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import prisma from "lib/prisma";
 import Search from "public/img/homepage/icon-search.png";
 import { useRouter } from "next/router";
+import Navbar from "components/elements/Navbar";
 
 const Merchant = (props: { menu: any }): JSX.Element => {
   const router = useRouter();
@@ -63,7 +64,6 @@ const Merchant = (props: { menu: any }): JSX.Element => {
   }
 
   return (
-    <MerchantLayout location="katalog">
       <div className="min-h-screen">
         <div className="flex flex-col gap-4 px-4 pt-9">
           <h1 className="font-extrabold mb-2">{name}</h1>
@@ -180,9 +180,12 @@ const Merchant = (props: { menu: any }): JSX.Element => {
         <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} />
         <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} />
         <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} /> */}
+        <div className="fixed bottom-0 w-full bg-white">
+          <Navbar role="customer" location="home" />
+        </div>
         </div>
       </div>
-    </MerchantLayout>
+  
   );
 };
 
