@@ -1,46 +1,82 @@
-import React from 'react'
+import React, { use } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+
+// declare type of slide
+type Slide = {
+  id: string
+  name: string
+  jarak: number
+  rating: number
+  merchantLogo: string
+}
 
 const VerticalCardCarousel = (data: any) => {
   console.log(data)
-  const slides = [
-    {
-      id: "641f454af632f91b866b4805",
-      name: "Seblak Pasta Deresan",
-      jarak: 2.7,
-      rating: 4,
-      img:'/img/homepage/seblak-pasta.jpg'
-    },
-    {
-      id: "2",
-      name: "Warmindo Andeska",
-      jarak: 1,
-      rating: 3,
-      img:'/img/homepage/andeska.jpg'
-    },
-    {
-      id: "3",
-      name: "Ayam Geprek Bu Susi",
-      jarak: 0.6,
-      rating: 4,
-      img:'/img/homepage/ayam-geprek.jfif'
-    },
-    {
-      id: "4",
-      name: "Nasi Goreng Mandiri",
-      jarak: 2,
-      rating: 5,
-      img:'/img/homepage/nasgor-pinggir-jalan.jfif'
-    },
-  ]
+
+  const [slides, setSlides] = useState<Slide[]>([]);
+
+  // const slides = [
+  //   {
+  //     id: "641f454af632f91b866b4805",
+  //     name: "Seblak Pasta Deresan",
+  //     jarak: 2.7,
+  //     rating: 4,
+  //     img:'/img/homepage/seblak-pasta.jpg'
+  //   },
+  //   {
+  //     id: "2",
+  //     name: "Warmindo Andeska",
+  //     jarak: 1,
+  //     rating: 3,
+  //     img:'/img/homepage/andeska.jpg'
+  //   },
+  //   {
+  //     id: "3",
+  //     name: "Ayam Geprek Bu Susi",
+  //     jarak: 0.6,
+  //     rating: 4,
+  //     img:'/img/homepage/ayam-geprek.jfif'
+  //   },
+  //   {
+  //     id: "4",
+  //     name: "Nasi Goreng Mandiri",
+  //     jarak: 2,
+  //     rating: 5,
+  //     img:'/img/homepage/nasgor-pinggir-jalan.jfif'
+  //   },
+  // ]
+
+  useEffect(() => {
+    fetch('api/profile/merchant', {
+      method: 'GET',
+    }).then((res) => res.json()).then((data) => {
+      let data2 = [];
+      let selected = [];
+      for (let i = 0; i < data.length; i++) {
+        selected.push(false);
+      }
+      for (let i = 0; i < 4; i++) {
+        let rand = Math.floor(Math.random() * data.length);
+        while (selected[rand]) {
+          rand = Math.floor(Math.random() * data.length);
+        }
+        selected[rand] = true;
+        data2.push(data[rand]);
+      }
+      setSlides(data2) 
+    })
+  }, [])
+
+
   return (
     <div className='w-full h-full overflow-auto flex no-scrollbar'>
         <div className='w-full pl-7 h-[286px] flex '>
             <div className='flex items-center gap-3 h-[280px]'>
-                {(!data.data) && slides.map((slide) => (
+                {(!data.data && slides) && slides.map((slide) => (
                   <div key={slide.id}>
-                    <VerticalCard img={slide.img} id={slide.id} name={slide.name} jarak={slide.jarak} rating={slide.rating} />
+                    <VerticalCard img={slide.merchantLogo} id={slide.id} name={slide.name} jarak={Math.round(Math.random() * (10 - 1) + 1)} rating={Math.round(Math.random() * (5 - 1) + 1)} />
 
                   </div>
                 ))}
