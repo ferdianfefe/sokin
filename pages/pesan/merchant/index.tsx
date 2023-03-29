@@ -114,9 +114,9 @@ const Merchant = (props: { menu: any }): JSX.Element => {
             <Image
               alt="logo"  
               src={logo}
-              width={80}
-              height={80}
-              className="rounded-full bg-white object-cover"
+              width={100}
+              height={100}
+              className="w-full h-full object-cover"
             ></Image>
 
           </div>

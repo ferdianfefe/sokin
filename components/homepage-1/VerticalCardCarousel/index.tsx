@@ -69,7 +69,7 @@ const VerticalCard = ({ img, id, name, jarak, rating }: { img: string, id:string
   }
   return (
     <div onClick={goTo}>
-        <div className='flex flex-col w-[160px] h-[275px] rounded-[20px] bg-[#FFF] shadow-[-3px 2px 5px 1px rgba(255, 183, 109, 0.37)] border-[1px] border-[#FE8304]/10 overflow-hidden shadow-card'>
+        <div className='flex flex-col w-[160px] h-[283px] rounded-[20px] bg-[#FFF] shadow-[-3px 2px 5px 1px rgba(255, 183, 109, 0.37)] border-[1px] border-[#FE8304]/10 overflow-hidden shadow-card'>
             <div className='flex h-[178px] w-full overflow-hidden'>
               {img && (
                 <Image 

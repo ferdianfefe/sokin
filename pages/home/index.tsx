@@ -2,7 +2,7 @@ import Image from "next/image";
 import Search from "public/img/homepage/icon-search.png";
 import Button from "components/elements/Button";
 import Navbar from "components/elements/Navbar";
-import BackgroundLoginDaftar from "public/img/homepage/bg-login-daftar.png";
+// import BackgroundLoginDaftar from "public/img/homepage/bg-login-daftar.png";
 import { signIn, signOut, useSession } from "next-auth/react";
 import HorizontalCardCarousel from "components/homepage-1/HorizontalCardCarousel";
 import VerticalCardCarousel from "components/homepage-1/VerticalCardCarousel";
@@ -80,10 +80,12 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
             <div className="px-7">
               <div className="bg-slate-200 rounded-[30px] w-full flex py-8 px-8 justify-center items-center gap-6 relative overflow-hidden">
                 <Image
-                  src={BackgroundLoginDaftar}
+                  src="public/img/homepage/bg-login-daftar.svg"
                   alt=""
                   className="absolute object-cover w-full h-full z-0"
                   quality={100}
+                  width={100}
+                  height={100}
                 />
 
                 <div className="z-20 px-auto">
@@ -110,8 +112,11 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
             <div className="px-7">
               <div className=" rounded-[30px] w-full flex py-3 px-auto justify-center items-center gap-6 relative overflow-hidden">
                 <Image
-                  src={BackgroundLoginDaftar}
+                priority
+                  src="/img/homepage/bg-login-daftar.svg"
                   alt=""
+                  width={100}
+                  height={100}
                   className="absolute object-cover w-full h-full z-0 pointer-events-none"
                 />
 
