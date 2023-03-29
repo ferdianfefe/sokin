@@ -6,10 +6,22 @@ export default async function handle(
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
-    console.log("GET");
     // const { id } = req.query;
 
-    const menu = await prisma.menu.findMany({});
+    const { keyword, sortBy } = req.body;
+    let menu: any[] = [];
+    if (keyword) {
+      menu = await prisma.menu.findMany({
+        where: {
+          name: {
+            contains: keyword,
+          },
+        },
+      });
+      return res.json(menu);
+    } else {
+      const menu = await prisma.menu.findMany({});
+    }
 
     if (!menu) {
       return res.status(404).json({ message: "Menu not found" });
@@ -18,5 +30,27 @@ export default async function handle(
     return res.json(menu);
   }
 
+  if (req.method === "GET") {
+    const { keyword, sortBy } = req.body;
+    let menu: any[] = [];
+    if (keyword) {
+      menu = await prisma.menu.findMany({
+        where: {
+          name: {
+            contains: keyword,
+          },
+        },
+      });
+      return res.json(menu);
+    } else {
+      const menu = await prisma.menu.findMany({});
+    }
+
+    if (!menu) {
+      return res.status(404).json({ message: "Menu not found" });
+    }
+
+    return res.json(menu);
+  }
   return res.status(400).json({ message: "Invalid request method" });
 }
