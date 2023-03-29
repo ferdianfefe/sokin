@@ -75,7 +75,7 @@ const Navbar: React.FC<Props> = ({ location, role }: Props) => {
           </Link>
         )}
         {role === "customer" && (
-          <Link href={"#"} >
+          <Link href={"/pesan"} >
             <div className="w-14 grid justify-items-center">
               <svg
                 width="26"

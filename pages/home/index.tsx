@@ -9,11 +9,15 @@ import VerticalCardCarousel from "components/homepage-1/VerticalCardCarousel";
 import SquareCardCarousel from "components/homepage-1/SquareCardCarousel";
 import { Router } from "next/router";
 import DefaultLayout from "components/layout/DefaultLayout";
+import { useState } from "react";
 
 const Homepage: React.FunctionComponent = (): JSX.Element => {
+  const [keyword, setKeyword] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
+  const [similar, setSimilar] = useState([]);
   const { data, status } = useSession();
 
-  console.log(data?.user);
+  // console.log(data?.user);
 
   if (status === "loading") {
     return <div>Loading...</div>;
@@ -27,16 +31,51 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
     console.log(res);
   };
 
+  const change = (e: any) => {
+    setKeyword(e.target.value);
+    // console.log(keyword);
+  }
+
+  const search = async (e: any) => {
+    if (e.key === "Enter" || e === "Enter") {
+      // setFixKeyword(keyword);
+      // Router.push(`/search?keyword=${keyword}`);
+      console.log(keyword);
+      e.target.value = "";
+      setKeyword("");
+      await fetch(`/api/search`, {
+        method: "POST",
+        body: JSON.stringify({keyword: keyword})
+      }).then(res => res.json()).then(data => {
+        console.log(data.data);
+        setSearchResult(data.data);
+        setSimilar(data.data2);
+      })
+    }
+  }
+
   return (
     <DefaultLayout location="home">
-      <div className="flex flex-col w-full h-full overflow-y-scroll">
+      <div className="flex flex-col w-full h-full overflow-y-scroll min-h-screen">
         <div className="mt-7 flex flex-col gap-4">
           {/* SEARCH BAR */}
           <div className="px-7">
-            <SearchBar />
+            {/* <SearchBar /> */}
+            <div className="relative flex">
+              {/* ICON */}
+              <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                <Image src={Search} alt={""} />
+              </span>
+              <input
+                placeholder="Cari makananmu"
+                type="text"
+                className="bg-[#FE8304] rounded-full bg-opacity-40 w-full py-[6px] px-14 font-bold text-sm placeholder-[#817A7A] bg-auto focus:outline-none"
+                onChange={change}
+                onKeyDown={search}
+              ></input>
+            </div>
           </div>
 
-          {/* Login/Daftar */}
           {status == "unauthenticated" && (
             <div className="px-7">
               <div className="bg-slate-200 rounded-[30px] w-full flex py-8 px-8 justify-center items-center gap-6 relative overflow-hidden">
@@ -67,7 +106,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
               </div>
             </div>
           )}
-          {status == "authenticated" && (
+          {(status == "authenticated" && searchResult.length == 0) && (
             <div className="px-7">
               <div className=" rounded-[30px] w-full flex py-3 px-auto justify-center items-center gap-6 relative overflow-hidden">
                 <Image
@@ -211,69 +250,128 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
             </div>
           )}
 
-          <div className="mt-4 w-full h-full flex flex-col gap-3 px-7">
-            <div className="flex justify-between">
-              <h2 className="font-bold">Penawaran Kami</h2>
+          {searchResult.length == 0 && (
+            <>
+              <div className="mt-4 w-full h-full flex flex-col gap-3 px-7">
+                <div className="flex justify-between">
+                  <h2 className="font-bold">Penawaran Kami</h2>
 
-              <div className="flex relative">
-                <button className="bg-[#FFE0C0] rounded-full text-[9px] font-bold text-[#FE8304] px-2 pr-5 drop-shadow-lg shadow-[#FEB26] shadow-inner-white shadow-inner-xl">
-                  Lihat semuanya
-                </button>
-                <svg
-                  className="absolute top-[7px] right-2 items-center align-center"
-                  width="5"
-                  height="9"
-                  viewBox="0 0 5 9"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M1.16211 8.10828L4.05877 4.64876L1.16211 1.18925"
-                    stroke="#FE8304"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
+                  <div className="flex relative">
+                    <button className="bg-[#FFE0C0] rounded-full text-[9px] font-bold text-[#FE8304] px-2 pr-5 drop-shadow-lg shadow-[#FEB26] shadow-inner-white shadow-inner-xl">
+                      Lihat semuanya
+                    </button>
+                    <svg
+                      className="absolute top-[7px] right-2 items-center align-center"
+                      width="5"
+                      height="9"
+                      viewBox="0 0 5 9"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M1.16211 8.10828L4.05877 4.64876L1.16211 1.18925"
+                        stroke="#FE8304"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+
+                {/* <div className='overflow-visible'>
+                                <SwiperCarousel />
+
+                            </div> */}
               </div>
-            </div>
 
-            {/* <div className='overflow-visible'>
-                            <SwiperCarousel />
+              <div className="flex -mt-4">
+                {/* <SwiperCarouselCoupon /> */}
+                <HorizontalCardCarousel />
+              </div>
 
-                        </div> */}
-          </div>
+              <div className="mt-4 flex px-7">
+                <div className="flex-col flex gap-3">
+                  <h2 className="font-bold">Paling Laris</h2>
+                </div>
+              </div>
 
-          <div className="flex -mt-4">
-            {/* <SwiperCarouselCoupon /> */}
-            <HorizontalCardCarousel />
-          </div>
+              <div className="flex -mt-2">
+                {/* <CardCarousel /> */}
+                <VerticalCardCarousel />
+              </div>
 
-          <div className="mt-4 flex px-7">
-            <div className="flex-col flex gap-3">
-              <h2 className="font-bold">Paling Laris</h2>
-            </div>
-          </div>
+              <div className="mt-4 flex px-7">
+                <div className="flex-col flex gap-3">
+                  <h2 className="font-bold">Kategori</h2>
+                </div>
+              </div>
 
-          <div className="flex -mt-2">
-            {/* <CardCarousel /> */}
-            <VerticalCardCarousel />
-          </div>
+              {/* <div className='flex overflow-visible z-0'>
+                            <KategoriCarousel />
+                        </div>  */}
 
-          <div className="mt-4 flex px-7">
-            <div className="flex-col flex gap-3">
-              <h2 className="font-bold">Kategori</h2>
-            </div>
-          </div>
+              <div className="flex -mt-2">
+                {/* <CardCarousel /> */}
+                <SquareCardCarousel />
+              </div>
+            </>
+          )}
 
-          {/* <div className='flex overflow-visible z-0'>
-                        <KategoriCarousel />
-                    </div>  */}
+          {searchResult.length != 0 && (
+            <>
+              <div className="mt-4 flex px-7">
+                <div className="flex-col flex gap-3">
+                  <h2 className="font-bold">Resto Sesuai Pencarian</h2>
+                </div>
+              </div>
 
-          <div className="flex -mt-2">
-            {/* <CardCarousel /> */}
-            <SquareCardCarousel />
-          </div>
+              <div className="flex -mt-2">
+                {/* <CardCarousel /> */}
+                <VerticalCardCarousel data={searchResult}/>
+              </div>
+
+              <div className="mt-4 flex px-7">
+                <div className="flex-col flex gap-3">
+                  <h2 className="font-bold">Resto Yang Mirip</h2>
+                </div>
+              </div>
+
+              {/* <div className='flex overflow-visible z-0'>
+                            <KategoriCarousel />
+                        </div>  */}
+
+              <div className="w-full flex flex-col items-center">
+                {similar.map((item: any) => {
+                  return (
+                    <div className="w-[87.5%] flex justify-center shadow-card mb-4 rounded-[20px] bg-[#FFF] shadow-[-3px 2px 5px 1px rgba(255, 183, 109, 0.37)] border-[1px] border-[#FE8304]/10">
+                      <div className="w-[25%] p-2">
+                        <Image 
+                            src={item.merchantLogo}
+                            alt=''
+                            width={75}
+                            height={75}
+                            className='aspect-square'
+                        />
+                      </div>
+                      <div className="w-[75%] flex flex-col justify-evenly p-2">
+                        <div className='font-bold text-[14px]'>{item.name}</div>
+                        <div className="flex">
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7.35173 1.44311C7.57636 0.852294 8.42364 0.852294 8.64827 1.44312L10.0973 5.45689C10.1987 5.72342 10.457 5.9 10.7456 5.9H14.3063C14.9638 5.9 15.251 6.71921 14.7341 7.11989L12.2 9.4C11.9667 9.58081 11.8761 9.88825 11.9749 10.1643L12.9 14.0866C13.1253 14.716 12.3954 15.2575 11.8448 14.8695L8.40243 12.6862C8.1617 12.5166 7.8383 12.5166 7.59757 12.6862L4.15529 14.8695C3.60462 15.2575 2.87478 14.716 3.1 14.0866L4.02513 10.1643C4.12389 9.88825 4.03334 9.58081 3.8 9.4L1.26596 7.11989C0.748953 6.71921 1.03621 5.9 1.6937 5.9H5.25437C5.54297 5.9 5.8013 5.72342 5.90263 5.45689L7.35173 1.44311Z" fill="#FE8304" stroke="#FE8304" stroke-width="0.700145" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                          <p className='text-sm'>
+                            {Math.round(Math.random() * (5 - 1) + 1)}
+                          </p>
+                        </div>
+                        <div className='text-xs text-[#574E4E]'>{Math.round(Math.random() * (10 - 1) + 1)} km</div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
         </div>
 
         <div className="w-full h-28"></div>

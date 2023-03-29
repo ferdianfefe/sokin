@@ -1,31 +1,33 @@
 import React from 'react'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 
-const VerticalCardCarousel = () => {
+const VerticalCardCarousel = (data: any) => {
+  console.log(data)
   const slides = [
     {
-      id: 1,
-      name: "Warung Pak Joko",
+      id: "641f454af632f91b866b4805",
+      name: "Seblak Pasta Deresan",
       jarak: 2.7,
       rating: 4,
-      img:'/img/homepage/warung-pak-joko.jpg'
+      img:'/img/homepage/seblak-pasta.jpg'
     },
     {
-      id: 2,
+      id: "2",
       name: "Warmindo Andeska",
       jarak: 1,
       rating: 3,
       img:'/img/homepage/andeska.jpg'
     },
     {
-      id: 3,
+      id: "3",
       name: "Ayam Geprek Bu Susi",
       jarak: 0.6,
       rating: 4,
       img:'/img/homepage/ayam-geprek.jfif'
     },
     {
-      id: 4,
+      id: "4",
       name: "Nasi Goreng Mandiri",
       jarak: 2,
       rating: 5,
@@ -34,11 +36,17 @@ const VerticalCardCarousel = () => {
   ]
   return (
     <div className='w-full h-full overflow-auto flex no-scrollbar'>
-        <div className='w-full pl-7 h-[295px] flex '>
-            <div className='flex items-center gap-6'>
-                {slides.map((slide) => (
+        <div className='w-full pl-7 h-[286px] flex '>
+            <div className='flex items-center gap-3 h-[286px]'>
+                {(!data.data) && slides.map((slide) => (
                   <div key={slide.id}>
                     <VerticalCard img={slide.img} id={slide.id} name={slide.name} jarak={slide.jarak} rating={slide.rating} />
+
+                  </div>
+                ))}
+                {( data.data ) && data.data.map((item: any) => (
+                  <div key={item.id}>
+                    <VerticalCard img={item.merchantLogo} id={item.id} name={item.name} jarak={Math.round(Math.random() * (10 - 1) + 1)} rating={Math.round(Math.random() * (5 - 1) + 1)} />
 
                   </div>
                 ))}
@@ -50,18 +58,39 @@ const VerticalCardCarousel = () => {
 
 export default VerticalCardCarousel
 
-const VerticalCard = ({ img, id, name, jarak, rating }: { img: string, id:number, name:string, jarak:number, rating:number }) => {
+const VerticalCard = ({ img, id, name, jarak, rating }: { img: string, id:string, name:string, jarak:number, rating:number }) => {
+  const router = useRouter();
+
+  const goTo = () => {
+    router.push({
+      pathname: '/pesan/merchant',
+      query: { id: id },
+    })
+  }
   return (
-    <div>
+    <div onClick={goTo}>
         <div className='flex flex-col w-[160px] min-h-[262px] max-h-[282px] rounded-[20px] bg-[#FFF] shadow-[-3px 2px 5px 1px rgba(255, 183, 109, 0.37)] border-[1px] border-[#FE8304]/10 overflow-hidden shadow-card'>
             <div className='flex h-[178px] w-full overflow-hidden'>
-              <Image 
-                  src={img}
-                  alt=''
-                  width={400}
-                  height={300}
-                  className='object-cover'
-              />
+              {img && (
+                <Image 
+                    src={img}
+                    alt='Logo'
+                    width={400}
+                    height={300}
+                    className='aspect-square'
+                />
+              )}
+              {!img && (
+                <div className='w-[190px] h-[190px]'>
+                  <Image 
+                      src={'https://cdn-icons-png.flaticon.com/512/1205/1205761.png'}
+                      alt=''
+                      width={400}
+                      height={300}
+                      className='object-cover'
+                  />
+                </div>
+              )}
             </div>
 
             {/* <div className='flex flex-col w-full bg-slate-200 p-3'> */}
