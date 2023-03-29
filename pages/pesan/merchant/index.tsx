@@ -110,13 +110,16 @@ const Merchant = (props: { menu: any }): JSX.Element => {
             alt={""}
             className="rounded-full bg-white"
           /> */}
-          <Image
-            alt="logo"
-            src={logo}
-            width={80}
-            height={80}
-            className="rounded-full bg-white"
-          ></Image>
+          <div className="overflow-hidden w-[80px] h-[80px] bg-white rounded-full">
+            <Image
+              alt="logo"  
+              src={logo}
+              width={80}
+              height={80}
+              className="rounded-full bg-white object-cover"
+            ></Image>
+
+          </div>
           <div className="w-3/5 flex justify-between">
             <div className="w-[45%] h-16 bg-white rounded-lg flex-col flex justify-center items-center">
               <div className="flex">
@@ -186,48 +189,50 @@ const Merchant = (props: { menu: any }): JSX.Element => {
               </Menu.Items>
             </Menu>
           </div>
-          <div className={"grid grid-cols-2 gap-4"}>
-            {searchResult.length > 0
-              ? searchResult.map((item: any, index: number) => (
+          <div className="flex justify-center">
+            <div className={"grid grid-cols-2 gap-6 md:gap-10"}>
+              {searchResult.length > 0
+                ? searchResult.map((item: any, index: number) => (
+                    <div className="" key={index}>
+                      <ItemCustomer
+                        onAddMenu={clickAddMenuHandler}
+                        title={item.name}
+                        price={item.price}
+                        description={item.description}
+                        image={item.image}
+                      />
+                    </div>
+                  ))
+                : menu.map((item: any, index: number) => (
+                    <div className="" key={index}>
+                      <ItemCustomer
+                        onAddMenu={clickAddMenuHandler}
+                        title={item.name}
+                        price={item.price}
+                        description={item.description}
+                        image={item.image}
+                      />
+                    </div>
+                  ))}
+              {/* {props?.menu?.map((item: any, index: number) => {
+                return (
                   <div className="" key={index}>
-                    <ItemCustomer
-                      onAddMenu={clickAddMenuHandler}
-                      title={item.name}
-                      price={item.price}
-                      description={item.description}
-                      image={item.image}
-                    />
+                      <ItemCustomer
+                        title={item.name}
+                        price={item.price}
+                        description={item.description}
+                        image={item.image}
+                      />
                   </div>
-                ))
-              : menu.map((item: any, index: number) => (
-                  <div className="" key={index}>
-                    <ItemCustomer
-                      onAddMenu={clickAddMenuHandler}
-                      title={item.name}
-                      price={item.price}
-                      description={item.description}
-                      image={item.image}
-                    />
-                  </div>
-                ))}
-            {/* {props?.menu?.map((item: any, index: number) => {
-              return (
-                <div className="" key={index}>
-                    <ItemCustomer
-                      title={item.name}
-                      price={item.price}
-                      description={item.description}
-                      image={item.image}
-                    />
-                </div>
-              );
-            })} */}
+                );
+              })} */}
+            </div>
           </div>
           {/* <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} />
         <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} />
         <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} />
         <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} /> */}
-        <div className="fixed bottom-0 w-full bg-white">
+        <div className="fixed bottom-0 w-full bg-white -translate-x-4">
           <Navbar role="customer" location="home" />
         </div>
         </div>
