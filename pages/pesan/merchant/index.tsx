@@ -9,16 +9,27 @@ import { useState, useEffect } from "react";
 import prisma from "lib/prisma";
 import Search from "public/img/homepage/icon-search.png";
 import { useRouter } from "next/router";
+import MenuDummy from "public/images/pesan/nasgor-enak.jpg"
 
 const Merchant = (props: { menu: any }): JSX.Element => {
   const router = useRouter();
 
   const [menu, setMenu] = useState([]);
   const [name, setName] = useState("");
-  const [logo, setLogo] = useState("");
+  const [logo, setLogo] = useState(""); 
   const [keyword, setKeyword] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [similar, setSimilar] = useState([]);
+  const [description, setDescription] = useState(""); 
+  const [popUp, setPopUp] = useState(false); 
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedMenu, setSelectedMenu] = useState(null);
+
+
+  const togglePopup = () => {
+    setIsOpen(!isOpen);
+  };
+
 
   const { data: session, status } = useSession();
   // console.log(session?.user);
@@ -34,6 +45,7 @@ const Merchant = (props: { menu: any }): JSX.Element => {
       setMenu(data.data);
       setName(data.name);
       setLogo(data.logo);
+      setDescription(data.description);
     })
   }, []);
 
@@ -63,7 +75,8 @@ const Merchant = (props: { menu: any }): JSX.Element => {
   }
 
   return (
-    <MerchantLayout location="katalog">
+    // <MerchantLayout location='katalog'>
+    <div>
       <div className="min-h-screen">
         <div className="flex flex-col gap-4 px-4 pt-9">
           <h1 className="font-extrabold mb-2">{name}</h1>
@@ -154,7 +167,12 @@ const Merchant = (props: { menu: any }): JSX.Element => {
           </div>
           <div className={"grid grid-cols-2 gap-4"}>
             {menu.length != 0 && menu.map((item: any, index: number) => (
-              <div className="" key={index}>
+              <div className="" key={index} 
+              onClick={() => {
+                setSelectedMenu(item);
+                togglePopup();
+              }}
+              >
                   <ItemCustomer
                     title={item.name}
                     price={item.price}
@@ -163,6 +181,67 @@ const Merchant = (props: { menu: any }): JSX.Element => {
                   />
               </div>
             ))}
+
+            {isOpen && 
+              <Transition show={isOpen}>
+              <div className="fixed z-10 inset-0  w-full -translate-x-4">
+                <div className="flex min-h-screen pt-4 px-4 pb-20 sm:block sm:p-0">
+                  <div className="fixed inset-0 transition-opacity">
+                    <div className="absolute inset-0 backdrop-blur-sm"></div>
+                  </div>
+      
+                  <div className="absolute bottom-0 bg-white rounded-[25px] overflow-hidden shadow-xl transform transition-all max-w-2xl w-full h-[400px] p-8 ">
+                    <h1 className="text-center font-black mb-[35px]">Tambah Menu</h1>
+                    <div className="flex gap-6">
+                      <Image 
+                      src={MenuDummy}
+                      alt=""
+                      className="rounded-lg"
+                      width={120}
+                      height={120}
+                      />
+
+                      <div className="flex flex-col">
+                        
+
+                        <h2 className="text-xl font-bold mb-2">
+                          {/* {selectedMenu ? selectedMenu.name : ""} */}
+                          Lorem Ipsum
+                        </h2>
+
+                        <h2 className="text-xl font-bold mb-4">
+                          Rp23.000
+                        </h2>
+
+
+                        <p className="text-gray-400 mb-4 text-sm">
+                          {/* {selectedMenu ? selectedMenu.description : ""} */}
+                          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="font-bold flex justify-between my-6">
+                      <h1 className="">Jumlah Pesanan</h1>
+                      <div className='flex gap-2 items-center'>
+                        <button className="bg-c-orange-700 w-[24px] h-[24px] rounded-full text-white">+</button>  
+                        <p>1</p>
+                        <button className="bg-c-orange-700 w-[24px] h-[24px] rounded-full text-white">-</button>  
+                      </div>
+                    </div>
+                  
+                    {/* <div className="flex justify-end">
+                      <button onClick={togglePopup}>Close</button>
+                    </div> */}
+                    <div onClick={togglePopup}>
+                      <Button text='Tambah Pesanan'></Button>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Transition>
+            }
             {/* {props?.menu?.map((item: any, index: number) => {
               return (
                 <div className="" key={index}>
@@ -182,7 +261,8 @@ const Merchant = (props: { menu: any }): JSX.Element => {
         <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} /> */}
         </div>
       </div>
-    </MerchantLayout>
+    {/* </MerchantLayout> */}
+    </div>
   );
 };
 
