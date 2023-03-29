@@ -16,7 +16,7 @@ const Merchant = (props: { menu: any }): JSX.Element => {
 
   const [menu, setMenu] = useState([]);
   const [name, setName] = useState("");
-  const [logo, setLogo] = useState("");
+  const [logo, setLogo] = useState(""); 
   const [keyword, setKeyword] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [similar, setSimilar] = useState([]);
@@ -25,6 +25,7 @@ const Merchant = (props: { menu: any }): JSX.Element => {
     title: "",
     price: 0,
     image: "",
+    description: "",
   });
 
   const { data: session, status } = useSession();
@@ -57,21 +58,37 @@ const Merchant = (props: { menu: any }): JSX.Element => {
 
   const change = (e: any) => {
     setKeyword(e.target.value);
+
+    let newMenu = menu.filter((item: any) => {
+      return item.name.toLowerCase().includes(keyword.toLowerCase());
+    });
+
+    setSearchResult(newMenu);
+    setSimilar(newMenu);
+
   };
 
   const search = async (e: any) => {
     if (e.key === "Enter" || e === "Enter") {
       e.target.value = "";
+
+      let newMenu = menu.filter((item: any) => {
+        return item.name.toLowerCase().includes(keyword.toLowerCase());
+      });
+
+      setSearchResult(newMenu);
+      setSimilar(newMenu);
+
       setKeyword("");
-      await fetch(`/api/search`, {
-        method: "POST",
-        body: JSON.stringify({ keyword: keyword }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setSearchResult(data.data);
-          setSimilar(data.data2);
-        });
+      // await fetch(`/api/menu/find`, {
+      //   method: "GET",
+      //   body: JSON.stringify({ keyword: keyword }),
+      // })
+      //   .then((res) => res.json())
+      //   .then((data) => {
+      //     setSearchResult(data.data);
+      //     setSimilar(data.data2);
+      //   });
     }
   };
 
@@ -172,10 +189,20 @@ const Merchant = (props: { menu: any }): JSX.Element => {
               </Menu.Items>
             </Menu>
           </div>
-          <div className="flex justify-center">
-            <div className={"grid grid-cols-2 gap-6 md:gap-10"}>
-              {menu.length != 0 &&
-                menu.map((item: any, index: number) => (
+          <div className={"grid grid-cols-2 gap-4"}>
+            {searchResult.length > 0
+              ? searchResult.map((item: any, index: number) => (
+                  <div className="" key={index}>
+                    <ItemCustomer
+                      onAddMenu={clickAddMenuHandler}
+                      title={item.name}
+                      price={item.price}
+                      description={item.description}
+                      image={item.image}
+                    />
+                  </div>
+                ))
+              : menu.map((item: any, index: number) => (
                   <div className="" key={index}>
                     <ItemCustomer
                       onAddMenu={clickAddMenuHandler}
@@ -186,20 +213,18 @@ const Merchant = (props: { menu: any }): JSX.Element => {
                     />
                   </div>
                 ))}
-              {/* {props?.menu?.map((item: any, index: number) => {
-                return (
-                  <div className="" key={index}>
-                      <ItemCustomer
-                        title={item.name}
-                        price={item.price}
-                        description={item.description}
-                        image={item.image}
-                      />
-                  </div>
-                );
-              })} */}
-            </div>
-
+            {/* {props?.menu?.map((item: any, index: number) => {
+              return (
+                <div className="" key={index}>
+                    <ItemCustomer
+                      title={item.name}
+                      price={item.price}
+                      description={item.description}
+                      image={item.image}
+                    />
+                </div>
+              );
+            })} */}
           </div>
           {/* <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} />
         <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} />
