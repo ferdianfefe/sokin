@@ -32,7 +32,10 @@ const ItemCustomer: React.FC<{
       <div className="mt-3">
         <h3 className="font-bold">{title}</h3>
         <p className="text-sm font-semibold">Rp{price}</p>
-        <Button text="Tambah" size="very small" className="mt-3" onClickHandler={() => onAddMenu(title, price, image, description)}/>
+        <div className="flex justify-center">
+          <Button text="Tambah" size="very small" className="mt-3" onClickHandler={() => onAddMenu(title, price, image, description)}/>
+
+        </div>
       </div>
     </div>
   );
