@@ -16,7 +16,7 @@ const Merchant = (props: { menu: any }): JSX.Element => {
 
   const [menu, setMenu] = useState([]);
   const [name, setName] = useState("");
-  const [logo, setLogo] = useState(""); 
+  const [logo, setLogo] = useState("");
   const [keyword, setKeyword] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [similar, setSimilar] = useState([]);
@@ -39,6 +39,26 @@ const Merchant = (props: { menu: any }): JSX.Element => {
   ) => {
     setAddMenuIsOpen(true);
     setAddedMenuData({ title, price, image, description });
+  };
+
+  const sortBy = (param: string) => {
+    let newMenu = menu.sort((a, b) => {
+      if (param === "price") {
+        return a.price - b.price;
+      } else if (param === "name") {
+        return a.name.localeCompare(b.name);
+      }
+    });
+
+    setMenu(newMenu);
+    newMenu = searchResult.sort((a, b) => {
+      if (param === "price") {
+        return a.price - b.price;
+      } else if (param === "name") {
+        return a.name.localeCompare(b.name);
+      }
+    });
+    setSearchResult(newMenu);
   };
 
   useEffect(() => {
@@ -65,7 +85,6 @@ const Merchant = (props: { menu: any }): JSX.Element => {
 
     setSearchResult(newMenu);
     setSimilar(newMenu);
-
   };
 
   const search = async (e: any) => {
@@ -93,128 +112,135 @@ const Merchant = (props: { menu: any }): JSX.Element => {
   };
 
   return (
-      <div className="min-h-screen">
-        <AddMenuPopUp
-          show={addMenuIsOpen}
-          setAddMenuIsOpen={setAddMenuIsOpen}
-          menuData={addedMenuData}
-        />
-        <div className="flex flex-col gap-4 px-4 pt-9">
-          <h1 className="font-extrabold mb-2">{name}</h1>
-        </div>
-        <div className="w-full h-20 bg-c-orange-600 justify-between px-7 flex items-center">
-          {/* <Image
+    <div className="min-h-screen">
+      <AddMenuPopUp
+        show={addMenuIsOpen}
+        setAddMenuIsOpen={setAddMenuIsOpen}
+        menuData={addedMenuData}
+      />
+      <div className="flex flex-col gap-4 px-4 pt-9">
+        <h1 className="font-extrabold mb-2">{name}</h1>
+      </div>
+      <div className="w-full h-20 bg-c-orange-600 justify-between px-7 flex items-center">
+        {/* <Image
             src={""}
             height={80}
             width={80}
             alt={""}
             className="rounded-full bg-white"
           /> */}
-          <div className="overflow-hidden w-[80px] h-[80px] bg-white rounded-full">
-            <Image
-              alt="logo"  
-              src={logo}
-              width={100}
-              height={100}
-              className="w-full h-full object-cover"
-            ></Image>
-
+        <div className="overflow-hidden w-[80px] h-[80px] bg-white rounded-full">
+          <Image
+            alt="logo"
+            src={logo}
+            width={80}
+            height={80}
+            className="rounded-full bg-white object-cover"
+          ></Image>
+        </div>
+        <div className="w-3/5 flex justify-between">
+          <div className="w-[45%] h-16 bg-white rounded-lg flex-col flex justify-center items-center">
+            <div className="flex">
+              <Image
+                src="/images/icons/star.svg"
+                height={18}
+                width={18}
+                alt={""}
+              />
+              <h2 className="ml-2 font-bold">4.7</h2>
+            </div>
+            <p className="text-gray-600 text-sm mt-1">2rb+ rating</p>
           </div>
-          <div className="w-3/5 flex justify-between">
-            <div className="w-[45%] h-16 bg-white rounded-lg flex-col flex justify-center items-center">
-              <div className="flex">
-                <Image
-                  src="/images/icons/star.svg"
-                  height={18}
-                  width={18}
-                  alt={""}
-                />
-                <h2 className="ml-2 font-bold">4.7</h2>
-              </div>
-              <p className="text-gray-600 text-sm mt-1">2rb+ rating</p>
+          <div className="w-[45%] h-16 bg-white rounded-lg justify-center items-center flex flex-col">
+            <div className="flex">
+              <Image
+                src="/images/icons/location.svg"
+                height={18}
+                width={13}
+                alt={""}
+              />
+              <h2 className="ml-2 font-bold">2.2 k</h2>
             </div>
-            <div className="w-[45%] h-16 bg-white rounded-lg justify-center items-center flex flex-col">
-              <div className="flex">
-                <Image
-                  src="/images/icons/location.svg"
-                  height={18}
-                  width={13}
-                  alt={""}
-                />
-                <h2 className="ml-2 font-bold">2.2 k</h2>
-              </div>
-              <p className="text-gray-600 text-sm mt-1">Jarak</p>
-            </div>
+            <p className="text-gray-600 text-sm mt-1">Jarak</p>
           </div>
         </div>
-        <div className="mt-4 px-4">
-          <div className="relative flex">
-            {/* ICON */}
-            <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-              <Image src={Search} alt={""} />
-            </span>
-            <input
-              placeholder="Cari makananmu"
-              type="text"
-              className="bg-[#FE8304] rounded-full bg-opacity-40 w-full py-[6px] px-14 font-bold text-sm placeholder-[#817A7A] bg-auto focus:outline-none"
-              onChange={change}
-              onKeyDown={search}
-            ></input>
-          </div>
+      </div>
+      <div className="mt-4 px-4">
+        <div className="relative flex">
+          {/* ICON */}
+          <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+            <Image src={Search} alt={""} />
+          </span>
+          <input
+            placeholder="Cari makananmu"
+            type="text"
+            className="bg-[#FE8304] rounded-full bg-opacity-40 w-full py-[6px] px-14 font-bold text-sm placeholder-[#817A7A] bg-auto focus:outline-none"
+            onChange={change}
+            onKeyDown={search}
+          ></input>
         </div>
-        <div className="flex flex-col gap-4 px-4 py-6">
-          <div className="flex justify-end">
-            <Menu as="div" className="relative inline-block">
-              <Menu.Button className="w-20 h-8 relative bg-c-orange-100 flex rounded-full justify-center items-center shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)] text-sm text-c-orange-700">
-                Sort By
-              </Menu.Button>
-              <Transition
-                enter="transition ease-out duration-100"
-                enterFrom="transform opacity-0 scale-95"
-                enterTo="transform opacity-100 scale-100"
-                leave="transition ease-in duration-75"
-                leaveFrom="transform opacity-100 scale-100"
-                leaveTo="transform opacity-0 scale-95"
-              ></Transition>
-              <Menu.Items className="text-c-orange-700 items-center flex flex-col text-sm absolute right-0 mt-2 w-20 divide-gray-100 rounded-xl bg-c-orange-100 ring-opacity-5 focus:outline-none">
-                <Menu.Item as="div" className="p-1">
-                  {({ active }) => <a>Harga</a>}
-                </Menu.Item>
-                <div className="bg-c-orange-700 w-full h-[1px]"></div>
-                <Menu.Item as="div" className="p-1">
-                  {({ active }) => (
-                    <a className={`${active && "bg-blue-500"}`}>Abjad</a>
-                  )}
-                </Menu.Item>
-              </Menu.Items>
-            </Menu>
-          </div>
-          <div className="flex justify-center">
-            <div className={"grid grid-cols-2 gap-6 md:gap-10"}>
-              {searchResult.length > 0
-                ? searchResult.map((item: any, index: number) => (
-                    <div className="" key={index}>
-                      <ItemCustomer
-                        onAddMenu={clickAddMenuHandler}
-                        title={item.name}
-                        price={item.price}
-                        description={item.description}
-                        image={item.image}
-                      />
-                    </div>
-                  ))
-                : menu.map((item: any, index: number) => (
-                    <div className="" key={index}>
-                      <ItemCustomer
-                        onAddMenu={clickAddMenuHandler}
-                        title={item.name}
-                        price={item.price}
-                        description={item.description}
-                        image={item.image}
-                      />
-                    </div>
-                  ))}
-              {/* {props?.menu?.map((item: any, index: number) => {
+      </div>
+      <div className="flex flex-col gap-4 px-4 py-6">
+        <div className="flex justify-end">
+          <Menu as="div" className="relative inline-block">
+            <Menu.Button className="w-20 h-8 relative bg-c-orange-100 flex rounded-full justify-center items-center shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)] text-sm text-c-orange-700">
+              Sort By
+            </Menu.Button>
+            <Transition
+              enter="transition ease-out duration-100"
+              enterFrom="transform opacity-0 scale-95"
+              enterTo="transform opacity-100 scale-100"
+              leave="transition ease-in duration-75"
+              leaveFrom="transform opacity-100 scale-100"
+              leaveTo="transform opacity-0 scale-95"
+            ></Transition>
+            <Menu.Items className="text-c-orange-700 items-center flex flex-col text-sm absolute right-0 mt-2 w-20 divide-gray-100 rounded-xl bg-c-orange-100 ring-opacity-5 focus:outline-none">
+              <Menu.Item
+                as="div"
+                className="p-1"
+                onClick={() => sortBy("price")}
+              >
+                {({ active }) => <a>Harga</a>}
+              </Menu.Item>
+              <div className="bg-c-orange-700 w-full h-[1px]"></div>
+              <Menu.Item
+                as="div"
+                className="p-1"
+                onClick={() => sortBy("name")}
+              >
+                {({ active }) => (
+                  <a className={`${active && "bg-blue-500"}`}>Abjad</a>
+                )}
+              </Menu.Item>
+            </Menu.Items>
+          </Menu>
+        </div>
+        <div className="flex justify-center">
+          <div className={"grid grid-cols-2 gap-6 md:gap-10"}>
+            {searchResult.length > 0
+              ? searchResult.map((item: any, index: number) => (
+                  <div className="" key={index}>
+                    <ItemCustomer
+                      onAddMenu={clickAddMenuHandler}
+                      title={item.name}
+                      price={item.price}
+                      description={item.description}
+                      image={item.image}
+                    />
+                  </div>
+                ))
+              : menu.map((item: any, index: number) => (
+                  <div className="" key={index}>
+                    <ItemCustomer
+                      onAddMenu={clickAddMenuHandler}
+                      title={item.name}
+                      price={item.price}
+                      description={item.description}
+                      image={item.image}
+                    />
+                  </div>
+                ))}
+            {/* {props?.menu?.map((item: any, index: number) => {
                 return (
                   <div className="" key={index}>
                       <ItemCustomer
@@ -226,18 +252,17 @@ const Merchant = (props: { menu: any }): JSX.Element => {
                   </div>
                 );
               })} */}
-            </div>
           </div>
-          {/* <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} />
+        </div>
+        {/* <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} />
         <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} />
         <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} />
         <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} /> */}
         <div className="fixed bottom-0 w-full bg-white -translate-x-4">
           <Navbar role="customer" location="home" />
         </div>
-        </div>
       </div>
-  
+    </div>
   );
 };
 
