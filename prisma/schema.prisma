@@ -155,6 +155,16 @@ model Order {
   driver       Driver      @relation(fields: [driverId], references: [id])
 }
 
+model Promo {
+  id                String      @id @default(auto()) @map("_id") @db.ObjectId
+  promoType         String
+  title             String
+  discPercentage    Int?
+  discValue         Int?
+  minOrder          Int
+  maxDisc           Int
+}
+
 enum OrderStatus {
   PENDING
   ACCEPTED
