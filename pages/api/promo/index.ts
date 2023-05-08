@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 
 type PromoCreateRequestBody = {
   id: string;
-  type: string;
+  promoType: string;
   title: string;
   percentage: number;
   value: number;
@@ -21,9 +21,9 @@ export default async function handle(
     return res.json(promo);
   }
   if (req.method === "POST") {
-    const { type, title, percentage, value, minOrder, maxDisc } = req.body as PromoCreateRequestBody;
+    const { promoType, title, percentage, value, minOrder, maxDisc } = req.body as PromoCreateRequestBody;
     const newPromo = await prisma.promo.create({
-        data: { type, title, percentage, value, minOrder, maxDisc  },
+        data: { promoType, title, percentage, value, minOrder, maxDisc },
     });
     return res.status(201).json(newPromo);
 
