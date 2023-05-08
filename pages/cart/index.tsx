@@ -1,7 +1,7 @@
 import Button from "components/elements/Button";
 import DefaultLayout from "components/layout/DefaultLayout";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type CartContentProps = {
   restaurantName: String;
@@ -22,6 +22,20 @@ const Cart: React.FC = (): JSX.Element => {
     },
   ]);
 
+  useEffect(() => {
+    fetch("/api/cart", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data.menuItems);
+        setCartContent(data.menuitems);
+      });
+  }, []);
+
   const [isEditing, setIsEditing] = useState(false);
 
   const changeItemQuantity = (index: number, quantity: number) => {
@@ -33,7 +47,7 @@ const Cart: React.FC = (): JSX.Element => {
 
   return (
     <DefaultLayout location="cart">
-      {cartContent.length > 0 ? (
+      {cartContent?.length > 0 ? (
         <div className="px-6 flex flex-col justify-between min-h-screen">
           <div className="">
             <div className="flex items-center mb-4  pt-6">
