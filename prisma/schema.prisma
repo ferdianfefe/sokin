@@ -163,6 +163,7 @@ model Promo {
   discValue         Int?
   minOrder          Int
   maxDisc           Int
+  @@map("promo")
 }
 
 enum OrderStatus {
