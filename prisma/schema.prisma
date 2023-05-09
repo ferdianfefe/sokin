@@ -89,15 +89,14 @@ model Owner {
 
 model Merchant {
   id           String  @id @default(auto()) @map("_id") @db.ObjectId
-  ownerId      String  @map("owner_id") @db.ObjectId
+  ownerId      String?  @map("owner_id") @db.ObjectId
   name         String?
   address      String?
   postalCode   String?
   coordinates  String?
   benchmark    String?
   merchantLogo String?
-  owner        Owner   @relation(fields: [ownerId], references: [id])
-  Cart         Cart[]
+  owner        Owner?   @relation(fields: [ownerId], references: [id])
 
   @@map("merchants")
 }
@@ -172,8 +171,6 @@ model Promo {
 model Cart {
   id           String     @id @default(auto()) @map("_id") @db.ObjectId
   userId       String     @map("user_id") @db.ObjectId
-  restaurant   Merchant   @relation(fields: [restaurantId], references: [id])
-  restaurantId String     @map("restaurant_id") @db.ObjectId
   menuItems    MenuItem[]
 }
 

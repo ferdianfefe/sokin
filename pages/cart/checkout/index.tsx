@@ -19,6 +19,7 @@ const Checkout: React.FC = (): JSX.Element => {
     deliveryFee: 5000,
     deliveryTime: 30,
   });
+  
   const [cartContent, setCartContent] = useState<CartContentProps[]>([
     {
       restaurantName: "McDonalds",
@@ -154,6 +155,7 @@ const Checkout: React.FC = (): JSX.Element => {
           <Button text={"Pesan dan Bayar Sekarang"} type="gray"/>
         </div>
       </div>
+      <PaymentPopup />
     </DefaultLayout>
   );
 };
@@ -195,6 +197,27 @@ const PaymentPopup: React.FC = (): JSX.Element => {
         </div>
         <p className="text-neutral-50">Saldo kurang, Top up atau bayar tunai</p>
         <Button text="Top up" className="!w-16 !h-8 text-base font-semibold" />
+      </div>
+      <div className="bg-c-orange-200">
+        <div className="flex items-center justify-between py-8">
+          <div className="flex">
+            <div className="relative h-6 w-6">
+              <Image src="/images/icons/wallet.svg" alt="wallet-icon" fill />
+            </div>
+            <div className="flex-2">
+              <p>Soket</p>
+              <p>Rp {100000}</p>
+            </div>
+          </div>
+          <Button
+            text="Ganti Opsi"
+            className="!w-20 bg-c-orange-200 text-base font-light !text-c-orange-800"
+          />
+        </div>
+        <Button
+          text="Pesan dan Bayar Sekarang"
+          className="bg-neutral-600 font-semibold"
+        />
       </div>
     </div>
   );

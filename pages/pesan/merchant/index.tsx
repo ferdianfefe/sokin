@@ -10,6 +10,7 @@ import prisma from "lib/prisma";
 import Search from "public/img/homepage/icon-search.png";
 import { useRouter } from "next/router";
 import Navbar from "components/elements/Navbar";
+import DefaultLayout from "components/layout/DefaultLayout";
 
 const Merchant = (props: { menu: any }): JSX.Element => {
   const router = useRouter();
@@ -32,13 +33,14 @@ const Merchant = (props: { menu: any }): JSX.Element => {
   const user = session?.user;
 
   const clickAddMenuHandler = (
+    id: string,
     title: string,
     price: number,
     image: string,
     description: string
   ) => {
     setAddMenuIsOpen(true);
-    setAddedMenuData({ title, price, image, description });
+    setAddedMenuData({ id, title, price, image, description });
   };
 
   const sortBy = (param: string) => {
@@ -74,7 +76,32 @@ const Merchant = (props: { menu: any }): JSX.Element => {
       });
   }, []);
 
+  useEffect(() => {
+    if (user) {
+      fetch(
+        "/api/cart?" +
+          new URLSearchParams({
+            userId: user.id,
+          }),
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          console.log("data", data);
+          setCartItemNumber(data.menuItems.length);
+        });
+    }
+  }, [user]);
+
   const [customerView, setcustomerView] = useState(false);
+  const [cartItemNumber, setCartItemNumber] = useState(0);
 
   const change = (e: any) => {
     setKeyword(e.target.value);
@@ -111,12 +138,60 @@ const Merchant = (props: { menu: any }): JSX.Element => {
     }
   };
 
+  const addToCart = async (menuId, quantity) => {
+    console.log(menuId, quantity, user.id, router.query.id);
+    await fetch(`/api/cart?action="addMenuItem"`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: user.id,
+        menuId,
+        quantity,
+        merchantId: router.query.id,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        fetch(
+          "/api/cart/" +
+            new URLSearchParams({
+              userId: user.id,
+            }),
+          {
+            method: "GET",
+          }
+        )
+          .then((res) => {
+            return res.json();
+          })
+          .then((data) => {
+            setCartItemNumber(data.menuItems.length);
+          });
+      });
+  };
+
   return (
-    <div className="min-h-screen">
+    <DefaultLayout location="pesan">
+      <div className="fixed p-4 bottom-20 right-6 bg-c-orange-800 rounded-full shadow-2xl shadow-neutral-900">
+        <div className="w-6 h-6 absolute bg-c-red-700 -left-[10%] -top-[10%] rounded-full text-neutral-50 flex justify-center items-center">
+          <small className="text-xs">{cartItemNumber}</small>
+        </div>
+        <div
+          className="relative w-8 h-8"
+          onClick={() => {
+            router.push("/cart");
+          }}
+        >
+          <Image src="/images/icons/cart.svg" alt="cart-icon" fill />
+        </div>
+      </div>
       <AddMenuPopUp
         show={addMenuIsOpen}
         setAddMenuIsOpen={setAddMenuIsOpen}
         menuData={addedMenuData}
+        addToCart={addToCart}
       />
       <div className="flex flex-col gap-4 px-4 pt-9">
         <h1 className="font-extrabold mb-2">{name}</h1>
@@ -222,6 +297,8 @@ const Merchant = (props: { menu: any }): JSX.Element => {
                   <div className="" key={index}>
                     <ItemCustomer
                       onAddMenu={clickAddMenuHandler}
+                      addToCart={addToCart}
+                      id={item.id}
                       title={item.name}
                       price={item.price}
                       description={item.description}
@@ -233,6 +310,8 @@ const Merchant = (props: { menu: any }): JSX.Element => {
                   <div className="" key={index}>
                     <ItemCustomer
                       onAddMenu={clickAddMenuHandler}
+                      addToCart={addToCart}
+                      id={item.id}
                       title={item.name}
                       price={item.price}
                       description={item.description}
@@ -258,11 +337,8 @@ const Merchant = (props: { menu: any }): JSX.Element => {
         <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} />
         <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} />
         <ItemMerchant title={"Title Title tit"} price={10000} description={""} stock={0} /> */}
-        <div className="fixed bottom-0 w-full bg-white -translate-x-4">
-          <Navbar role="customer" location="home" />
-        </div>
       </div>
-    </div>
+    </DefaultLayout>
   );
 };
 
@@ -272,10 +348,12 @@ const AddMenuPopUp = ({
   show,
   setAddMenuIsOpen = () => {},
   menuData,
+  addToCart = () => {},
 }: {
   show: Boolean;
   setAddMenuIsOpen: Function;
   menuData: object;
+  addToCart: Function;
 }): JSX.Element => {
   const [itemCount, setItemCount] = useState(1);
 
@@ -338,6 +416,9 @@ const AddMenuPopUp = ({
           <Button
             text={`Tambah Pesanan - Rp ${menuData.price * itemCount}`}
             className="font-bold"
+            onClickHandler={() => {
+              addToCart(menuData.id, itemCount);
+            }}
           ></Button>
         </div>
       </div>
