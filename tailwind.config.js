@@ -59,7 +59,7 @@ module.exports = {
     },
     boxShadow: {
       "list-order": "-4px 4px 0px rgba(236, 156, 70, 0.23)",
-      "card" : "1px 4px 12px 2px #FFFFFF40, -5px 4px 4px 0px #FE830440",
+      "card" : "1px 4px 12px 2px #FFFFFF40, -2px 2px 6px 2px #FE830440",
     },
     plugins: [],
   },
