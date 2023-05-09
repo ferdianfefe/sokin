@@ -18,9 +18,9 @@ export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if(req.method === "GET") {
+  if (req.method === "GET") {
     const cart = await prisma.cart.findFirst({
-      where: { userId: req.body.userId },
+      where: { userId: req.query.userId },
       include: { menuItems: { include: { menu: true } } },
     });
     return res.json(cart);
@@ -29,7 +29,6 @@ export default async function handle(
   if (req.method === "POST") {
     const { menuId, quantity, merchantId } =
       req.body as MenuItemCreateRequestBody;
-    console.log(menuId);
     // get cart from user
     const cart = await prisma.cart.findFirst({
       where: { userId: req.body.userId },

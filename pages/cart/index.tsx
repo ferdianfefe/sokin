@@ -1,40 +1,44 @@
 import Button from "components/elements/Button";
 import DefaultLayout from "components/layout/DefaultLayout";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
 type CartContentProps = {
   restaurantName: String;
   name: String;
-  imageURL: String;
+  image: String;
   price: Number;
   quantity: Number;
 };
 
 const Cart: React.FC = (): JSX.Element => {
-  const [cartContent, setCartContent] = useState<CartContentProps[]>([
-    {
-      restaurantName: "McDonalds",
-      imageURL: "/images/pesan/nasgor-enak.jpg",
-      name: "Paket Panas 1",
-      price: 35000,
-      quantity: 1,
-    },
-  ]);
+  const [cartContent, setCartContent] = useState(null);
+
+  const { data: session, status } = useSession();
+  const user = session?.user;
 
   useEffect(() => {
-    fetch("/api/cart", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data.menuItems);
-        setCartContent(data.menuitems);
-      });
-  }, []);
+    if (user) {
+      fetch(
+        "/api/cart?" +
+          new URLSearchParams({
+            userId: user.id,
+          }),
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data.menuItems);
+          setCartContent(data.menuItems);
+        });
+    }
+  }, [user]);
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -93,9 +97,9 @@ const Cart: React.FC = (): JSX.Element => {
             <div className="flex mt-4 font-bold text-3xl">
               <p className="">Total : </p>
               <p className="text-c-orange-700">
-                {" "}
+                Rp{" "}
                 {cartContent.reduce(
-                  (total, item) => total + item.price * item.quantity,
+                  (total, item) => total + item.menu.price * item.quantity,
                   0
                 )}
               </p>
@@ -143,12 +147,12 @@ const ItemBox: React.FC = ({
   return (
     <div className="flex justify-between mb-2 shadow-card">
       <div className="h-24 w-24 relative rounded-l-2xl">
-        <Image src={item.imageURL} alt="Phone" fill className="rounded-l-2xl" />
+        <Image src={item.menu.image} alt="Phone" fill className="rounded-l-2xl" />
       </div>
       <div className="flex-1 mx-4 my-2">
-        <p className="font-bold mb-2">{item.name}</p>
+        <p className="font-bold mb-2">{item.menu.name}</p>
         <div className="flex items-center">
-          <p className="font-bold">Rp {item.price * item.quantity}</p>
+          <p className="font-bold">Rp {item.menu.price * item.quantity}</p>
           <div className="flex justify-evenly items-center">
             <div
               className="w-10 h-10 relative"

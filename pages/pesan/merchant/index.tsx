@@ -77,21 +77,28 @@ const Merchant = (props: { menu: any }): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    fetch("/api/cart", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        console.log(res);
-        return res.json();
-      })
-      .then((data) => {
-        console.log(data);
-        setCartItemNumber(data.menuItems.length);
-      });
-  }, []);
+    if (user) {
+      fetch(
+        "/api/cart?" +
+          new URLSearchParams({
+            userId: user.id,
+          }),
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          console.log("data", data);
+          setCartItemNumber(data.menuItems.length);
+        });
+    }
+  }, [user]);
 
   const [customerView, setcustomerView] = useState(false);
   const [cartItemNumber, setCartItemNumber] = useState(0);
@@ -147,12 +154,15 @@ const Merchant = (props: { menu: any }): JSX.Element => {
     })
       .then((res) => res.json())
       .then((data) => {
-        fetch("/api/cart", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
+        fetch(
+          "/api/cart/" +
+            new URLSearchParams({
+              userId: user.id,
+            }),
+          {
+            method: "GET",
+          }
+        )
           .then((res) => {
             return res.json();
           })
@@ -168,9 +178,12 @@ const Merchant = (props: { menu: any }): JSX.Element => {
         <div className="w-6 h-6 absolute bg-c-red-700 -left-[10%] -top-[10%] rounded-full text-neutral-50 flex justify-center items-center">
           <small className="text-xs">{cartItemNumber}</small>
         </div>
-        <div className="relative w-8 h-8" onClick={() => {
-          router.push("/cart");
-        }}>
+        <div
+          className="relative w-8 h-8"
+          onClick={() => {
+            router.push("/cart");
+          }}
+        >
           <Image src="/images/icons/cart.svg" alt="cart-icon" fill />
         </div>
       </div>
