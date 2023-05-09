@@ -2,7 +2,8 @@ import Button from "components/elements/Button";
 import DefaultLayout from "components/layout/DefaultLayout";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useState } from "react";
 
 type CartContentProps = {
   restaurantName: String;
@@ -70,11 +71,13 @@ const Cart: React.FC = (): JSX.Element => {
           <div className="">
             <div className="flex items-center mb-4  pt-6">
               <div className="h-6 w-6 relative">
-                <Image
-                  src="/images/icons/left-arrow.svg"
-                  alt="Left arrow"
-                  fill
-                />
+                <Link href={"/pesan"}>
+                  <Image
+                    src="/images/icons/left-arrow.svg"
+                    alt="Left arrow"
+                    fill
+                  />
+                </Link>
               </div>
               <h1 className="text-2xl font-semibold text-neutral-700 ml-4">
                 Keranjang Saya
@@ -85,7 +88,7 @@ const Cart: React.FC = (): JSX.Element => {
                 <p className="font-bold text-2xl">
                   {cartContent[0].restaurantName}
                 </p>
-                <div className="bg-c-orange-800 p-3 rounded-full">
+                <div className="bg-c-orange-800 flex items-center justify-center w-8 h-8 rounded-full">
                   <div
                     className="w-4 h-4 relative"
                     onClick={() => setIsEditing(!isEditing)}
@@ -111,7 +114,8 @@ const Cart: React.FC = (): JSX.Element => {
             <div className="flex mt-4 font-bold text-3xl">
               <p className="">Total : </p>
               <p className="text-c-orange-700">
-                Rp{" "}
+                &nbsp;
+                {"Rp"}
                 {cartContent.reduce(
                   (total, item) => total + item.menu.price * item.quantity,
                   0
@@ -120,7 +124,9 @@ const Cart: React.FC = (): JSX.Element => {
             </div>
           </div>
           <div className="mb-10">
-            <Button text="Lanjut Ke Pembayaran" />
+            <Link href={"/cart/checkout"}>
+              <Button text="Lanjut Ke Pembayaran" />
+            </Link>
           </div>
         </div>
       ) : (
@@ -159,8 +165,8 @@ const ItemBox: React.FC = ({
   isEditing: boolean;
 }): JSX.Element => {
   return (
-    <div className="flex justify-between mb-2 shadow-card">
-      <div className="h-24 w-24 relative rounded-l-2xl">
+    <div className="flex justify-between mb-2 shadow-card rounded-3xl">
+      <div className="h-24 w-24 relative rounded-2xl">
         <Image src={item.menu.image} alt="Phone" fill className="rounded-l-2xl" />
       </div>
       <div className="flex-1 mx-4 my-2">
@@ -195,7 +201,7 @@ const ItemBox: React.FC = ({
         </div>
       </div>
       <div
-        className={`bg-c-red-700 h-100 px-8 ${
+        className={`bg-c-red-700 h-100 px-8 rounded-r-3xl ${
           isEditing ? "flex" : "hidden"
         } flex-col justify-center items-center w-0`}
       >
