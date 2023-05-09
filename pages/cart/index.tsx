@@ -40,6 +40,20 @@ const Cart: React.FC = (): JSX.Element => {
     }
   }, [user]);
 
+  useEffect(() => {
+    fetch("/api/cart", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data.menuItems);
+        setCartContent(data.menuitems);
+      });
+  }, []);
+
   const [isEditing, setIsEditing] = useState(false);
 
   const changeItemQuantity = (index: number, quantity: number) => {
