@@ -1,6 +1,6 @@
 import Button from "components/elements/Button";
 import DefaultLayout from "components/layout/DefaultLayout";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
 type CartContentProps = {
@@ -11,13 +11,25 @@ type CartContentProps = {
   quantity: Number;
 };
 
+interface Promo {
+  id: string;
+  promoType: string;
+  title: string;
+  discPercentage: number;
+  discValue: any;
+  minOrder: number;
+  maxDisc: number;
+}
+
 const Checkout: React.FC = (): JSX.Element => {
+  const [promo, setPromo] = useState<Promo[]>([]);
   const [orderInformation, setOrderInformation] = useState({
     restaurantName: "McDonalds",
     address: "Jl. Raya Bogor KM 30",
     deliveryFee: 5000,
     deliveryTime: 30,
   });
+  const [show, setShow] = useState(false);
   
   const [cartContent, setCartContent] = useState<CartContentProps[]>([
     {
@@ -29,8 +41,69 @@ const Checkout: React.FC = (): JSX.Element => {
     },
   ]);
 
+  useEffect(() => {
+    fetch("http://localhost:3000/api/promo", {
+      method: "GET",
+    }).then((res) => 
+      res.json()
+    ).then((data) => {
+      setPromo(data)
+    })
+  }, [])
+
+  const showPromo = () => {
+    setShow(true)
+  }
+
+  const hidePromo = () => {
+    setShow(false)
+  }
+
   return (
     <DefaultLayout location="cart">
+      {show && (
+        <div className="w-full min-h-full z-10 bg-[#FFFFFF] fixed">
+          <div className="flex items-center px-6 pt-6 mb-4">
+            <h1 className="flex items-center text-2xl font-bold text-neutral-700 ml-4">
+              <p className="hover:cursor-pointer" onClick={hidePromo}>X</p>
+              {/* <p>-</p> */}
+            </h1>
+            <h1 className="text-2xl font-semibold text-neutral-700 ml-4">
+              Gunakan Promo
+            </h1>
+          </div>
+          <div className="px-[5%] font-bold">
+            <p className="mb-4">Promo Ongkos Kirim</p>
+            {promo.length > 0 && (promo.map((item) => {
+              if (item.promoType === "ongkir"){
+                return (
+                  <div className="w-full h-[25vw] bg-[url('/ongkirPromo.png')] bg-contain bg-no-repeat text-[#FFFFFF] px-[30%] pt-[1.5vh]">
+                    <p>{item.title}</p>
+                    <p className="text-lg font-light">- Sampai dengan</p>
+                    <p className="text-lg font-light">- Minimal order</p>
+                  </div>
+                )
+              }
+            })
+            )}
+          </div>
+          <div className="px-[5%] font-bold">
+            <p className="mb-4">Promo Makanan atau Minuman</p>
+            {promo.length > 0 && (promo.map((item) => {
+              if (item.promoType === "makanan"){
+                return (
+                  <div className="w-full h-[25vw] bg-[url('/foodPromo.png')] bg-contain bg-no-repeat text-[#FE8304] px-[30%] pt-[1.5vh]">
+                    <p>{item.title}</p>
+                    <p className="text-lg font-light">- Sampai dengan</p>
+                    <p className="text-lg font-light">- Minimal order</p>
+                  </div>
+                )
+              }
+            })
+            )}
+          </div>
+        </div>
+      )}
       <div className="px-6 flex flex-col justify-between min-h-screen relative">
         <div className="">
           <div className="flex items-center mb-4  pt-6">
@@ -69,7 +142,7 @@ const Checkout: React.FC = (): JSX.Element => {
               <ItemBox key={index} item={item} index={index} />
             ))}
           </div>
-          <div className="bg-c-orange-200 flex items-center justify-evenly py-2 px-3 rounded-3xl mb-8">
+          <div className="bg-c-orange-200 flex items-center justify-evenly py-2 px-3 rounded-3xl mb-8" onClick={showPromo}>
             <div className="relative w-8 h-8">
               <Image
                 src="/images/icons/discount.svg"
@@ -77,7 +150,7 @@ const Checkout: React.FC = (): JSX.Element => {
                 fill
               />
             </div>
-            <p className="text-c-orange-800 text-2xl">
+            <p className="text-c-orange-800 text-2xl hover:cursor-pointer">
               Jangan lupa pakai promo
             </p>
             <div className="relative w-4 h-4">
