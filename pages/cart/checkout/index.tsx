@@ -18,6 +18,7 @@ const Checkout: React.FC = (): JSX.Element => {
     deliveryFee: 5000,
     deliveryTime: 30,
   });
+  
   const [cartContent, setCartContent] = useState<CartContentProps[]>([
     {
       restaurantName: "McDonalds",
