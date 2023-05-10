@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
 type CartContentProps = {
   restaurantName: String;
@@ -14,6 +15,8 @@ type CartContentProps = {
 };
 
 const Cart: React.FC = (): JSX.Element => {
+  const router = useRouter();
+
   const [cartContent, setCartContent] = useState(null);
 
   const { data: session, status } = useSession();
@@ -63,6 +66,16 @@ const Cart: React.FC = (): JSX.Element => {
     newCartContent[index].quantity = quantity;
     setCartContent(newCartContent);
   };
+
+  const bayar = (x:number) => {
+    // return alert (x)
+    router.push({
+      pathname: "/cart/checkout",
+      query: {
+        total: x,
+      },
+    });
+  }
 
   return (
     <DefaultLayout location="cart">
@@ -124,9 +137,12 @@ const Cart: React.FC = (): JSX.Element => {
             </div>
           </div>
           <div className="mb-10">
-            <Link href={"/cart/checkout"}>
+            <div onClick={() => {
+              let totalHarga = cartContent.reduce((total, item) => total + item.menu.price * item.quantity, 0)
+              bayar(totalHarga)
+            }}>
               <Button text="Lanjut Ke Pembayaran" />
-            </Link>
+            </div>
           </div>
         </div>
       ) : (
