@@ -17,8 +17,7 @@ type CartContentProps = {
 const Cart: React.FC = (): JSX.Element => {
   const router = useRouter();
 
-  const [cartContent, setCartContent] = useState(null);
-
+  const [cartContent, setCartContent] = useState<CartContentProps[]>([]);
   const { data: session, status } = useSession();
   const user = session?.user;
 
@@ -121,6 +120,8 @@ const Cart: React.FC = (): JSX.Element => {
                   index={index}
                   changeItemQuantity={changeItemQuantity}
                   isEditing={isEditing}
+                  set={setCartContent}
+                  content={cartContent}
                 />
               ))}
             </div>
@@ -174,12 +175,38 @@ const ItemBox: React.FC = ({
   index,
   changeItemQuantity,
   isEditing,
+  set,
+  content,
 }: {
   item: CartContentProps;
   index: number;
   changeItemQuantity: (index: number, quantity: Number) => void;
   isEditing: boolean;
+  set: any;
+  content: any;
 }): JSX.Element => {
+
+  const delMenu = (item) => {
+    let newCart = [...content]
+    for (let i = 0; i < newCart.length; i++) {
+      if (newCart[i].menu.id === item.menu.id) {
+        newCart.splice(i, 1)
+      }
+    }
+    set(newCart)
+    // alert(item.id)
+    fetch("/api/cart", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        menuId: item.id,
+      }),
+    })
+
+  }
+
   return (
     <div className="flex justify-between mb-2 shadow-card rounded-3xl">
       <div className="h-24 w-24 relative rounded-2xl">
@@ -220,6 +247,7 @@ const ItemBox: React.FC = ({
         className={`bg-c-red-700 h-100 px-8 rounded-r-3xl ${
           isEditing ? "flex" : "hidden"
         } flex-col justify-center items-center w-0`}
+        onClick={() => delMenu(item)}
       >
         <div className={`w-8 transition-all h-8 relative`}>
           <Image src={"/images/icons/trashcan.svg"} alt="trash-icon" fill />
