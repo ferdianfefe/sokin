@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
 type CartContentProps = {
   restaurantName: String;
@@ -14,8 +15,9 @@ type CartContentProps = {
 };
 
 const Cart: React.FC = (): JSX.Element => {
-  const [cartContent, setCartContent] = useState(null);
+  const router = useRouter();
 
+  const [cartContent, setCartContent] = useState<CartContentProps[]>([]);
   const { data: session, status } = useSession();
   const user = session?.user;
 
@@ -64,6 +66,16 @@ const Cart: React.FC = (): JSX.Element => {
     setCartContent(newCartContent);
   };
 
+  const bayar = (x: number) => {
+    // return alert (x)
+    router.push({
+      pathname: "/cart/checkout",
+      query: {
+        total: x,
+      },
+    });
+  };
+
   return (
     <DefaultLayout location="cart">
       {cartContent?.length > 0 ? (
@@ -108,6 +120,8 @@ const Cart: React.FC = (): JSX.Element => {
                   index={index}
                   changeItemQuantity={changeItemQuantity}
                   isEditing={isEditing}
+                  set={setCartContent}
+                  content={cartContent}
                 />
               ))}
             </div>
@@ -124,17 +138,31 @@ const Cart: React.FC = (): JSX.Element => {
             </div>
           </div>
           <div className="mb-10">
-            <Link href={"/cart/checkout"}>
+            <div
+              onClick={() => {
+                let totalHarga = cartContent.reduce(
+                  (total, item) => total + item.menu.price * item.quantity,
+                  0
+                );
+                bayar(totalHarga);
+              }}
+            >
               <Button text="Lanjut Ke Pembayaran" />
-            </Link>
+            </div>
           </div>
         </div>
       ) : (
         <div className="h-screen relative px-6">
           <div className="flex items-center mb-4 pt-6">
-            <div className="h-6 w-6 relative">
-              <Image src="/images/icons/left-arrow.svg" alt="Left arrow" fill />
-            </div>
+            <Link href={"/pesan"}>
+              <div className="h-6 w-6 relative">
+                <Image
+                  src="/images/icons/left-arrow.svg"
+                  alt="Left arrow"
+                  fill
+                />
+              </div>
+            </Link>
             <h1 className="text-2xl text-neutral-700 font-semibold ml-4">
               Keranjang Saya
             </h1>
@@ -158,16 +186,45 @@ const ItemBox: React.FC = ({
   index,
   changeItemQuantity,
   isEditing,
+  set,
+  content,
 }: {
   item: CartContentProps;
   index: number;
   changeItemQuantity: (index: number, quantity: Number) => void;
   isEditing: boolean;
+  set: any;
+  content: any;
 }): JSX.Element => {
+  const delMenu = (item) => {
+    let newCart = [...content];
+    for (let i = 0; i < newCart.length; i++) {
+      if (newCart[i].menu.id === item.menu.id) {
+        newCart.splice(i, 1);
+      }
+    }
+    set(newCart);
+    // alert(item.id)
+    fetch("/api/cart", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        menuId: item.id,
+      }),
+    });
+  };
+
   return (
     <div className="flex justify-between mb-2 shadow-card rounded-3xl">
       <div className="h-24 w-24 relative rounded-2xl">
-        <Image src={item.menu.image} alt="Phone" fill className="rounded-l-2xl" />
+        <Image
+          src={item.menu.image}
+          alt="Phone"
+          fill
+          className="rounded-l-2xl"
+        />
       </div>
       <div className="flex-1 mx-4 my-2">
         <p className="font-bold mb-2">{item.menu.name}</p>
@@ -204,6 +261,7 @@ const ItemBox: React.FC = ({
         className={`bg-c-red-700 h-100 px-8 rounded-r-3xl ${
           isEditing ? "flex" : "hidden"
         } flex-col justify-center items-center w-0`}
+        onClick={() => delMenu(item)}
       >
         <div className={`w-8 transition-all h-8 relative`}>
           <Image src={"/images/icons/trashcan.svg"} alt="trash-icon" fill />

@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
+import { json } from "react-router-dom";
 
 type CartCreateRequestBody = {
   userId: string;
@@ -79,9 +80,11 @@ export default async function handle(
   }
 
   if (req.method === "DELETE") {
-    const { id } = req.body;
-    const deletedMenuItem = await prisma.menuItem.delete({ where: { id } });
-    return res.status(200).json(deletedMenuItem);
+    const data = req.body.menuId;
+    console.log(data);
+    const deletedMenuItem = await prisma.menuItem.delete({ where: { id: data } });
+    // return res.status(200).json(deletedMenuItem);
+    return res.status(200).json({ message: "deleted" });
   }
   // if (req.method === "POST" && req.query.action === "addMenuItem") {
   //   const { menuId, quantity } = req.body as MenuItemCreateRequestBody;

@@ -3,6 +3,8 @@ import DefaultLayout from "components/layout/DefaultLayout";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { set } from "react-hook-form";
 
 type CartContentProps = {
   restaurantName: String;
@@ -23,6 +25,8 @@ interface Promo {
 }
 
 const Checkout: React.FC = (): JSX.Element => {
+  const router = useRouter();
+
   const [promo, setPromo] = useState<Promo[]>([]);
   const [orderInformation, setOrderInformation] = useState({
     restaurantName: "McDonalds",
@@ -33,6 +37,10 @@ const Checkout: React.FC = (): JSX.Element => {
   const [show, setShow] = useState(false);
   const [showOpsi, setShowOpsi] = useState(false);
   const [opsiPembayaran, setOpsiPembayaran] = useState("Soket");
+  const [ongkir, setOngkir] = useState<number>(10000);
+  const [layanan, setLayanan] = useState<number>(2500);
+  const [promoFood, setPromoFood] = useState<number>(0);
+  const [promoOngkir, setPromoOngkir] = useState<number>(0);
 
   const [cartContent, setCartContent] = useState<CartContentProps[]>([
     {
@@ -74,6 +82,29 @@ const Checkout: React.FC = (): JSX.Element => {
     setOpsiPembayaran("Cash");
   };
 
+  const usePromo = (item: Promo) => {
+    if (item.promoType === "ongkir") {
+      if (item.minOrder > parseInt(router.query.total)){
+        alert ('Pesanan Anda tidak memenuhi nominal minimum untuk menggunakan promo ini')
+      } else {
+        if (item.discValue > ongkir) {
+          setPromoOngkir(ongkir)
+        } else {
+          setPromoOngkir(item.discValue)
+        }
+        setShow(false)
+      }
+    }
+    if (item.promoType === "makanan") {
+      if (item.minOrder > parseInt(router.query.total)){
+        alert ('Pesanan Anda tidak memenuhi nominal minimum untuk menggunakan promo ini')
+      } else {
+        setPromoFood(item.discPercentage * parseInt(router.query.total) / 100)
+        setShow(false)
+      }
+    }
+  }
+
   return (
     <DefaultLayout location="pesan" className="z-60">
       {show && (
@@ -95,10 +126,10 @@ const Checkout: React.FC = (): JSX.Element => {
               promo.map((item) => {
                 if (item.promoType === "ongkir") {
                   return (
-                    <div className="w-full h-[25vw] bg-[url('/ongkirPromo.png')] bg-contain bg-no-repeat text-[#FFFFFF] px-[30%] pt-[1.5vh]">
+                    <div className="w-full hover:cursor-pointer hover:scale-[.975] h-[25vw] bg-[url('/ongkirPromo.png')] bg-contain bg-no-repeat text-[#FFFFFF] px-[30%] pt-[1.5vh]" onClick={() => usePromo(item)}>
                       <p>{item.title}</p>
-                      <p className="text-lg font-light">- Sampai dengan</p>
-                      <p className="text-lg font-light">- Minimal order</p>
+                      <p className="text-base font-light">- Sampai dengan Rp{item.maxDisc}</p>
+                      <p className="text-base font-light">- Minimal order Rp{item.minOrder}</p>
                     </div>
                   );
                 }
@@ -110,10 +141,10 @@ const Checkout: React.FC = (): JSX.Element => {
               promo.map((item) => {
                 if (item.promoType === "makanan") {
                   return (
-                    <div className="w-full h-[25vw] bg-[url('/foodPromo.png')] bg-contain bg-no-repeat text-[#FE8304] px-[30%] pt-[1.5vh]">
+                    <div className="w-full hover:cursor-pointer hover:scale-[.975] h-[25vw] bg-[url('/foodPromo.png')] bg-contain bg-no-repeat text-[#FE8304] px-[30%] pt-[1.5vh]" onClick={() => usePromo(item)}>
                       <p>{item.title}</p>
-                      <p className="text-lg font-light">- Sampai dengan</p>
-                      <p className="text-lg font-light">- Minimal order</p>
+                      <p className="text-base font-light">- Sampai dengan Rp{item.maxDisc}</p>
+                      <p className="text-base font-light">- Minimal order Rp{item.minOrder}</p>
                     </div>
                   );
                 }
@@ -202,32 +233,39 @@ const Checkout: React.FC = (): JSX.Element => {
             <div className="flex justify-between mb-4">
               <p className="">Total Pesanan</p>
               <p className="">
-                Rp{" "}
-                {cartContent.reduce(
+                Rp{" "}{router.query.total}
+                {/* {cartContent.reduce(
                   (total, item) => total + item.price * item.quantity,
                   0
-                )}
+                )} */}
               </p>
             </div>
             <div className="flex justify-between mb-4">
               <p className="">Ongkos Kirim</p>
-              <p className="">Rp 10000</p>
+              <p className="">Rp {" "}{ongkir}</p>
             </div>
             <div className="flex justify-between mb-4">
               <p className="">Biaya Layanan</p>
-              <p className="">Rp 2500</p>
+              <p className="">Rp {" "}{layanan}</p>
             </div>
+            {(promoOngkir > 0) && (
+              <div className="flex justify-between mb-4">
+                <p className="">Promo Ongkos kirim</p>
+                <p className="">Rp {" -"}{promoOngkir}</p>
+              </div>
+            )}
+            {(promoFood > 0) && (
+              <div className="flex justify-between mb-4">
+                <p className="">Promo Ongkos kirim</p>
+                <p className="">Rp {" -"}{promoFood}</p>
+              </div>
+            )}
             <hr className="border-[1.5px] border-[#000000] mb-4" />
             <div className="flex justify-between mb-4">
               <p className="">Total</p>
               <p className="">
                 Rp{" "}
-                {cartContent.reduce(
-                  (total, item) => total + item.price * item.quantity,
-                  0
-                ) +
-                  10000 +
-                  2500}
+                {parseInt(router.query.total) + parseInt(ongkir) + parseInt(layanan) - parseInt(promoOngkir) - parseInt(promoFood)}
               </p>
             </div>
           </div>
