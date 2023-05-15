@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Button from "../Button";
 
 const ItemCustomer: React.FC<{
+  id: string;
   title: string;
   price: number;
   description: string;
@@ -10,6 +11,7 @@ const ItemCustomer: React.FC<{
   className?: string;
   onAddMenu?: () => void;
 }> = ({
+  id,
   title,
   price,
   image,
@@ -33,7 +35,7 @@ const ItemCustomer: React.FC<{
         <h3 className="font-bold">{title}</h3>
         <p className="text-sm font-semibold">Rp{price}</p>
         <div className="flex justify-center">
-          <Button text="Tambah" size="very small" className="mt-3" onClickHandler={() => onAddMenu(title, price, image, description)}/>
+          <Button text="Tambah" size="very small" className="mt-3" onClickHandler={() => onAddMenu(id, title, price, image, description)}/>
 
         </div>
       </div>

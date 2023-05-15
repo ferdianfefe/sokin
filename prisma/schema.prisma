@@ -15,7 +15,7 @@ model User {
   name          String?
   email         String    @unique
   emailVerified DateTime? @map("email_verified")
-  password      String?    @map("hashed_password")
+  password      String?   @map("hashed_password")
   image         String?
   accounts      Account[]
   sessions      Session[]
@@ -89,14 +89,14 @@ model Owner {
 
 model Merchant {
   id           String  @id @default(auto()) @map("_id") @db.ObjectId
-  ownerId      String  @map("owner_id") @db.ObjectId
+  ownerId      String?  @map("owner_id") @db.ObjectId
   name         String?
   address      String?
   postalCode   String?
   coordinates  String?
   benchmark    String?
   merchantLogo String?
-  owner        Owner   @relation(fields: [ownerId], references: [id])
+  owner        Owner?   @relation(fields: [ownerId], references: [id])
 
   @@map("merchants")
 }
@@ -124,15 +124,16 @@ model Driver {
 }
 
 model Menu {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  ownerId     String  @map("owner_id") @db.ObjectId
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  ownerId     String     @map("owner_id") @db.ObjectId
   name        String
   price       Float
   category    String?
   description String?
-  stock       Int?    @default(0)
+  stock       Int?       @default(0)
   image       String?
-  owner       Owner   @relation(fields: [ownerId], references: [id])
+  owner       Owner      @relation(fields: [ownerId], references: [id])
+  MenuItem    MenuItem[]
 
   @@map("menus")
 }
@@ -153,6 +154,33 @@ model Order {
   isCompleted  Boolean     @default(false)
   fee          Float?
   driver       Driver      @relation(fields: [driverId], references: [id])
+}
+
+model Promo {
+  id             String @id @default(auto()) @map("_id") @db.ObjectId
+  promoType      String
+  title          String
+  discPercentage Int?
+  discValue      Int?
+  minOrder       Int
+  maxDisc        Int
+
+  @@map("promo")
+}
+
+model Cart {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String     @map("user_id") @db.ObjectId
+  menuItems    MenuItem[]
+}
+
+model MenuItem {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  cart     Cart   @relation(fields: [cartId], references: [id])
+  cartId   String @map("cart_id") @db.ObjectId
+  menu     Menu   @relation(fields: [menuId], references: [id])
+  menuId   String @map("menu_id") @db.ObjectId
+  quantity Int
 }
 
 enum OrderStatus {
