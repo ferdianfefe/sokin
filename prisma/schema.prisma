@@ -98,6 +98,7 @@ model Merchant {
   benchmark    String?
   merchantLogo String?
   owner        Owner?  @relation(fields: [ownerId], references: [id])
+  Order        Order[]
 
   @@map("merchants")
 }
@@ -140,24 +141,25 @@ model Menu {
 }
 
 model Order {
-  id          String      @id @default(auto()) @map("_id") @db.ObjectId
-  driverId    String      @map("owner_id") @db.ObjectId
-  userId      String      @map("user_id") @db.ObjectId
-  merchantId  String      @map("merchant_id") @db.ObjectId
-  menuId      String[]    @map("menu_id") @db.ObjectId
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  driverId    String       @map("driver_id") @db.ObjectId
+  userId      String       @map("user_id") @db.ObjectId
+  merchantId  String       @map("merchant_id") @db.ObjectId
+  cartId      String       @map("cart_id") @db.ObjectId
+  createdAt   DateTime     @default(now())
   source      String
   destination String
   distance    Float
-  status      OrderStatus @default(PENDING)
-  creditScore Float
-  menuOrder   String[]
+  status      OrderStatus? @default(DELIVERY)
   eta         Int
-  isAccepted  Boolean     @default(false)
-  isCompleted Boolean     @default(false)
-  fee         Float?
-  driver      Driver?     @relation(fields: [driverId], references: [id])
-  user        User?       @relation(fields: [userId], references: [id])
-  merchant    Merchant?   @relation(fields: [merchantId], references: [id])
+  isAccepted  Boolean      @default(false)
+  isCompleted Boolean      @default(false)
+  foodFee     Float?
+  costFee     Float?
+  driver      Driver?      @relation(fields: [driverId], references: [id])
+  user        User?        @relation(fields: [userId], references: [id])
+  cart        Cart?        @relation(fields: [cartId], references: [id])
+  merchant    Merchant?    @relation(fields: [merchantId], references: [id])
 }
 
 model Promo {
@@ -176,6 +178,7 @@ model Cart {
   id        String     @id @default(auto()) @map("_id") @db.ObjectId
   userId    String     @map("user_id") @db.ObjectId
   menuItems MenuItem[]
+  Order     Order[]
 }
 
 model MenuItem {
@@ -188,7 +191,7 @@ model MenuItem {
 }
 
 enum OrderStatus {
-  PENDING
-  ACCEPTED
-  COMPLETED
+  DELIVERY
+  PROCESS
+  DONE
 }
