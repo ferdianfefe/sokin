@@ -1,22 +1,22 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient, Order } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 type OrderCreateRequestBody = {
   id: string;
   driverId: string;
   userId: string;
   merchantId: string;
-  menuId: string[];
+  cartId: string;
   source: string;
   destination: string;
   distance: number;
   status: string;
   creditScore: number;
-  menuOrder: string[];
   eta: number;
   isAccepted: boolean;
   isCompleted: boolean;
-  fee: number;
+  foodFee: number;
+  costFee: number;
 };
 
 type UpdateOrderData = {
@@ -30,28 +30,67 @@ export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method === "GET") {
+  /*if (req.method === "GET") {
     const order = await prisma.order.findMany();
     console.log(order);
     return res.status(200).json(order);
-  }
+  }*/
+    if (req.method === "GET") {
+    const order = await prisma.order.findMany({
+      include: {
+        driver: {
+          select: {
+            name: true,
+            phoneNumber: true,
+            licenseNumber: true,
+            vehicle: true
+          }
+        },
+        user: {
+          select: {
+            name: true
+          }
+        },
+        cart: {
+          include: {
+            menuItems: {
+              include: {
+                menu: {
+                  select: {
+                    name: true,
+                    price: true,
+                    image: true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  
+      console.log(order);
+      return res.status(200).json(order);
+    }
+
+  
   if (req.method === "POST") {
-    const { driverId, userId, merchantId, menuId,  source, destination, distance, creditScore, menuOrder, eta, isAccepted, isCompleted, fee} = req.body as OrderCreateRequestBody;
+    const { driverId, userId, merchantId, cartId,  source, destination, distance, creditScore,  eta, isAccepted, isCompleted, foodFee, costFee} = req.body as OrderCreateRequestBody;
     const newOrder = await prisma.order.create({
       data: {
         driver: { connect: { id: driverId } },
         user: { connect: { id: userId } },
         merchant: { connect: { id: merchantId } },
-        menuId,
+        cart: { connect: { id: cartId} },
         source,
         destination,
         distance,
         creditScore,
-        menuOrder,
         eta,
         isAccepted,
         isCompleted,
-        fee,
+        foodFee,
+        costFee
       },
     });
     return res.status(201).json(newOrder);
