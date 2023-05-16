@@ -18,7 +18,8 @@ export default async function handle(
 ) {
   if (req.method === "GET") {
     const promo = await prisma.promo.findMany();
-    return res.json(promo);
+    console.log(promo);
+    return res.status(200).json(promo);
   }
   if (req.method === "POST") {
     const { promoType, title, discPercentage, discValue, minOrder, maxDisc } = req.body as PromoCreateRequestBody;

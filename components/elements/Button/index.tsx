@@ -36,6 +36,8 @@ const Button: React.FC<Props> = ({
             ? "bg-c-red-700 text-neutral-50"
             : type == "green"
             ? "bg-c-green-700 text-neutral-50"
+            : type == "gray"
+            ? "bg-gray-500 text-neutral-50"
             : "bg-[#FE8304] text-neutral-50"
         }
                   ${
