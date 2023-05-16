@@ -42,7 +42,7 @@ export default async function handle(
     });
     return res.status(201).json(newPromo);
 
-  } else if (req.method === 'PUT') {
+  } /*else if (req.method === 'PUT') {
     try {
       const { orderId, status, isAccepted, isCompleted } = req.body;
 
@@ -68,6 +68,6 @@ export default async function handle(
       res.status(200).json(order);
     } catch (error) {
       res.status(500).json({ message: 'Internal Server Error' });
-    }
+    } */
   }
 }
