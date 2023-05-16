@@ -98,6 +98,7 @@ model Merchant {
   benchmark    String?
   merchantLogo String?
   owner        Owner?  @relation(fields: [ownerId], references: [id])
+  Order        Order[]
 
   @@map("merchants")
 }
@@ -148,7 +149,7 @@ model Order {
   source      String
   destination String
   distance    Float
-  status      OrderStatus @default(PENDING)
+  status      OrderStatus @default(DELIVERY)
   creditScore Float
   menuOrder   String[]
   eta         Int
@@ -188,7 +189,7 @@ model MenuItem {
 }
 
 enum OrderStatus {
-  PENDING
-  ACCEPTED
-  COMPLETED
+  DELIVERY
+  PROCESS
+  DONE
 }
