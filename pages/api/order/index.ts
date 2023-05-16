@@ -36,15 +36,29 @@ export default async function handle(
     return res.status(200).json(order);
   }
   if (req.method === "POST") {
-    const { driverId, userId, menuId, customerName, source, destination, distance, status, creditScore, menuOrder, eta, isAccepted, isCompleted, fee} = req.body as OrderCreateRequestBody;
-    const newPromo = await prisma.order.create({
-        data: { driverId, userId, menuId, customerName, source, destination, distance, status, creditScore, menuOrder, eta, isAccepted, isCompleted, fee},
+    const { driverId, userId, merchantId, menuId,  source, destination, distance, creditScore, menuOrder, eta, isAccepted, isCompleted, fee} = req.body as OrderCreateRequestBody;
+    const newOrder = await prisma.order.create({
+      data: {
+        driver: { connect: { id: driverId } },
+        user: { connect: { id: userId } },
+        merchant: { connect: { id: merchantId } },
+        menuId,
+        source,
+        destination,
+        distance,
+        creditScore,
+        menuOrder,
+        eta,
+        isAccepted,
+        isCompleted,
+        fee,
+      },
     });
-    return res.status(201).json(newPromo);
+    return res.status(201).json(newOrder);
 
   } /*else if (req.method === 'PUT') {
     try {
-      const { orderId, status, isAccepted, isCompleted } = req.body;
+      const { orderId, isAccepted, isCompleted } = req.body;
 
       const dataToUpdate: UpdateOrderData = {};
 
@@ -70,4 +84,3 @@ export default async function handle(
       res.status(500).json({ message: 'Internal Server Error' });
     } */
   }
-}

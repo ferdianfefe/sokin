@@ -142,7 +142,7 @@ model Menu {
 
 model Order {
   id          String      @id @default(auto()) @map("_id") @db.ObjectId
-  driverId    String      @map("owner_id") @db.ObjectId
+  driverId    String      @map("driver_id") @db.ObjectId
   userId      String      @map("user_id") @db.ObjectId
   merchantId  String      @map("merchant_id") @db.ObjectId
   menuId      String[]    @map("menu_id") @db.ObjectId
