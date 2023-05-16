@@ -25,6 +25,7 @@ model User {
   creditScore   Int       @default(0)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  Order         Order[]
 
   @@map("users")
 }
@@ -89,14 +90,14 @@ model Owner {
 
 model Merchant {
   id           String  @id @default(auto()) @map("_id") @db.ObjectId
-  ownerId      String?  @map("owner_id") @db.ObjectId
+  ownerId      String? @map("owner_id") @db.ObjectId
   name         String?
   address      String?
   postalCode   String?
   coordinates  String?
   benchmark    String?
   merchantLogo String?
-  owner        Owner?   @relation(fields: [ownerId], references: [id])
+  owner        Owner?  @relation(fields: [ownerId], references: [id])
 
   @@map("merchants")
 }
@@ -139,21 +140,24 @@ model Menu {
 }
 
 model Order {
-  id           String      @id @default(auto()) @map("_id") @db.ObjectId
-  driverId     String      @map("owner_id") @db.ObjectId
-  userId       String      @map("user_id") @db.ObjectId
-  customerName String
-  source       String
-  destination  String
-  distance     Float
-  status       OrderStatus @default(PENDING)
-  creditScore  Float
-  menuOrder    String[]
-  eta          Int
-  isAccepted   Boolean     @default(false)
-  isCompleted  Boolean     @default(false)
-  fee          Float?
-  driver       Driver      @relation(fields: [driverId], references: [id])
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  driverId    String      @map("owner_id") @db.ObjectId
+  userId      String      @map("user_id") @db.ObjectId
+  merchantId  String      @map("merchant_id") @db.ObjectId
+  menuId      String[]    @map("menu_id") @db.ObjectId
+  source      String
+  destination String
+  distance    Float
+  status      OrderStatus @default(PENDING)
+  creditScore Float
+  menuOrder   String[]
+  eta         Int
+  isAccepted  Boolean     @default(false)
+  isCompleted Boolean     @default(false)
+  fee         Float?
+  driver      Driver?     @relation(fields: [driverId], references: [id])
+  user        User?       @relation(fields: [userId], references: [id])
+  merchant    Merchant?   @relation(fields: [merchantId], references: [id])
 }
 
 model Promo {
@@ -169,9 +173,9 @@ model Promo {
 }
 
 model Cart {
-  id           String     @id @default(auto()) @map("_id") @db.ObjectId
-  userId       String     @map("user_id") @db.ObjectId
-  menuItems    MenuItem[]
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String     @map("user_id") @db.ObjectId
+  menuItems MenuItem[]
 }
 
 model MenuItem {
