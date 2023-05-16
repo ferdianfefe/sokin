@@ -34,6 +34,7 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.2",
     "react-id-swiper": "^4.0.0",
+    "react-loading-spinner": "^1.0.12",
     "react-router-dom": "^6.8.2",
     "react-slide-routes": "^3.0.3",
     "react-step-builder": "^3.0.6",

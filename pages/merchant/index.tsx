@@ -3,6 +3,8 @@ import MerchantLayout from "components/layout/MerchantLayout";
 import Button from "components/elements/Button";
 import { useSession, UseSessionOptions, getSession, signOut } from "next-auth/react";
 import Navbar from "components/elements/Navbar";
+import { useEffect, useState } from "react";
+
 const OrderItem: React.FC<{
   orderNumber: number;
   customerName: string;
@@ -70,7 +72,23 @@ const Merchant: React.FC = () => {
   // console.log(session?.user);
   const user = session?.user;
 
-  console.log(user?.name);
+  const [logo, setLogo] = useState<string>("/images/preksu.png");
+  const [name, setName] = useState<string>("");
+
+  console.log(user);
+
+  useEffect(() => {
+    fetch("/api/profile/merchant/merchantInfo", {
+      method: "POST",
+      body: JSON.stringify({
+        id: user?.id,
+      }),
+    }).then((res) => res.json()).then((data) => {
+      console.log(data);
+      setLogo(data.merchantLogo);
+      setName(data.name);
+    });
+  }, []);
 
   const logoutHandler = () => {
     signOut();
@@ -82,10 +100,10 @@ const Merchant: React.FC = () => {
         <h1 className="font-bold text-black text-lg mb-3">Informasi Akun</h1>
         <div className="bg-[#FCBF86] w-full h-44 flex rounded-3xl px-2 py-6 mb-3 items-center justify-evenly text-[14px]">
           <div className="w-24">
-            <Image alt="preksu-logo" src={"/images/preksu.png"} width={94} height={94}></Image>
+            <Image alt="preksu-logo" src={logo} width={94} height={94}></Image>
           </div>
           <div className="mx-2 w-52">
-            <h3 className="font-semibold mb-2">Preksu: Ayam Geprek & Susu</h3>
+            <h3 className="font-semibold mb-2">{name}</h3>
             <div className="bg-white py-[6px] mb-2 flex rounded-xl w-full pl-4">
                 <Image
                   alt="wallet-icon"

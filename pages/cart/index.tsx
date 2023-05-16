@@ -15,9 +15,8 @@ type CartContentProps = {
 };
 
 const Cart: React.FC = (): JSX.Element => {
-  const router = useRouter();
+  const [cartContent, setCartContent] = useState(null);
 
-  const [cartContent, setCartContent] = useState<CartContentProps[]>([]);
   const { data: session, status } = useSession();
   const user = session?.user;
 
@@ -43,38 +42,26 @@ const Cart: React.FC = (): JSX.Element => {
     }
   }, [user]);
 
-  useEffect(() => {
-    fetch("/api/cart", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data.menuItems);
-        setCartContent(data.menuitems);
-      });
-  }, []);
-
   const [isEditing, setIsEditing] = useState(false);
 
   const changeItemQuantity = (index: number, quantity: number) => {
-    console.log(index);
     const newCartContent = [...cartContent];
     newCartContent[index].quantity = quantity;
     setCartContent(newCartContent);
   };
 
-  const bayar = (x:number) => {
+  const bayar = (x: number) => {
+    let id = router.query.merchant;
     // return alert (x)
+    // console.log(id);
     router.push({
       pathname: "/cart/checkout",
       query: {
         total: x,
+        merchantId: id,
       },
     });
-  }
+  };
 
   return (
     <DefaultLayout location="cart">
@@ -128,8 +115,7 @@ const Cart: React.FC = (): JSX.Element => {
             <div className="flex mt-4 font-bold text-3xl">
               <p className="">Total : </p>
               <p className="text-c-orange-700">
-                &nbsp;
-                {"Rp"}
+                Rp{" "}
                 {cartContent.reduce(
                   (total, item) => total + item.menu.price * item.quantity,
                   0
@@ -138,10 +124,15 @@ const Cart: React.FC = (): JSX.Element => {
             </div>
           </div>
           <div className="mb-10">
-            <div onClick={() => {
-              let totalHarga = cartContent.reduce((total, item) => total + item.menu.price * item.quantity, 0)
-              bayar(totalHarga)
-            }}>
+            <div
+              onClick={() => {
+                let totalHarga = cartContent.reduce(
+                  (total, item) => total + item.menu.price * item.quantity,
+                  0
+                );
+                bayar(totalHarga);
+              }}
+            >
               <Button text="Lanjut Ke Pembayaran" />
             </div>
           </div>
@@ -149,9 +140,15 @@ const Cart: React.FC = (): JSX.Element => {
       ) : (
         <div className="h-screen relative px-6">
           <div className="flex items-center mb-4 pt-6">
-            <div className="h-6 w-6 relative">
-              <Image src="/images/icons/left-arrow.svg" alt="Left arrow" fill />
-            </div>
+            <Link href={"/pesan"}>
+              <div className="h-6 w-6 relative">
+                <Image
+                  src="/images/icons/left-arrow.svg"
+                  alt="Left arrow"
+                  fill
+                />
+              </div>
+            </Link>
             <h1 className="text-2xl text-neutral-700 font-semibold ml-4">
               Keranjang Saya
             </h1>
@@ -180,20 +177,19 @@ const ItemBox: React.FC = ({
 }: {
   item: CartContentProps;
   index: number;
-  changeItemQuantity: (index: number, quantity: Number) => void;
+  changeItemQuantity: (index: number, quantity: number) => void;
   isEditing: boolean;
   set: any;
   content: any;
 }): JSX.Element => {
-
   const delMenu = (item) => {
-    let newCart = [...content]
+    let newCart = [...content];
     for (let i = 0; i < newCart.length; i++) {
       if (newCart[i].menu.id === item.menu.id) {
-        newCart.splice(i, 1)
+        newCart.splice(i, 1);
       }
     }
-    set(newCart)
+    set(newCart);
     // alert(item.id)
     fetch("/api/cart", {
       method: "DELETE",
@@ -203,14 +199,18 @@ const ItemBox: React.FC = ({
       body: JSON.stringify({
         menuId: item.id,
       }),
-    })
-
-  }
+    });
+  };
 
   return (
     <div className="flex justify-between mb-2 shadow-card rounded-3xl">
       <div className="h-24 w-24 relative rounded-2xl">
-        <Image src={item.menu.image} alt="Phone" fill className="rounded-l-2xl" />
+        <Image
+          src={item.menu.image}
+          alt="Phone"
+          fill
+          className="rounded-l-2xl"
+        />
       </div>
       <div className="flex-1 mx-4 my-2">
         <p className="font-bold mb-2">{item.menu.name}</p>

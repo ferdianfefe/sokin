@@ -8,10 +8,12 @@ import DefaultLayout from "components/layout/DefaultLayout";
 import Image from "next/image";
 import React, { useState } from "react";
 import Search from "public/img/homepage/icon-search.png";
+import router from "next/router";
 
 export default function Pesan() {
   const [showLocation, setShowLocation] = useState(false);
   const [showPopUp, setShowPopup] = useState("z-50 backdrop-blur-sm fixed w-full h-full translate-y-10 transition duration-300 hidden");
+  const [cartItemNumber, setCartItemNumber] = useState(0);
 
   const toggleShowLocation = () => {
     setShowLocation(!showLocation);
@@ -35,6 +37,19 @@ export default function Pesan() {
   }
   return (
     <DefaultLayout location="pesan">
+      <div className="fixed p-4 bottom-20 right-6 bg-c-orange-800 rounded-full shadow-2xl shadow-neutral-900">
+        {/* <div className="w-6 h-6 absolute bg-c-red-700 -left-[10%] -top-[10%] rounded-full text-neutral-50 flex justify-center items-center">
+          <small className="text-xs">{cartItemNumber}</small>
+        </div> */}
+        <div
+          className="relative w-8 h-8"
+          onClick={() => {
+            router.push("/cart");
+          }}
+        >
+          <Image src="/images/icons/cart.svg" alt="cart-icon" fill />
+        </div>
+      </div>
       <div className="min-h-screen py-4">
         {showPopUp && (
           <PopupLocation
@@ -181,7 +196,7 @@ export default function Pesan() {
           <SquareCardCarousel />
         </div>
       </div>
-      <div onClick={tes}>tes</div>
+      {/* <div onClick={tes}>tes</div> */}
     </DefaultLayout>
   );
 }
