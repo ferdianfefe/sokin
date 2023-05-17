@@ -66,7 +66,7 @@ const Cart: React.FC = (): JSX.Element => {
     setCartContent(newCartContent);
   };
 
-  const bayar = (x:number) => {
+  const bayar = (x: number) => {
     // return alert (x)
     router.push({
       pathname: "/cart/checkout",
@@ -74,7 +74,7 @@ const Cart: React.FC = (): JSX.Element => {
         total: x,
       },
     });
-  }
+  };
 
   return (
     <DefaultLayout location="cart">
@@ -138,10 +138,15 @@ const Cart: React.FC = (): JSX.Element => {
             </div>
           </div>
           <div className="mb-10">
-            <div onClick={() => {
-              let totalHarga = cartContent.reduce((total, item) => total + item.menu.price * item.quantity, 0)
-              bayar(totalHarga)
-            }}>
+            <div
+              onClick={() => {
+                let totalHarga = cartContent.reduce(
+                  (total, item) => total + item.menu.price * item.quantity,
+                  0
+                );
+                bayar(totalHarga);
+              }}
+            >
               <Button text="Lanjut Ke Pembayaran" />
             </div>
           </div>
@@ -149,9 +154,15 @@ const Cart: React.FC = (): JSX.Element => {
       ) : (
         <div className="h-screen relative px-6">
           <div className="flex items-center mb-4 pt-6">
-            <div className="h-6 w-6 relative">
-              <Image src="/images/icons/left-arrow.svg" alt="Left arrow" fill />
-            </div>
+            <Link href={"/pesan"}>
+              <div className="h-6 w-6 relative">
+                <Image
+                  src="/images/icons/left-arrow.svg"
+                  alt="Left arrow"
+                  fill
+                />
+              </div>
+            </Link>
             <h1 className="text-2xl text-neutral-700 font-semibold ml-4">
               Keranjang Saya
             </h1>
@@ -185,15 +196,14 @@ const ItemBox: React.FC = ({
   set: any;
   content: any;
 }): JSX.Element => {
-
   const delMenu = (item) => {
-    let newCart = [...content]
+    let newCart = [...content];
     for (let i = 0; i < newCart.length; i++) {
       if (newCart[i].menu.id === item.menu.id) {
-        newCart.splice(i, 1)
+        newCart.splice(i, 1);
       }
     }
-    set(newCart)
+    set(newCart);
     // alert(item.id)
     fetch("/api/cart", {
       method: "DELETE",
@@ -203,14 +213,18 @@ const ItemBox: React.FC = ({
       body: JSON.stringify({
         menuId: item.id,
       }),
-    })
-
-  }
+    });
+  };
 
   return (
     <div className="flex justify-between mb-2 shadow-card rounded-3xl">
       <div className="h-24 w-24 relative rounded-2xl">
-        <Image src={item.menu.image} alt="Phone" fill className="rounded-l-2xl" />
+        <Image
+          src={item.menu.image}
+          alt="Phone"
+          fill
+          className="rounded-l-2xl"
+        />
       </div>
       <div className="flex-1 mx-4 my-2">
         <p className="font-bold mb-2">{item.menu.name}</p>
