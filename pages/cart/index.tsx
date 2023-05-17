@@ -15,9 +15,8 @@ type CartContentProps = {
 };
 
 const Cart: React.FC = (): JSX.Element => {
-  const router = useRouter();
+  const [cartContent, setCartContent] = useState(null);
 
-  const [cartContent, setCartContent] = useState<CartContentProps[]>([]);
   const { data: session, status } = useSession();
   const user = session?.user;
 
@@ -43,24 +42,9 @@ const Cart: React.FC = (): JSX.Element => {
     }
   }, [user]);
 
-  useEffect(() => {
-    fetch("/api/cart", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data.menuItems);
-        setCartContent(data.menuitems);
-      });
-  }, []);
-
   const [isEditing, setIsEditing] = useState(false);
 
   const changeItemQuantity = (index: number, quantity: number) => {
-    console.log(index);
     const newCartContent = [...cartContent];
     newCartContent[index].quantity = quantity;
     setCartContent(newCartContent);
@@ -131,8 +115,7 @@ const Cart: React.FC = (): JSX.Element => {
             <div className="flex mt-4 font-bold text-3xl">
               <p className="">Total : </p>
               <p className="text-c-orange-700">
-                &nbsp;
-                {"Rp"}
+                Rp{" "}
                 {cartContent.reduce(
                   (total, item) => total + item.menu.price * item.quantity,
                   0
@@ -194,7 +177,7 @@ const ItemBox: React.FC = ({
 }: {
   item: CartContentProps;
   index: number;
-  changeItemQuantity: (index: number, quantity: Number) => void;
+  changeItemQuantity: (index: number, quantity: number) => void;
   isEditing: boolean;
   set: any;
   content: any;
