@@ -4,12 +4,40 @@ import Image from "next/image";
 import { useState } from "react";
 import Input from "components/elements/Input";
 import Button from "components/elements/Button";
+import { useSession } from "next-auth/react";
 
 const Topup: React.FC = (): JSX.Element => {
   const [isModalActive, setIsModalActive] = useState(false);
   const [isTransferPage, setIsTransferPage] = useState(false);
   const [nominal, setNominal] = useState(0);
   const [isTopupSuccess, setIsTopupSuccess] = useState(true);
+
+  const { data: session, status } = useSession();
+  const user = session?.user;
+
+  const topUp = () => {
+    // call top up api
+    setIsTopupSuccess(true);
+
+    // if success
+    setIsTransferPage(false);
+    setIsModalActive(false);
+
+    fetch("/api/balance", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: user.id,
+        amount: nominal,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      });
+  };
 
   return (
     <DefaultLayout location="cart" className="">
@@ -21,7 +49,6 @@ const Topup: React.FC = (): JSX.Element => {
           setIsModalActive(false);
         }}
       ></div>
-      
       <div
         className={`fixed ${
           isModalActive ? "bottom-0" : "-bottom-full"
@@ -87,7 +114,13 @@ const Topup: React.FC = (): JSX.Element => {
                 </div>
               </div>
             </div>
-            <Button text="Saya sudah transfer" className="w-full" />
+            <Button
+              text="Saya sudah transfer"
+              className="w-full"
+              onClickHandler={() => {
+                topUp();
+              }}
+            />
           </div>
         )}
       </div>
