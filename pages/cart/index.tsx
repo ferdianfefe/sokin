@@ -137,9 +137,15 @@ const Cart: React.FC = (): JSX.Element => {
       ) : (
         <div className="h-screen relative px-6">
           <div className="flex items-center mb-4 pt-6">
-            <div className="h-6 w-6 relative">
-              <Image src="/images/icons/left-arrow.svg" alt="Left arrow" fill />
-            </div>
+            <Link href={"/pesan"}>
+              <div className="h-6 w-6 relative">
+                <Image
+                  src="/images/icons/left-arrow.svg"
+                  alt="Left arrow"
+                  fill
+                />
+              </div>
+            </Link>
             <h1 className="text-2xl text-neutral-700 font-semibold ml-4">
               Keranjang Saya
             </h1>
@@ -173,7 +179,7 @@ const ItemBox: React.FC = ({
   set: any;
   content: any;
 }): JSX.Element => {
-  const delMenu = (item: any) => {
+  const delMenu = (item) => {
     let newCart = [...content];
     for (let i = 0; i < newCart.length; i++) {
       if (newCart[i].menu.id === item.menu.id) {
@@ -194,8 +200,8 @@ const ItemBox: React.FC = ({
   };
 
   return (
-    <div className="flex justify-between mb-2 shadow-card">
-      <div className="h-24 w-24 relative rounded-l-2xl">
+    <div className="flex justify-between mb-2 shadow-card rounded-3xl">
+      <div className="h-24 w-24 relative rounded-2xl">
         <Image
           src={item.menu.image}
           alt="Phone"
