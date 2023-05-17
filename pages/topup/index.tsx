@@ -49,7 +49,6 @@ const Topup: React.FC = (): JSX.Element => {
           setIsModalActive(false);
         }}
       ></div>
-
       <div
         className={`fixed ${
           isModalActive ? "bottom-0" : "-bottom-full"
