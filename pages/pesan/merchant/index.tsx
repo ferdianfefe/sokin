@@ -181,7 +181,13 @@ const Merchant = (props: { menu: any }): JSX.Element => {
         <div
           className="relative w-8 h-8"
           onClick={() => {
-            router.push("/cart");
+            router.push({
+              pathname: "/cart",
+              query: {
+                merchant: router.query.id,
+              },
+            });
+            // router.push("/cart");
           }}
         >
           <Image src="/images/icons/cart.svg" alt="cart-icon" fill />

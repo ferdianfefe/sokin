@@ -29,6 +29,32 @@ interface Promo {
 const Checkout: React.FC = (): JSX.Element => {
   const router = useRouter();
 
+  const [cartContent, setCartContent] = useState<CartContentProps[]>([]);
+  const { data: session, status } = useSession();
+  const user = session?.user;
+
+  useEffect(() => {
+    if (user) {
+      fetch(
+        "/api/cart?" +
+          new URLSearchParams({
+            userId: user.id,
+          }),
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data.menuItems);
+          setCartContent(data.menuItems);
+        });
+    }
+  }, [user]);
+
   const [promo, setPromo] = useState<Promo[]>([]);
   const [orderInformation, setOrderInformation] = useState({
     restaurantName: "McDonalds",
@@ -44,15 +70,15 @@ const Checkout: React.FC = (): JSX.Element => {
   const [promoFood, setPromoFood] = useState<number>(0);
   const [promoOngkir, setPromoOngkir] = useState<number>(0);
   const [isSuccessful, setIsSuccessful] = useState(false);
-  const [cartContent, setCartContent] = useState<CartContentProps[]>([
-    {
-      restaurantName: "McDonalds",
-      imageURL: "/images/pesan/nasgor-enak.jpg",
-      name: "Paket Panas 1",
-      price: 35000,
-      quantity: 1,
-    },
-  ]);
+  // const [cartContent, setCartContent] = useState<CartContentProps[]>([
+  //   {
+  //     restaurantName: "McDonalds",
+  //     imageURL: "/images/pesan/nasgor-enak.jpg",
+  //     name: "Paket Panas 1",
+  //     price: 35000,
+  //     quantity: 1,
+  //   },
+  // ]);
 
   useEffect(() => {
     fetch("http://localhost:3000/api/promo", {
@@ -355,12 +381,12 @@ const ItemBox: React.FC = ({
   return (
     <div className="flex justify-between mb-2 shadow-card rounded-2xl">
       <div className="h-24 w-24 relative rounded-l-2xl">
-        <Image src={item.imageURL} alt="Phone" fill className="rounded-l-2xl" />
+        <Image src={item.menu.image} alt="Phone" fill className="rounded-l-2xl" />
       </div>
       <div className="flex-1 mx-4 my-2">
         <p className="font-bold mb-2">{item.name}</p>
         <div className="items-center flex justify-between">
-          <p className="font-bold">Rp {item.price * item.quantity}</p>
+          <p className="font-bold">Rp {item.menu.price * item.quantity}</p>
           <div className="flex justify-evenly items-center">
             <h3 className="font-semibold ml-4">x {item.quantity}</h3>
           </div>
@@ -379,7 +405,23 @@ const PaymentPopup: React.FC = ({
   opsiPembayaran: string;
   successful?: Function;
 }): JSX.Element => {
+  const { data: session, status } = useSession();
+  const user = session?.user;
   const [saldo, setSaldo] = useState(0);
+  const [balance, setBalance] = useState(0);
+
+  useEffect(() => {
+    fetch('/api/profile/user/userProfile', {
+      method: "POST",
+      body: JSON.stringify({
+        id: user?.id,
+      }),
+    }).then((res) => res.json()).then((data) => {
+      console.log(data);
+      setBalance(data.balance);
+    })
+  }, []);
+
   return (
     <div className="sticky bottom-0 left-0">
       {opsiPembayaran === "Soket" && (
@@ -410,7 +452,7 @@ const PaymentPopup: React.FC = ({
             {opsiPembayaran === "Soket" ? (
               <div className="flex-2 ml-4">
                 <p className="font-semibold">Soket</p>
-                <p className="font-bold text-c-red-700">Rp {100000}</p>
+                <p className="font-bold text-c-red-700">Rp {balance}</p>
               </div>
             ) : (
               <div className="flex-2 ml-4">

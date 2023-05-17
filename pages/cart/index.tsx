@@ -67,11 +67,14 @@ const Cart: React.FC = (): JSX.Element => {
   };
 
   const bayar = (x: number) => {
+    let id = router.query.merchant;
     // return alert (x)
+    // console.log(id);
     router.push({
       pathname: "/cart/checkout",
       query: {
         total: x,
+        merchantId: id,
       },
     });
   };

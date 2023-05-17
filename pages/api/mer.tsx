@@ -17,14 +17,14 @@ export default async function handle(
   res: NextApiResponse
 ) {
   if (req.method === "GET") {
-    // const promo = await prisma.cart.findMany();
-    // console.log(promo);
-    // return res.status(200).json(promo);
-    const cart = await prisma.cart.findFirst({
-        where: { userId: '6458f87ec5de7d3000e553cd' },
-        include: { menuItems: { include: { menu: true } } },
-      });
-      return res.json(cart);
+    const promo = await prisma.user.findMany();
+    console.log(promo);
+    return res.status(200).json(promo);
+    // const cart = await prisma.cart.findFirst({
+    //     where: { userId: '6458f87ec5de7d3000e553cd' },
+    //     include: { menuItems: { include: { menu: true } } },
+    //   });
+    //   return res.json(cart);
   }
   if (req.method === "POST") {
     const { promoType, title, discPercentage, discValue, minOrder, maxDisc } = req.body as PromoCreateRequestBody;
