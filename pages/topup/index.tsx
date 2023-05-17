@@ -9,6 +9,7 @@ const Topup: React.FC = (): JSX.Element => {
   const [isModalActive, setIsModalActive] = useState(false);
   const [isTransferPage, setIsTransferPage] = useState(false);
   const [nominal, setNominal] = useState(0);
+  const [isTopupSuccess, setIsTopupSuccess] = useState(true);
 
   return (
     <DefaultLayout location="cart" className="">
@@ -20,6 +21,7 @@ const Topup: React.FC = (): JSX.Element => {
           setIsModalActive(false);
         }}
       ></div>
+      
       <div
         className={`fixed ${
           isModalActive ? "bottom-0" : "-bottom-full"
@@ -33,16 +35,23 @@ const Topup: React.FC = (): JSX.Element => {
                 Masukkan Nominal
               </p>
               <div className="mt-6">
-                <Input type="number" className="" />
+                <Input
+                  type="number"
+                  className=""
+                  onValueChangeHandler={(val: number) => {
+                    setNominal(val);
+                  }}
+                  defaultValue={nominal === 0 ? "" : nominal.toString()}
+                />
               </div>
             </div>
             <Button
               text="Menuju Pembayaran"
-              className="w-full"
+              className={`w-full ${nominal === 0 ? "!bg-neutral-700" : ""}`}
               onClickHandler={() => {
                 setIsTransferPage(true);
               }}
-              
+              disabled={nominal === 0}
             />
           </div>
         ) : (
@@ -57,6 +66,7 @@ const Topup: React.FC = (): JSX.Element => {
                   type="number"
                   className=""
                   text="Jumlah yang harus dibayar: "
+                  defaultValue={nominal === 0 ? "" : nominal.toString()}
                 />
               </div>
               <small>Silakan transfer ke rekening: </small>
@@ -65,6 +75,7 @@ const Topup: React.FC = (): JSX.Element => {
                   src={"/images/icons/paypal.svg"}
                   width={35}
                   height={35}
+                  alt="Paypal"
                 />
                 <div className="ml-4">
                   <p className="text-c-orange-800 font-semibold">
@@ -76,7 +87,7 @@ const Topup: React.FC = (): JSX.Element => {
                 </div>
               </div>
             </div>
-            <Button text="Menuju Pembayaran" className="w-full" />
+            <Button text="Saya sudah transfer" className="w-full" />
           </div>
         )}
       </div>
@@ -100,16 +111,28 @@ const Topup: React.FC = (): JSX.Element => {
               icon="/images/icons/coin-1.svg"
               nominal={10000}
               isActive={false}
+              onClickHandler={() => {
+                setIsModalActive(true);
+                setNominal(10000);
+              }}
             />
             <CoinButton
               icon="/images/icons/coin-2.svg"
               nominal={25000}
               isActive={false}
+              onClickHandler={() => {
+                setIsModalActive(true);
+                setNominal(25000);
+              }}
             />
             <CoinButton
               icon="/images/icons/coin-3.svg"
               nominal={50000}
               isActive={false}
+              onClickHandler={() => {
+                setIsModalActive(true);
+                setNominal(50000);
+              }}
             />
           </div>
           <div className="flex justify-between items-center mb-6">
@@ -117,16 +140,28 @@ const Topup: React.FC = (): JSX.Element => {
               icon="/images/icons/coin-4.svg"
               nominal={100000}
               isActive={false}
+              onClickHandler={() => {
+                setIsModalActive(true);
+                setNominal(100000);
+              }}
             />
             <CoinButton
               icon="/images/icons/coin-5.svg"
               nominal={250000}
               isActive={false}
+              onClickHandler={() => {
+                setIsModalActive(true);
+                setNominal(250000);
+              }}
             />
             <CoinButton
               icon="/images/icons/coin-6.svg"
               nominal={500000}
               isActive={false}
+              onClickHandler={() => {
+                setIsModalActive(true);
+                setNominal(500000);
+              }}
             />
           </div>
           <div
@@ -152,13 +187,20 @@ const CoinButton: React.FC = ({
   icon,
   nominal,
   isActive,
+  onClickHandler,
 }: {
   icon: string;
   nominal: number;
   isActive?: boolean;
+  onClickHandler?: () => void;
 }): JSX.Element => {
   return (
-    <div className="shadow-card p-6 pb-2">
+    <div
+      className="shadow-card p-6 pb-2 rounded-2xl"
+      onClick={() => {
+        onClickHandler && onClickHandler();
+      }}
+    >
       <div className="flex justify-center items-center mb-4">
         <Image src={icon} alt="Coin" width={50} height={50} />
       </div>
