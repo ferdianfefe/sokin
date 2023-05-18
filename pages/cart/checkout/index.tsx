@@ -426,7 +426,7 @@ const PaymentPopup: React.FC = ({
 
   return (
     <div className="sticky bottom-0 left-0">
-      {opsiPembayaran === "Soket" && (
+      {(opsiPembayaran === "Soket" && balance < parseInt(router.query.total)) && (
         <div className="bg-c-red-700 flex items-center h-12 justify-evenly shadow-[inset_0_0px_15px_7px_rgb(500,500,500,0.2)]">
           <div className="relative w-6 h-6">
             <Image src={"/images/icons/bell.svg"} alt="bell-icon" fill />
@@ -478,9 +478,9 @@ const PaymentPopup: React.FC = ({
         <Button
           text="Pesan dan Bayar Sekarang"
           className={`${
-            opsiPembayaran == "Soket" ? "bg-neutral-600" : ""
+            (opsiPembayaran == "Soket" && balance < parseInt(router.query.total)) ? "bg-neutral-600" : ""
           } font-semibold mb-2`}
-          disabled={opsiPembayaran == "Soket" && saldo < 100000}
+          disabled={opsiPembayaran == "Soket" && balance < parseInt(router.query.total)}
           onClickHandler={successful}
         />
       </div>

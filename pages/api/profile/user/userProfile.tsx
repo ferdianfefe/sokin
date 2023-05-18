@@ -1,6 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { PrismaClient, Prisma } from "@prisma/client";
+import Merchant from "pages/merchant";
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+const prisma = new PrismaClient();
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "POST") {
         const { id } = JSON.parse(req.body);
 

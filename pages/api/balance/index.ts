@@ -14,4 +14,11 @@ export default async function handle(
     console.log(balance)
     return res.json(balance);
   }
+
+  if (req.method == "GET") {
+    const balance = await prisma.user.findUnique({
+      where: { id: req.body.userId },
+    });
+    return res.json(balance);
+  }
 }
