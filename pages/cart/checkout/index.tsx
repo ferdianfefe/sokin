@@ -410,6 +410,8 @@ const PaymentPopup: React.FC = ({
   const [saldo, setSaldo] = useState(0);
   const [balance, setBalance] = useState(0);
 
+  const router = useRouter()
+
   useEffect(() => {
     fetch('/api/profile/user/userProfile', {
       method: "POST",
@@ -435,6 +437,9 @@ const PaymentPopup: React.FC = ({
           <Button
             text="Top up"
             className="!w-16 !h-8 text-base font-semibold"
+            onClickHandler={() => {
+              router.push("/topup");
+            }}
           />
         </div>
       )}

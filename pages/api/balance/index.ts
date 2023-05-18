@@ -9,7 +9,7 @@ export default async function handle(
   if (req.method == "POST") {
     const balance = await prisma.user.update({
         where: { id: req.body.userId },
-        data: { balance: { increment: req.body.amount } },
+        data: { balance: { increment: parseFloat(req.body.amount) } },
     });
     console.log(balance)
     return res.json(balance);

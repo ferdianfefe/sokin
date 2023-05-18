@@ -14,6 +14,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({ message: "failed to get user" });
         }
 
+        console.log(user);
+
         return res.status(200).json(user);
     }
     

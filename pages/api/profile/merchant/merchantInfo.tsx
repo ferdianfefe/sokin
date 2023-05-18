@@ -13,7 +13,7 @@ export default async function handle(
 
     const merchant = await prisma.merchant.findFirst({
         where: {
-            ownerId: '641f4549f632f91b866b4804',
+            ownerId: id,
         }
     })
 
