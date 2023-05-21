@@ -12,7 +12,7 @@
   "dependencies": {
     "@headlessui/react": "^1.7.13",
     "@next-auth/prisma-adapter": "^1.0.5",
-    "@pankod/refine-cli": "^1.13.0",
+    "@pankod/refine-cli": "^1.5.3",
     "@pankod/refine-core": "^3.90.4",
     "@pankod/refine-inferencer": "^2.0.2",
     "@pankod/refine-nextjs-router": "^4.1.0",
