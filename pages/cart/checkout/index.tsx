@@ -398,29 +398,35 @@ const PaymentPopup: React.FC = ({
       )}
       <div className="bg-c-orange-200 px-7">
         <div className="flex items-center justify-between py-8">
-          <div className="flex items-center">
-            <div className="relative">
+          {opsiPembayaran === "Soket" ? (
+            <div className="flex items-center">
               <Image
                 src="/images/icons/wallet.svg"
                 alt="wallet-icon"
                 width={41}
                 height={31}
               />
-            </div>
-            {opsiPembayaran === "Soket" ? (
               <div className="flex-2 ml-4">
                 <p className="font-semibold">Soket</p>
                 <p className="font-bold text-c-red-700">Rp {100000}</p>
               </div>
-            ) : (
+            </div>
+          ) : (
+            <div className="flex items-center">
+              <Image
+                src="/images/icons/Tunai.svg"
+                alt="wallet-icon"
+                width={41}
+                height={31}
+              />
               <div className="flex-2 ml-4">
                 <p className="font-semibold">Cash</p>
-                <p className="font-bold text-c-red-700">
-                  Harap siapkan uang pas
+                <p className="font-bold text-c-orange-700">
+                  Rp {100000}
                 </p>
               </div>
-            )}
-          </div>
+            </div>
+          )}
           <div onClick={toggleShowOpsi}>
             <Button
               text="Ganti Opsi"
