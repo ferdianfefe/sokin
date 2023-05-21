@@ -9,13 +9,14 @@ import VerticalCardCarousel from "components/homepage-1/VerticalCardCarousel";
 import SquareCardCarousel from "components/homepage-1/SquareCardCarousel";
 import { Router } from "next/router";
 import DefaultLayout from "components/layout/DefaultLayout";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Homepage: React.FunctionComponent = (): JSX.Element => {
   const [keyword, setKeyword] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [similar, setSimilar] = useState([]);
   const { data, status } = useSession();
+  const [profile, setProfile] = useState({balance: 0, creditScore: 0});
 
   // console.log(data?.user);
 
@@ -25,6 +26,16 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
 
   if (status === "unauthenticated") {
   }
+
+  useEffect(() => {
+    fetch(`/api/profile/user/userProfile`, {
+      method: "POST",
+      body: JSON.stringify({id: data?.user?.id})
+    }).then(res => res.json()).then(data => {
+      console.log(data);
+      setProfile(data);
+    })
+  }, [])
 
   const logout = async () => {
     const res = await signOut();
@@ -199,7 +210,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
                       </svg>
 
                       <h3 className="text-sm font-bold ">
-                        Skor Kredit: <span className="font-black">100</span>
+                        Skor Kredit: <span className="font-black">{profile.creditScore}</span>
                       </h3>
                     </div>
                   </div>
@@ -245,7 +256,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
                       </svg>
                       <h3 className="font-extrabold text-base">Soket</h3>
                     </div>
-                    <h2 className="font-black text-xl">Rp54.000</h2>
+                    <h2 className="font-black text-xl">Rp{profile.balance}</h2>
                     <p className="text-center text-sm">
                       Lihat Riwayat Transaksi
                     </p>
