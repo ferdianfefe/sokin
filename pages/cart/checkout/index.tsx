@@ -382,7 +382,12 @@ const ItemBox: React.FC = ({
   return (
     <div className="flex justify-between mb-2 shadow-card rounded-2xl">
       <div className="h-24 w-24 relative rounded-l-2xl">
-        <Image src={item.menu.image} alt="Phone" fill className="rounded-l-2xl" />
+        <Image
+          src={item.menu.image}
+          alt="Phone"
+          fill
+          className="rounded-l-2xl"
+        />
       </div>
       <div className="flex-1 mx-4 my-2">
         <p className="font-bold mb-2">{item.name}</p>
@@ -411,23 +416,26 @@ const PaymentPopup: React.FC = ({
   const [saldo, setSaldo] = useState(0);
   const [balance, setBalance] = useState(0);
 
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
-    fetch('/api/profile/user/userProfile', {
-      method: "POST",
-      body: JSON.stringify({
-        id: user?.id,
-      }),
-    }).then((res) => res.json()).then((data) => {
-      console.log(data);
-      setBalance(data.balance);
-    })
-  }, []);
+    if (user) {
+      fetch("/api/profile/user/userProfile", {
+        method: "POST",
+        body: JSON.stringify({
+          id: user?.id,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setBalance(data.balance);
+        });
+    }
+  }, [balance, user]);
 
   return (
     <div className="sticky bottom-0 left-0">
-      {(opsiPembayaran === "Soket" && balance < parseInt(router.query.total)) && (
+      {opsiPembayaran === "Soket" && balance < parseInt(router.query.total) && (
         <div className="bg-c-red-700 flex items-center h-12 justify-evenly shadow-[inset_0_0px_15px_7px_rgb(500,500,500,0.2)]">
           <div className="relative w-6 h-6">
             <Image src={"/images/icons/bell.svg"} alt="bell-icon" fill />
@@ -469,9 +477,7 @@ const PaymentPopup: React.FC = ({
               />
               <div className="flex-2 ml-4">
                 <p className="font-semibold">Cash</p>
-                <p className="font-bold text-c-orange-700">
-                  Rp {100000}
-                </p>
+                <p className="font-bold text-c-orange-700">Rp {100000}</p>
               </div>
             </div>
           )}
@@ -485,9 +491,13 @@ const PaymentPopup: React.FC = ({
         <Button
           text="Pesan dan Bayar Sekarang"
           className={`${
-            (opsiPembayaran == "Soket" && balance < parseInt(router.query.total)) ? "bg-neutral-600" : ""
+            opsiPembayaran == "Soket" && balance < parseInt(router.query.total)
+              ? "bg-neutral-600"
+              : ""
           } font-semibold mb-2`}
-          disabled={opsiPembayaran == "Soket" && balance < parseInt(router.query.total)}
+          disabled={
+            opsiPembayaran == "Soket" && balance < parseInt(router.query.total)
+          }
           onClickHandler={successful}
         />
       </div>
@@ -502,7 +512,6 @@ const PopUpOpsi = ({
   opsiPembayaran,
   user,
 }: {
-  
   toggleShowOpsi: () => void;
   opsiSoket: () => void;
   opsiCash: () => void;
