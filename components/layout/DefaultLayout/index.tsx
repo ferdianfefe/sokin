@@ -8,8 +8,8 @@ const DefaultLayout: React.FC<{
   children: any;
   location: string;
   className?: string;
-  isLoading: boolean;
-}> = ({ children, location, className, isLoading }): JSX.Element => {
+  isLoading?: boolean;
+}> = ({ children, location, className, isLoading = false }): JSX.Element => {
   const onAddMenu = () => {};
 
   return (

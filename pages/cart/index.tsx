@@ -17,7 +17,6 @@ type CartContentProps = {
 const Cart: React.FC = (): JSX.Element => {
   const [cartContent, setCartContent] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const router = useRouter();
 
   const { data: session, status } = useSession();
   const user = session?.user;
