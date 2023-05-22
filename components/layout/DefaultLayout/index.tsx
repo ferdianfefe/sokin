@@ -1,6 +1,8 @@
 // Create a layout with navbar
 import Navbar from "components/elements/Navbar";
 import Image from "next/image";
+//import loading spinner
+import {Spinner} from "react-loading-spinner";
 
 const DefaultLayout: React.FC<{
   children: any;

@@ -21,6 +21,7 @@ const Cart: React.FC = (): JSX.Element => {
 
   const { data: session, status } = useSession();
   const user = session?.user;
+  const router = useRouter();
 
   useEffect(() => {
     if (user) {

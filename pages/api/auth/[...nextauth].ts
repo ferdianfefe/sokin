@@ -53,15 +53,15 @@ export default NextAuth({
           throw new Error("No merchant found")
         }
 
-        if (!credentials?.password || !owner.password) {
-          throw new Error("An error occurred")
-        }
+        // if (!credentials?.password || !owner.password) {
+        //   throw new Error("An error occurred")
+        // }
 
-        const passwordMatch = await bcrypt.compare(credentials.password, owner.password)
+        // const passwordMatch = await bcrypt.compare(credentials.password, owner.password)
 
-        if (!passwordMatch) {
-          throw new Error("Password is incorrect")
-        }
+        // if (!passwordMatch) {
+        //   throw new Error("Password is incorrect")
+        // }
         return owner;
       }
     }),

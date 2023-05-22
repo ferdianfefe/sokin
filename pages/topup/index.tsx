@@ -5,6 +5,7 @@ import { useState } from "react";
 import Input from "components/elements/Input";
 import Button from "components/elements/Button";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 const Topup: React.FC = (): JSX.Element => {
   const [isModalActive, setIsModalActive] = useState(false);
@@ -14,6 +15,7 @@ const Topup: React.FC = (): JSX.Element => {
 
   const { data: session, status } = useSession();
   const user = session?.user;
+  const router = useRouter();
 
   const topUp = () => {
     // call top up api
@@ -127,9 +129,9 @@ const Topup: React.FC = (): JSX.Element => {
       <div className="px-6 min-h-screen">
         <div className="flex items-center mb-4  pt-6">
           <div className="h-6 w-6 relative">
-            <Link href={"/pesan"}>
+            <div onClick={() => router.back()}>
               <Image src="/images/icons/left-arrow.svg" alt="Left arrow" fill />
-            </Link>
+            </div>
           </div>
           <h1 className="text-2xl font-semibold text-neutral-700 ml-4">
             Top up Soket

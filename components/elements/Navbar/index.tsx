@@ -152,7 +152,7 @@ const Navbar: React.FC<Props> = ({ location, role, className }: Props) => {
           </Link>
         )}
         {role === "customer" && (
-          <Link href={"/promo"}>
+          <Link href={"/riwayat"}>
             <div className="w-14 grid justify-items-center">
               <svg
                 width="27"
@@ -183,7 +183,7 @@ const Navbar: React.FC<Props> = ({ location, role, className }: Props) => {
                   location === "promo" ? "text-black" : "text-[#817A7A]"
                 }`}
               >
-                Promo
+                Riwayat
               </p>
             </div>
           </Link>

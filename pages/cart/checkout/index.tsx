@@ -32,6 +32,7 @@ const Checkout: React.FC = (): JSX.Element => {
   const [cartContent, setCartContent] = useState<CartContentProps[]>([]);
   const { data: session, status } = useSession();
   const user = session?.user;
+  console.log(user);
 
   useEffect(() => {
     if (user) {
@@ -410,6 +411,8 @@ const PaymentPopup: React.FC = ({
   const [saldo, setSaldo] = useState(0);
   const [balance, setBalance] = useState(0);
 
+  const router = useRouter()
+
   useEffect(() => {
     fetch('/api/profile/user/userProfile', {
       method: "POST",
@@ -424,7 +427,7 @@ const PaymentPopup: React.FC = ({
 
   return (
     <div className="sticky bottom-0 left-0">
-      {opsiPembayaran === "Soket" && (
+      {(opsiPembayaran === "Soket" && balance < parseInt(router.query.total)) && (
         <div className="bg-c-red-700 flex items-center h-12 justify-evenly shadow-[inset_0_0px_15px_7px_rgb(500,500,500,0.2)]">
           <div className="relative w-6 h-6">
             <Image src={"/images/icons/bell.svg"} alt="bell-icon" fill />
@@ -435,34 +438,43 @@ const PaymentPopup: React.FC = ({
           <Button
             text="Top up"
             className="!w-16 !h-8 text-base font-semibold"
+            onClickHandler={() => {
+              router.push("/topup");
+            }}
           />
         </div>
       )}
       <div className="bg-c-orange-200 px-7">
         <div className="flex items-center justify-between py-8">
-          <div className="flex items-center">
-            <div className="relative">
+          {opsiPembayaran === "Soket" ? (
+            <div className="flex items-center">
               <Image
                 src="/images/icons/wallet.svg"
                 alt="wallet-icon"
                 width={41}
                 height={31}
               />
-            </div>
-            {opsiPembayaran === "Soket" ? (
               <div className="flex-2 ml-4">
                 <p className="font-semibold">Soket</p>
                 <p className="font-bold text-c-red-700">Rp {balance}</p>
               </div>
-            ) : (
+            </div>
+          ) : (
+            <div className="flex items-center">
+              <Image
+                src="/images/icons/Tunai.svg"
+                alt="wallet-icon"
+                width={41}
+                height={31}
+              />
               <div className="flex-2 ml-4">
                 <p className="font-semibold">Cash</p>
-                <p className="font-bold text-c-red-700">
-                  Harap siapkan uang pas
+                <p className="font-bold text-c-orange-700">
+                  Rp {100000}
                 </p>
               </div>
-            )}
-          </div>
+            </div>
+          )}
           <div onClick={toggleShowOpsi}>
             <Button
               text="Ganti Opsi"
@@ -473,9 +485,9 @@ const PaymentPopup: React.FC = ({
         <Button
           text="Pesan dan Bayar Sekarang"
           className={`${
-            opsiPembayaran == "Soket" ? "bg-neutral-600" : ""
+            (opsiPembayaran == "Soket" && balance < parseInt(router.query.total)) ? "bg-neutral-600" : ""
           } font-semibold mb-2`}
-          disabled={opsiPembayaran == "Soket" && saldo < 100000}
+          disabled={opsiPembayaran == "Soket" && balance < parseInt(router.query.total)}
           onClickHandler={successful}
         />
       </div>
@@ -488,11 +500,14 @@ const PopUpOpsi = ({
   opsiSoket,
   opsiCash,
   opsiPembayaran,
+  user,
 }: {
+  
   toggleShowOpsi: () => void;
   opsiSoket: () => void;
   opsiCash: () => void;
   opsiPembayaran: String;
+  user: any;
 }) => {
   return (
     <div className="fixed inset-0 flex flex-col justify-end z-10 backdrop-blur-sm">
@@ -524,7 +539,7 @@ const PopUpOpsi = ({
               <p className="text-sm">
                 saldo:{" "}
                 <span className="text-c-orange-700 font-semibold">
-                  Rp20.000
+                  {user.balance}
                 </span>
               </p>
             </div>
