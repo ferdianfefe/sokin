@@ -32,6 +32,7 @@ const Checkout: React.FC = (): JSX.Element => {
   const [cartContent, setCartContent] = useState<CartContentProps[]>([]);
   const { data: session, status } = useSession();
   const user = session?.user;
+  console.log(user);
 
   useEffect(() => {
     if (user) {
@@ -499,11 +500,14 @@ const PopUpOpsi = ({
   opsiSoket,
   opsiCash,
   opsiPembayaran,
+  user,
 }: {
+  
   toggleShowOpsi: () => void;
   opsiSoket: () => void;
   opsiCash: () => void;
   opsiPembayaran: String;
+  user: any;
 }) => {
   return (
     <div className="fixed inset-0 flex flex-col justify-end z-10 backdrop-blur-sm">
@@ -535,7 +539,7 @@ const PopUpOpsi = ({
               <p className="text-sm">
                 saldo:{" "}
                 <span className="text-c-orange-700 font-semibold">
-                  Rp20.000
+                  {user.balance}
                 </span>
               </p>
             </div>
