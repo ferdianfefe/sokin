@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
+import io from "socket.io-client";
+let socket = io("/api/socket");
 
 type OrderCreateRequestBody = {
   id: string;
@@ -20,10 +22,10 @@ type OrderCreateRequestBody = {
 };
 
 type UpdateOrderData = {
-    status?: string;
-    isAccepted?: boolean;
-    isCompleted?: boolean;
-  };
+  status?: string;
+  isAccepted?: boolean;
+  isCompleted?: boolean;
+};
 
 const prisma = new PrismaClient();
 export default async function handle(
@@ -35,7 +37,7 @@ export default async function handle(
     console.log(order);
     return res.status(200).json(order);
   }*/
-    if (req.method === "GET") {
+  if (req.method === "GET") {
     const order = await prisma.order.findMany({
       include: {
         driver: {
@@ -43,13 +45,13 @@ export default async function handle(
             name: true,
             phoneNumber: true,
             licenseNumber: true,
-            vehicle: true
-          }
+            vehicle: true,
+          },
         },
         user: {
           select: {
-            name: true
-          }
+            name: true,
+          },
         },
         cart: {
           include: {
@@ -59,42 +61,56 @@ export default async function handle(
                   select: {
                     name: true,
                     price: true,
-                    image: true
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+                    image: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     });
-  
-      console.log(order);
-      return res.status(200).json(order);
-    }
 
-  
+    console.log(order);
+    return res.status(200).json(order);
+  }
+
   if (req.method === "POST") {
-    const { driverId, userId, merchantId, cartId,  source, destination, distance, creditScore,  eta, isAccepted, isCompleted, foodFee, costFee} = req.body as OrderCreateRequestBody;
+    const {
+      driverId,
+      userId,
+      merchantId,
+      cartId,
+      source,
+      destination,
+      distance,
+      eta,
+      isAccepted,
+      isCompleted,
+      foodFee,
+      costFee,
+    } = req.body as OrderCreateRequestBody;
     const newOrder = await prisma.order.create({
       data: {
-        driver: { connect: { id: driverId } },
-        user: { connect: { id: userId } },
-        merchant: { connect: { id: merchantId } },
-        cart: { connect: { id: cartId} },
+        driverId,
+        userId,
+        merchantId,
+        cartId,
         source,
         destination,
         distance,
-        creditScore,
         eta,
         isAccepted,
         isCompleted,
         foodFee,
-        costFee
+        costFee,
       },
     });
-    return res.status(201).json(newOrder);
+    console.log("success creating order");
 
+    socket.emit("newOrder", newOrder);
+
+    return res.status(201).json(newOrder);
   } /*else if (req.method === 'PUT') {
     try {
       const { orderId, isAccepted, isCompleted } = req.body;
@@ -122,4 +138,4 @@ export default async function handle(
     } catch (error) {
       res.status(500).json({ message: 'Internal Server Error' });
     } */
-  }
+}
