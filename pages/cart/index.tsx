@@ -16,6 +16,7 @@ type CartContentProps = {
 
 const Cart: React.FC = (): JSX.Element => {
   const [cartContent, setCartContent] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const { data: session, status } = useSession();
   const user = session?.user;
@@ -23,6 +24,7 @@ const Cart: React.FC = (): JSX.Element => {
 
   useEffect(() => {
     if (user) {
+      setIsLoading(true);
       fetch(
         "/api/cart?" +
           new URLSearchParams({
@@ -37,7 +39,7 @@ const Cart: React.FC = (): JSX.Element => {
       )
         .then((res) => res.json())
         .then((data) => {
-          console.log(data.menuItems);
+          setIsLoading(false);
           setCartContent(data.menuItems);
         });
     }
@@ -65,7 +67,7 @@ const Cart: React.FC = (): JSX.Element => {
   };
 
   return (
-    <DefaultLayout location="cart">
+    <DefaultLayout location="cart" isLoading={isLoading}>
       {cartContent?.length > 0 ? (
         <div className="px-6 flex flex-col justify-between min-h-screen">
           <div className="">

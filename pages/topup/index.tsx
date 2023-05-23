@@ -11,16 +11,15 @@ const Topup: React.FC = (): JSX.Element => {
   const [isModalActive, setIsModalActive] = useState(false);
   const [isTransferPage, setIsTransferPage] = useState(false);
   const [nominal, setNominal] = useState(0);
-  const [isTopupSuccess, setIsTopupSuccess] = useState(true);
+  const [isTopupSuccess, setIsTopupSuccess] = useState(false);
 
   const { data: session, status } = useSession();
   const user = session?.user;
   const router = useRouter();
 
   const topUp = () => {
-    // call top up api
-    setIsTopupSuccess(true);
-
+    
+    setIsTopupSuccess(false);
     // if success
     setIsTransferPage(false);
     setIsModalActive(false);
@@ -37,7 +36,8 @@ const Topup: React.FC = (): JSX.Element => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        setIsTopupSuccess(true);
+        router.push("/topup/success")
       });
   };
 
