@@ -1,18 +1,19 @@
-import React from "react";
 import Button from "components/elements/Button";
 import Navbar from "components/elements/Navbar";
+import Input from "components/elements/Input";
 import TargetBar from "public/images/driver/dashboard/target-bar-driver.png";
 import Vector from "public/images/driver/dashboard/vector-pesanan.png";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import DriverLayout from "components/layout/DriverLayout";
 import { useRouter } from "next/router";
 import { getSession, useSession, signOut } from "next-auth/react";
+import MapContainer from "components/elements/MapContainer";
 
 const DriverDashboard = () => {
-  const [isActive, setIsActive] = useState(false);
   const [showPopUp, setShowPopup] = useState(false);
   const [Reservation, setReservation] = useState(false);
+  const [keyword, setKeyword] = useState("");
 
   const toggleSwitch = () => {
     setIsActive(!isActive);
@@ -31,8 +32,41 @@ const DriverDashboard = () => {
     const status = await signOut();
     console.log(status);
   }
+
+  const { data: session, status } = useSession();
+  const user = session?.user;
+  console.log(session?.user)
+  const [name, setName] = useState<string>("");
+  const [vehicle, setVehicle] = useState<string>("");
+  const [balance, setBalance] = useState<Float32Array>();
+  const [licence, setLicenceNumber] = useState<string>('');
+  const [isActive, setIsActive] = useState<boolean>(false);
+  const [dailyTarget, setDailyTarget] = useState<number>(0);
+  const [coordinates, setCoordinates] = useState<number[]>([0, 0]);
   
-  console.log(showPopUp);
+  useEffect(() => {
+    fetch("/api/profile/merchant/driverInfo", {
+      method: "POST",
+      body: JSON.stringify({
+        id: user?.id,
+      }),
+    }).then((res) => res.json()).then((data) => {
+      console.log(data);
+      // setLogo(data.merchantLogo);
+      setName(data.name);
+      setVehicle(data.vehicle);
+      setBalance(data.balance);
+      setLicenceNumber(data.licence);
+      setIsActive(data.isActive);
+      setDailyTarget(data.dailyTarget);
+    });
+  }, []);
+
+  const logoutHandler = () => {
+    signOut();
+  }
+
+
   return (
     <DriverLayout location="home">
       <div className="p-0 m-0">
@@ -52,7 +86,7 @@ const DriverDashboard = () => {
             className="bg-white rounded-full h-[52px] w-[52px]"
           />
           <div>
-            <h2 className="font-extrabold">Ninda Nandita</h2>
+            <h2 className="font-extrabold">{name}</h2>
             <p className="font-semibold text-sm">+6281238163514</p>
           </div>
           <div className="bg-white rounded-lg p-1 w-[15%] h-[42px] flex-col justify-center items-center ml-2">
@@ -77,7 +111,7 @@ const DriverDashboard = () => {
               />
               <p className="text-xs ml-1">Target Harian</p>
             </div>
-            <h3 className="font-semibold text-center">0 %</h3>
+            <h3 className="font-semibold text-center">{dailyTarget}%</h3>
           </div>
         </div>
 
@@ -93,7 +127,7 @@ const DriverDashboard = () => {
               <p className="text-xs ml-2">Saldomu</p>
             </div>
             <h3 className="text-sm mt-1 text-center font-semibold">
-              RP 430.000
+              RP{balance}
             </h3>
           </div>
           <div className="py-[6px] bg-orange-500 h-14 w-[30%] text-white rounded-[21px] shadow-[-2px_2px_5px_0.1px_rgb(120,30,0,0.7),inset_0_0px_6px_6px_rgb(0,0,0,0.1)]">
@@ -107,7 +141,7 @@ const DriverDashboard = () => {
               <p className="text-xs ml-2">Kendaraan</p>
             </div>
             <h3 className="text-sm mt-1 text-center font-semibold">
-              Vario Tekno 110
+              {vehicle}
             </h3>
           </div>
           <div className="py-[6px] bg-orange-500 h-14 w-[30%] text-white rounded-[21px] shadow-[-2px_2px_5px_0.1px_rgb(120,30,0,0.7),inset_0_0px_6px_6px_rgb(0,0,0,0.1)]">
@@ -121,7 +155,7 @@ const DriverDashboard = () => {
               <p className="text-xs ml-1">Plat Nomor</p>
             </div>
             <h3 className="text-sm mt-1 text-center font-semibold">
-              Dk 1782 AB
+              {licence}
             </h3>
           </div>
         </div>
@@ -234,6 +268,12 @@ const DriverDashboard = () => {
               placeholder="Cari lokasi"
               className="pl-10 font-semibold focus:ring-0 rounded-full w-full h-[35px] bg-white border-[1px] border-[#FE8304] drop-shadow-lg"
             ></input>
+            {/* <SearchBar
+                  
+                  text="Cari lokasi"
+                  onValueChangeHandler={(value: any) => setKeyword(value)}
+            /> */}
+              
             <svg
               className="absolute left-5 top-2 "
               width="13"
@@ -264,10 +304,14 @@ const DriverDashboard = () => {
               />
             </svg>
           </div>
-          <div className="flex w-full h-96 p-5 bg-slate-200 rounded-[15px]">
-            map
+          <div className="flex w-[95%] h-full overflow-hidden bg-slate-200 rounded-[15px] mx-auto">
+              <MapContainer keywordProp={keyword} getCenterHandler={(coordinatesProp) => {setCoordinates(coordinatesProp)}}/>
           </div>
-
+          
+          <Button
+            text="Berhenti Sementara"
+            onClickHandler={setIsActive }
+          />
           {/* {isActive === true ? (
             <div onClick={toggleSwitch}>
               <Button type="primary" text="Selesai Bekerja" />
@@ -279,7 +323,7 @@ const DriverDashboard = () => {
           )} */}
         </div>
       </div>
-      <div onClick={logout}>logout</div>
+      <div onClick={logoutHandler}>logout</div>
     </DriverLayout>
   );
 };
@@ -452,6 +496,38 @@ const PopUpDriver = ({
     </div>
   );
 };
+
+// const [value, setValue] = useState("");
+type PropsSearch = {
+  onValueChangeHandler?: Function;
+  defaultValue?: string;
+}
+
+// const SearchBar: React.FC<PropsSearch> =({
+//     onValueChangeHandler,
+//     defaultValue='',
+//   }: PropsSearch) =>{
+
+//   useEffect(() => {
+//     setValue(defaultValue);
+//   }, []);
+
+//   const onChangeHandler = (e: any) => {
+//     setValue(e.target.value);
+//     if (onValueChangeHandler) {
+//       onValueChangeHandler(e.target.value);
+//     }
+
+//     return(
+//       <div
+//         className={`drop-shadow-lg bg-white h-[25px] w-[90px] border-[1px] rounded-full border-[#E4A76F] text-xs font-bold  flex justify-center items-center`}
+//         value={value}
+//         onChange={onChangeHandler}
+//        >
+        
+//       </div>
+//     )
+// }
 
 const OrderReservation = () => {
   return (
