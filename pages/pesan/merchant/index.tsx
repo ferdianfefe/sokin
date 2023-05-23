@@ -11,6 +11,7 @@ import Search from "public/img/homepage/icon-search.png";
 import { useRouter } from "next/router";
 import Navbar from "components/elements/Navbar";
 import DefaultLayout from "components/layout/DefaultLayout";
+import { set } from "react-hook-form";
 
 const Merchant = (props: { menu: any }): JSX.Element => {
   const router = useRouter();
@@ -95,7 +96,7 @@ const Merchant = (props: { menu: any }): JSX.Element => {
         })
         .then((data) => {
           console.log("data", data);
-          setCartItemNumber(data.menuItems.length);
+          setCartItemNumber((data) ? data.menuItems.length : 0);
         });
     }
   }, [user]);
@@ -154,6 +155,7 @@ const Merchant = (props: { menu: any }): JSX.Element => {
     })
       .then((res) => res.json())
       .then((data) => {
+        setAddMenuIsOpen(false);
         fetch(
           "/api/cart/" +
             new URLSearchParams({
@@ -181,13 +183,13 @@ const Merchant = (props: { menu: any }): JSX.Element => {
         <div
           className="relative w-8 h-8"
           onClick={() => {
-            router.push({
-              pathname: "/cart",
-              query: {
-                merchant: router.query.id,
-              },
-            });
-            // router.push("/cart");
+            // router.push({
+            //   pathname: "/cart",
+            //   query: {
+            //     merchant: router.query.id,
+            //   },
+            // });
+            router.push("/cart");
           }}
         >
           <Image src="/images/icons/cart.svg" alt="cart-icon" fill />
