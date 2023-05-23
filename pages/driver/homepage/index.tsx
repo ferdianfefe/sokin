@@ -1,13 +1,25 @@
 import Navbar from "components/elements/Navbar";
 import DriverLayout from "components/layout/DriverLayout";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import io from "socket.io-client";
+let socket: any;
 
 export default function Homepage() {
-    const [setActive, setActiveState] = useState(false);
+  const [setActive, setActiveState] = useState(false);
+
+  useEffect(() => {
+    socket = io("/api/socket");
+    socket.emit("newOrder")
+    socket.on("order-to-client", () => {
+      console.log("new Order")
+    })
+  })
+
+
   return (
     <>
-      <DriverLayout location='home'>
+      <DriverLayout location="home">
         <div className="flex w-full h-20 bg-[#ffa967c9] justify-evenly items-center mt-8">
           <Image
             src={`/images/regis/Person.svg`}
@@ -90,7 +102,7 @@ export default function Homepage() {
           </div>
         </div>
         <div className="h-11">
-            <div></div>
+          <div></div>
         </div>
       </DriverLayout>
     </>
