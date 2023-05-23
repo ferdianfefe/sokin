@@ -15,11 +15,8 @@ const DriverLayout: React.FC<{ children: any; location: string }> = ({
   const socketInitializer = async () => {
     await fetch("/api/socket/");
     socket = io();
-    socket.on("connect", () => {
-      console.log("connected");
-    });
 
-    socket.on("newOrder", () => {
+    socket.on("order-to-client", () => {
       console.log("order masuk");
     });
   };

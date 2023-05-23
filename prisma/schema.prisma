@@ -175,11 +175,10 @@ model Promo {
 }
 
 model Cart {
-  id          String     @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String     @map("user_id") @db.ObjectId
-  merchantId  String     @map("merchant_id") @db.ObjectId
-  menuItems   MenuItem[]
-  Order       Order[]
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String     @map("user_id") @db.ObjectId
+  menuItems MenuItem[]
+  Order     Order[]
 }
 
 model MenuItem {

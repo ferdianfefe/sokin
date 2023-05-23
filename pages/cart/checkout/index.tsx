@@ -30,6 +30,7 @@ const Checkout: React.FC = (): JSX.Element => {
   const router = useRouter();
 
   const [cartContent, setCartContent] = useState<CartContentProps[]>([]);
+  const [merchantId, setMerchantId] = useState<string>("")
   const [cartId, setCartId] = useState<string>("");
   const { data: session, status } = useSession();
   const user = session?.user;
@@ -53,6 +54,7 @@ const Checkout: React.FC = (): JSX.Element => {
           console.log(data.menuItems);
           setCartContent(data.menuItems);
           setCartId(data.id);
+          setMerchantId(data.merchantId)
         });
     }
   }, [user]);
@@ -358,7 +360,7 @@ const Checkout: React.FC = (): JSX.Element => {
         toggleShowOpsi={toggleShowOpsi}
         opsiPembayaran={opsiPembayaran}
         successful={successful}
-        merchantId={router.query.merchantId as string}
+        merchantId={merchantId}
         cartId={cartId}
         foodFee={parseInt(router.query.total as string)}
         costFee={ongkir}
@@ -449,6 +451,9 @@ const PaymentPopup: React.FC = ({
   const handlePayment = async () => {
     await fetch("/api/order", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         driverId: "6407f4c6879d863b747793a3",
         userId: user?.id,
@@ -457,7 +462,6 @@ const PaymentPopup: React.FC = ({
         source: "Yogyakarta",
         destination: "Jl. Raya Bogor KM 30",
         distance: 2.6,
-        creditScore: 100,
         eta: 30,
         isAccepted: false,
         isCompleted: false,

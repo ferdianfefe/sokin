@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import io from "socket.io-client";
-let socket = io("http://localhost:3000");
+let socket = io("/api/socket");
 
 type OrderCreateRequestBody = {
   id: string;
@@ -84,7 +84,6 @@ export default async function handle(
       source,
       destination,
       distance,
-      creditScore,
       eta,
       isAccepted,
       isCompleted,
@@ -93,14 +92,13 @@ export default async function handle(
     } = req.body as OrderCreateRequestBody;
     const newOrder = await prisma.order.create({
       data: {
-        driver: { connect: { id: driverId } },
-        user: { connect: { id: userId } },
-        merchant: { connect: { id: merchantId } },
-        cart: { connect: { id: cartId } },
+        driverId,
+        userId,
+        merchantId,
+        cartId,
         source,
         destination,
         distance,
-        creditScore,
         eta,
         isAccepted,
         isCompleted,
@@ -108,8 +106,9 @@ export default async function handle(
         costFee,
       },
     });
+    console.log("success creating order");
 
-    socket.io.emit("newOrder", newOrder);
+    socket.emit("newOrder", newOrder);
 
     return res.status(201).json(newOrder);
   } /*else if (req.method === 'PUT') {

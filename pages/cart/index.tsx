@@ -98,7 +98,7 @@ const Cart: React.FC = (): JSX.Element => {
                     <Image
                       src={`images/icons/${isEditing ? "x" : "pencil"}.svg`}
                       alt="Pencil"
-                      fill
+                      fill 
                     />
                   </div>
                 </div>
