@@ -6,8 +6,8 @@ import dataProvider from "@pankod/refine-simple-rest";
 import { SessionProvider } from "next-auth/react";
 import { HeadlessInferencer } from "@pankod/refine-inferencer/headless";
 import { useEffect } from "react";
-
-
+import io from "socket.io-client";
+let socket: any;
 
 import "../src/styles/global.css";
 
@@ -17,7 +17,17 @@ function MyApp({
   Component,
   pageProps: { session, ...pageProps },
 }: AppProps): JSX.Element {
-  useEffect(() => {}, []);
+  useEffect(() => {
+    socketInitializer();
+  }, []);
+
+  const socketInitializer = async () => {
+    await fetch("/api/socket/");
+    socket = io();
+    socket.on("connect", () => {
+      console.log("connected");
+    });
+  };
 
   return (
     <Refine
@@ -38,7 +48,6 @@ function MyApp({
         <Component className="h-screen" {...pageProps} />
       </SessionProvider>
     </Refine>
-    
   );
 }
 

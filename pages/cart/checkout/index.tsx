@@ -30,9 +30,9 @@ const Checkout: React.FC = (): JSX.Element => {
   const router = useRouter();
 
   const [cartContent, setCartContent] = useState<CartContentProps[]>([]);
+  const [cartId, setCartId] = useState<string>("");
   const { data: session, status } = useSession();
   const user = session?.user;
-  console.log(user);
 
   useEffect(() => {
     if (user) {
@@ -52,6 +52,7 @@ const Checkout: React.FC = (): JSX.Element => {
         .then((data) => {
           console.log(data.menuItems);
           setCartContent(data.menuItems);
+          setCartId(data.id);
         });
     }
   }, [user]);
@@ -330,11 +331,11 @@ const Checkout: React.FC = (): JSX.Element => {
               <p className="">Total</p>
               <p className="text-c-orange-800">
                 Rp{" "}
-                {parseInt(router.query.total) +
-                  parseInt(ongkir) +
-                  parseInt(layanan) -
-                  parseInt(promoOngkir) -
-                  parseInt(promoFood)}
+                {parseInt(router.query.total as string) +
+                  ongkir +
+                  layanan -
+                  promoOngkir -
+                  promoFood}
               </p>
             </div>
           </div>
@@ -357,6 +358,10 @@ const Checkout: React.FC = (): JSX.Element => {
         toggleShowOpsi={toggleShowOpsi}
         opsiPembayaran={opsiPembayaran}
         successful={successful}
+        merchantId={router.query.merchantId as string}
+        cartId={cartId}
+        foodFee={parseInt(router.query.total as string)}
+        costFee={ongkir}
       />
       {showOpsi && (
         <PopUpOpsi
@@ -406,10 +411,18 @@ const PaymentPopup: React.FC = ({
   toggleShowOpsi,
   opsiPembayaran,
   successful,
+  merchantId,
+  cartId,
+  costFee,
+  foodFee,
 }: {
   toggleShowOpsi: Function;
   opsiPembayaran: string;
   successful?: Function;
+  merchantId?: string;
+  cartId?: string;
+  costFee?: number;
+  foodFee?: number;
 }): JSX.Element => {
   const { data: session, status } = useSession();
   const user = session?.user;
@@ -433,25 +446,47 @@ const PaymentPopup: React.FC = ({
     }
   }, [balance, user]);
 
+  const handlePayment = async () => {
+    await fetch("/api/order", {
+      method: "POST",
+      body: JSON.stringify({
+        driverId: "6407f4c6879d863b747793a3",
+        userId: user?.id,
+        merchantId,
+        cartId,
+        source: "Yogyakarta",
+        destination: "Jl. Raya Bogor KM 30",
+        distance: 2.6,
+        creditScore: 100,
+        eta: 30,
+        isAccepted: false,
+        isCompleted: false,
+        foodFee,
+        costFee,
+      }),
+    });
+  };
+
   return (
     <div className="sticky bottom-0 left-0">
-      {opsiPembayaran === "Soket" && balance < parseInt(router.query.total) && (
-        <div className="bg-c-red-700 flex items-center h-12 justify-evenly shadow-[inset_0_0px_15px_7px_rgb(500,500,500,0.2)]">
-          <div className="relative w-6 h-6">
-            <Image src={"/images/icons/bell.svg"} alt="bell-icon" fill />
+      {opsiPembayaran === "Soket" &&
+        balance < parseInt(router.query.total as string) && (
+          <div className="bg-c-red-700 flex items-center h-12 justify-evenly shadow-[inset_0_0px_15px_7px_rgb(500,500,500,0.2)]">
+            <div className="relative w-6 h-6">
+              <Image src={"/images/icons/bell.svg"} alt="bell-icon" fill />
+            </div>
+            <p className="text-neutral-50">
+              Saldo kurang, Top up atau bayar tunai
+            </p>
+            <Button
+              text="Top up"
+              className="!w-16 !h-8 text-base font-semibold"
+              onClickHandler={() => {
+                router.push("/topup");
+              }}
+            />
           </div>
-          <p className="text-neutral-50">
-            Saldo kurang, Top up atau bayar tunai
-          </p>
-          <Button
-            text="Top up"
-            className="!w-16 !h-8 text-base font-semibold"
-            onClickHandler={() => {
-              router.push("/topup");
-            }}
-          />
-        </div>
-      )}
+        )}
       <div className="bg-c-orange-200 px-7">
         <div className="flex items-center justify-between py-8">
           {opsiPembayaran === "Soket" ? (
@@ -491,14 +526,18 @@ const PaymentPopup: React.FC = ({
         <Button
           text="Pesan dan Bayar Sekarang"
           className={`${
-            opsiPembayaran == "Soket" && balance < parseInt(router.query.total)
+            opsiPembayaran == "Soket" &&
+            balance < parseInt(router.query.total as string)
               ? "bg-neutral-600"
               : ""
           } font-semibold mb-2`}
           disabled={
-            opsiPembayaran == "Soket" && balance < parseInt(router.query.total)
+            opsiPembayaran == "Soket" &&
+            balance < parseInt(router.query.total as string)
           }
-          onClickHandler={successful}
+          onClickHandler={() => {
+            handlePayment();
+          }}
         />
       </div>
     </div>
