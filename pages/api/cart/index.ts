@@ -20,10 +20,12 @@ export default async function handle(
   res: NextApiResponse
 ) {
   if (req.method === "GET") {
+    console.log("userId", req.query.userId)
     const cart = await prisma.cart.findFirst({
       where: { userId: req.query.userId },
       include: { menuItems: { include: { menu: true } } },
     });
+    console.log("cart", cart);
     return res.json(cart);
   }
 
@@ -83,7 +85,9 @@ export default async function handle(
   if (req.method === "DELETE") {
     const data = req.body.menuId;
     console.log(data);
-    const deletedMenuItem = await prisma.menuItem.delete({ where: { id: data } });
+    const deletedMenuItem = await prisma.menuItem.delete({
+      where: { id: data },
+    });
     // return res.status(200).json(deletedMenuItem);
     return res.status(200).json({ message: "deleted" });
   }

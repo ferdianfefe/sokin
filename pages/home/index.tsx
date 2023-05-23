@@ -18,15 +18,6 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
   const { data, status } = useSession();
   const [profile, setProfile] = useState({balance: 0, creditScore: 0});
 
-  // console.log(data?.user);
-
-  if (status === "loading") {
-    return <div>Loading...</div>;
-  }
-
-  if (status === "unauthenticated") {
-  }
-
   useEffect(() => {
     fetch(`/api/profile/user/userProfile`, {
       method: "POST",
