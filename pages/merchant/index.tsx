@@ -52,7 +52,7 @@ const PopUpOrderMerchant: React.FC<{
     setIsOpen(false);
   };
   return isOpen ?(
-    <div>
+    <div className="hidden">
       <div className='w-full'>
         <div className='absolute inset-0 m-auto rounded-[20px] w-[352px] h-[375px] bg-[#FFF] z-50 p-8'>
           <div className="flex gap-10 items-center border-b-2 border-c-orange-500 pb-2">
@@ -180,6 +180,7 @@ const Merchant: React.FC = () => {
 
   const [logo, setLogo] = useState<string>("/images/preksu.png");
   const [name, setName] = useState<string>("");
+  const [active, setActive] = useState<number>(1);
 
   console.log(user);
 
@@ -246,10 +247,24 @@ const Merchant: React.FC = () => {
           </div>
         </div>
         <div className="mt-6">
-          <div className="rounded-full py-1 px-2 h-8 bg-[#FFE0C0] text-[#FE8304] mb-3 font-bold text-center shadow-md text shadow-[0_3px_3px_0.3px_rgb(400,100,0,0.4),inset_0_3px_7px_6px_rgb(500,500,500,0.3)] w-[45%] md:w-[25%]">
+          <div className="flex justify-between font-bold">
+            <div className={`cursor-pointer ${(active == 1) ? "text-[#FE8304] border-b-2 border-[#FE8304]" : "text-gray-400"}`} onClick={() => setActive(1)}>
+              All Order
+            </div>
+            <div className={`cursor-pointer ${(active == 2) ? "text-[#FE8304] border-b-2 border-[#FE8304]" : "text-gray-400"}`} onClick={() => setActive(2)}>
+              Received
+            </div>
+            <div className={`cursor-pointer ${(active == 3) ? "text-[#FE8304] border-b-2 border-[#FE8304]" : "text-gray-400"}`} onClick={() => setActive(3)}>
+              Processing
+            </div>
+            <div className={`cursor-pointer ${(active == 4) ? "text-[#FE8304] border-b-2 border-[#FE8304]" : "text-gray-400"}`} onClick={() => setActive(4)}>
+              On Delivery
+            </div>
+          </div>
+          <div className="hidden rounded-full py-1 px-2 h-8 bg-[#FFE0C0] text-[#FE8304] mb-3 font-bold text-center shadow-md text shadow-[0_3px_3px_0.3px_rgb(400,100,0,0.4),inset_0_3px_7px_6px_rgb(500,500,500,0.3)] w-[45%] md:w-[25%]">
             Antrian Pesanan
           </div>
-          <div className="mb-10 flex flex-col gap-4 mt-6">
+          <div className="hidden mb-10 flex flex-col gap-4 mt-6">
             {orderData.map((order) => {
               return (
                 <OrderItem
