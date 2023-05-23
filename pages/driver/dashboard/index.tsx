@@ -14,6 +14,27 @@ const DriverDashboard = () => {
   const [showPopUp, setShowPopup] = useState(false);
   const [Reservation, setReservation] = useState(false);
   const [keyword, setKeyword] = useState("");
+  const router = useRouter();
+  const [isActive, setIsActive] = useState(false);
+  const { data: session, status } = useSession();
+  const driver = session?.user;
+  console.log(driver);
+
+  useEffect(() => {
+    fetch(`/api/profile/driver?id=${driver.id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    })
+      .then((res) => {
+        console.log(res);
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data);
+      });
+  }, []);
 
   const toggleSwitch = () => {
     setIsActive(!isActive);
@@ -33,34 +54,34 @@ const DriverDashboard = () => {
     console.log(status);
   }
 
-  const { data: session, status } = useSession();
-  const user = session?.user;
-  console.log(session?.user)
-  const [name, setName] = useState<string>("");
-  const [vehicle, setVehicle] = useState<string>("");
-  const [balance, setBalance] = useState<Float32Array>();
-  const [licence, setLicenceNumber] = useState<string>('');
-  const [isActive, setIsActive] = useState<boolean>(false);
-  const [dailyTarget, setDailyTarget] = useState<number>(0);
-  const [coordinates, setCoordinates] = useState<number[]>([0, 0]);
+  // const { data: session, status } = useSession();
+  // const user = session?.user;
+  // console.log(session?.user)
+  // const [name, setName] = useState<string>("");
+  // const [vehicle, setVehicle] = useState<string>("");
+  // const [balance, setBalance] = useState<Float32Array>();
+  // const [licence, setLicenceNumber] = useState<string>('');
+  // const [isActive, setIsActive] = useState<boolean>(false);
+  // const [dailyTarget, setDailyTarget] = useState<number>(0);
+   const [coordinates, setCoordinates] = useState<number[]>([0, 0]);
   
-  useEffect(() => {
-    fetch("/api/profile/merchant/driverInfo", {
-      method: "POST",
-      body: JSON.stringify({
-        id: user?.id,
-      }),
-    }).then((res) => res.json()).then((data) => {
-      console.log(data);
-      // setLogo(data.merchantLogo);
-      setName(data.name);
-      setVehicle(data.vehicle);
-      setBalance(data.balance);
-      setLicenceNumber(data.licence);
-      setIsActive(data.isActive);
-      setDailyTarget(data.dailyTarget);
-    });
-  }, []);
+  // useEffect(() => {
+  //   fetch("/api/profile/merchant/driverInfo", {
+  //     method: "POST",
+  //     body: JSON.stringify({
+  //       id: user?.id,
+  //     }),
+  //   }).then((res) => res.json()).then((data) => {
+  //     console.log(data);
+  //     // setLogo(data.merchantLogo);
+  //     setName(data.name);
+  //     setVehicle(data.vehicle);
+  //     setBalance(data.balance);
+  //     setLicenceNumber(data.licence);
+  //     setIsActive(data.isActive);
+  //     setDailyTarget(data.dailyTarget);
+  //   });
+  // }, []);
 
   const logoutHandler = () => {
     signOut();
@@ -86,8 +107,8 @@ const DriverDashboard = () => {
             className="bg-white rounded-full h-[52px] w-[52px]"
           />
           <div>
-            <h2 className="font-extrabold">{name}</h2>
-            <p className="font-semibold text-sm">+6281238163514</p>
+            <h2 className="font-extrabold">{driver?.name}</h2>
+            <p className="font-semibold text-sm">{driver.phoneNumber}</p>
           </div>
           <div className="bg-white rounded-lg p-1 w-[15%] h-[42px] flex-col justify-center items-center ml-2">
             <div className="flex justify-center">
@@ -111,7 +132,7 @@ const DriverDashboard = () => {
               />
               <p className="text-xs ml-1">Target Harian</p>
             </div>
-            <h3 className="font-semibold text-center">{dailyTarget}%</h3>
+            <h3 className="font-semibold text-center">{driver.dailyTarget}%</h3>
           </div>
         </div>
 
@@ -127,7 +148,7 @@ const DriverDashboard = () => {
               <p className="text-xs ml-2">Saldomu</p>
             </div>
             <h3 className="text-sm mt-1 text-center font-semibold">
-              RP{balance}
+              {driver.balance}
             </h3>
           </div>
           <div className="py-[6px] bg-orange-500 h-14 w-[30%] text-white rounded-[21px] shadow-[-2px_2px_5px_0.1px_rgb(120,30,0,0.7),inset_0_0px_6px_6px_rgb(0,0,0,0.1)]">
@@ -141,7 +162,7 @@ const DriverDashboard = () => {
               <p className="text-xs ml-2">Kendaraan</p>
             </div>
             <h3 className="text-sm mt-1 text-center font-semibold">
-              {vehicle}
+              {driver.vehicle}
             </h3>
           </div>
           <div className="py-[6px] bg-orange-500 h-14 w-[30%] text-white rounded-[21px] shadow-[-2px_2px_5px_0.1px_rgb(120,30,0,0.7),inset_0_0px_6px_6px_rgb(0,0,0,0.1)]">
@@ -155,7 +176,7 @@ const DriverDashboard = () => {
               <p className="text-xs ml-1">Plat Nomor</p>
             </div>
             <h3 className="text-sm mt-1 text-center font-semibold">
-              {licence}
+              {driver.licenseNumber}
             </h3>
           </div>
         </div>
