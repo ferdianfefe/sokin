@@ -42,6 +42,7 @@ export default async function handle(
       const newCart = await prisma.cart.create({
         data: {
           userId: req.body.userId,
+          merchantId,
           menuItems: {
             create: {
               quantity,

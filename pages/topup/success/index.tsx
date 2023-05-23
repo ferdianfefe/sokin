@@ -1,7 +1,18 @@
 import DefaultLayout from "components/layout/DefaultLayout";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const TopupSuccess: React.FC = (): JSX.Element => {
+
+  const router = useRouter();
+
+  useEffect(() => {
+    setTimeout(() => {
+      router.push("/cart");
+    }, 3000);
+  }, [])
+
   return (
     <DefaultLayout location="topup-success" className="">
       <div
