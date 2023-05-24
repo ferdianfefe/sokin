@@ -6,7 +6,7 @@ const MerchantLayout: React.FC<{ children: any; location: string }> = ({
   location,
 }): JSX.Element => {
   return (
-    <div className="relative h-screen">
+    <div className="relative min-h-screen">
       {children}
       <Navbar location={location} role="merchant" className="z-[100]" />
     </div>
