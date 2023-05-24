@@ -185,7 +185,11 @@ const Merchant: React.FC = () => {
 
   const [logo, setLogo] = useState<string>("/images/preksu.png");
   const [name, setName] = useState<string>("");
+  const [merchantId, setMerchantId] = useState<string>("");
   const [active, setActive] = useState<number>(1);
+  const [order, setOrder] = useState<any>([]);
+
+  let merId = ""
 
   console.log(user);
 
@@ -195,14 +199,37 @@ const Merchant: React.FC = () => {
       body: JSON.stringify({
         id: user?.id,
       }),
+    }).then((res) => res.json()).then((data) => {
+      console.log(data);
+      setLogo(data.merchantLogo);
+      setName(data.name);
+      setMerchantId(data.id);
+      merId = data.id;
+    }).then(() => {
+      fetch("/api/order/getOrder", {
+        method: "POST",
+        body: JSON.stringify({
+          // id: merId,
+          id: '641f459cf632f91b866b4807'
+        }),
+      }).then((res) => res.json()).then((data) => {
+        // console.log(data);
+        setOrder(data);
+      })
     })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        setLogo(data.merchantLogo);
-        setName(data.name);
-      });
   }, []);
+
+  // useEffect(() => {
+  //   fetch("/api/order/getOrder", {
+  //     method: "POST",
+  //     body: JSON.stringify({
+  //       id: ,
+  //     }),
+  //   }).then((res) => res.json()).then((data) => {
+  //     console.log(data);
+  //     setOrder(data);
+  //   });
+  // }, [])
 
   const logoutHandler = () => {
     signOut();
@@ -254,7 +281,7 @@ const Merchant: React.FC = () => {
           </div>
         </div>
         <div className="mt-6">
-          <div className="flex justify-between font-bold text-sm">
+          <div className="flex justify-between font-bold mb-4">
             <div className={`cursor-pointer ${(active == 1) ? "text-[#FE8304] border-b-2 border-[#FE8304]" : "text-gray-400"}`} onClick={() => setActive(1)}>
               All Order
             </div>
@@ -267,6 +294,25 @@ const Merchant: React.FC = () => {
             <div className={`cursor-pointer ${(active == 4) ? "text-[#FE8304] border-b-2 border-[#FE8304]" : "text-gray-400"}`} onClick={() => setActive(4)}>
               On Delivery
             </div>
+          </div>
+          <div className="">
+            {order.length > 0 && order.map((order, i) => {
+              return(
+                <div className={`flex w-full hover:cursor-pointer hover:scale-[.975] h-[15vw] ${order.status == 'DELIVERY' ? "bg-[url('/Del.png')]" : ""} ${order.status == 'POCESSING' ? "bg-[url('/Pro.png')]" : ""} ${order.status == 'RECEIVED' ? "bg-[url('/Rec.png')]" : ""} bg-contain bg-no-repeat`}>
+                  <div className="px-10 flex font-bold text-[#FE8304] h-[10vw] items-center text-2xl">
+                    #{i+1}
+                  </div>
+                  <div className="flex flex-col justify-evenly h-[10vw]">
+                    <div className="font-bold text-lg">
+                      {order.user.name}
+                    </div>
+                    <div className="font-bold text-gray-400 text-sm">
+                      {order.cart.menuItems.length} Menu | Rp {parseInt(order.foodFee) + parseInt(order.costFee)}
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
           </div>
           <div className="hidden rounded-full py-1 px-2 h-8 bg-[#FFE0C0] text-[#FE8304] mb-3 font-bold text-center shadow-md text shadow-[0_3px_3px_0.3px_rgb(400,100,0,0.4),inset_0_3px_7px_6px_rgb(500,500,500,0.3)] w-[45%] md:w-[25%]">
             Antrian Pesanan
