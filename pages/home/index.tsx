@@ -81,13 +81,13 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
           {status == "unauthenticated" && (
             <div className="px-7">
               <div className="bg-slate-200 rounded-[30px] w-full flex py-8 px-8 justify-center items-center gap-6 relative overflow-hidden">
-                <Image
-                  src="public/img/homepage/bg-login-daftar.svg"
+              <Image
+                priority
+                  src="/img/homepage/bg-login-daftar.svg"
                   alt=""
-                  className="absolute object-cover w-full h-full z-0"
-                  quality={100}
                   width={100}
                   height={100}
+                  className="absolute object-cover w-full h-full z-0 pointer-events-none"
                 />
 
                 <div className="z-20 px-auto">
@@ -285,15 +285,9 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
                     </svg>
                   </div>
                 </div>
-
-                {/* <div className='overflow-visible'>
-                                <SwiperCarousel />
-
-                            </div> */}
               </div>
 
               <div className="flex -mt-4">
-                {/* <SwiperCarouselCoupon /> */}
                 <HorizontalCardCarousel />
               </div>
 
@@ -303,8 +297,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
                 </div>
               </div>
 
-              <div className="flex -mt-2">
-                {/* <CardCarousel /> */}
+              <div className="flex mt-2">
                 <VerticalCardCarousel />
               </div>
 
@@ -314,12 +307,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
                 </div>
               </div>
 
-              {/* <div className='flex overflow-visible z-0'>
-                            <KategoriCarousel />
-                        </div>  */}
-
-              <div className="flex -mt-2">
-                {/* <CardCarousel /> */}
+              <div className="flex mt-2">
                 <SquareCardCarousel />
               </div>
             </>
@@ -343,10 +331,6 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
                   <h2 className="font-bold">Resto Yang Mirip</h2>
                 </div>
               </div>
-
-              {/* <div className='flex overflow-visible z-0'>
-                            <KategoriCarousel />
-                        </div>  */}
 
               <div className="w-full flex flex-col items-center">
                 {similar.map((item: any) => {
@@ -381,7 +365,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
           )}
         </div>
 
-        <div className="w-full h-28"></div>
+        <div className="w-full h-14"></div>
 
         <div className="fixed bottom-0 w-full bg-white">
           <Navbar role="customer" location="home" />
