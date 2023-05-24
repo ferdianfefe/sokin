@@ -20,10 +20,12 @@ export default async function handle(
   res: NextApiResponse
 ) {
   if (req.method === "GET") {
+    console.log("userId", req.query.userId)
     const cart = await prisma.cart.findFirst({
       where: { userId: req.query.userId },
       include: { menuItems: { include: { menu: true } } },
     });
+    console.log("cart", cart);
     return res.json(cart);
   }
 
