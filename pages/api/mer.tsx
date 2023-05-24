@@ -17,7 +17,7 @@ export default async function handle(
   res: NextApiResponse
 ) {
   if (req.method === "GET") {
-    const promo = await prisma.user.findMany();
+    const promo = await prisma.owner.findMany();
     console.log(promo);
     return res.status(200).json(promo);
     // const cart = await prisma.cart.findFirst({
@@ -25,6 +25,8 @@ export default async function handle(
     //     include: { menuItems: { include: { menu: true } } },
     //   });
     //   return res.json(cart);
+    // const delCart = await prisma.cart.deleteMany({})
+    // return res.status(200).json(delCart);
   }
   if (req.method === "POST") {
     const { promoType, title, discPercentage, discValue, minOrder, maxDisc } = req.body as PromoCreateRequestBody;
