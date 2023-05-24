@@ -1,7 +1,12 @@
 import Image from "next/image";
 import MerchantLayout from "components/layout/MerchantLayout";
 import Button from "components/elements/Button";
-import { useSession, UseSessionOptions, getSession, signOut } from "next-auth/react";
+import {
+  useSession,
+  UseSessionOptions,
+  getSession,
+  signOut,
+} from "next-auth/react";
 import Navbar from "components/elements/Navbar";
 import React, { useEffect, useState } from "react";
 
@@ -228,7 +233,7 @@ const Merchant: React.FC = () => {
 
   const logoutHandler = () => {
     signOut();
-  }
+  };
 
   return (
     <MerchantLayout location="home">
@@ -250,7 +255,7 @@ const Merchant: React.FC = () => {
                 className="mr-4"
               ></Image>
               <div className="ml-1">
-                <p className="text-semibold">Total Penjualan</p>
+                <p className="text-semibold text-sm">Total Penjualan</p>
                 <p className="font-bold">Rp 20.000.000</p>
               </div>
             </div>
@@ -350,5 +355,5 @@ export const getServerSideProps = async ({ req }: { req: any }) => {
   }
   return {
     props: { session },
-  }
-}
+  };
+};
