@@ -17,7 +17,7 @@ export default async function handle(
   res: NextApiResponse
 ) {
   if (req.method === "GET") {
-    const promo = await prisma.cart.findMany();
+    const promo = await prisma.merchant.findMany();
     console.log(promo);
     return res.status(200).json(promo);
     // const cart = await prisma.cart.findFirst({
@@ -40,7 +40,7 @@ export default async function handle(
     const { id } = JSON.parse(req.body);
     const deletePromo = await prisma.promo.delete({
       where: {
-        id: id,
+        merchantId: id,
       },
     });
     if (!deletePromo) {

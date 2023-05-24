@@ -1,6 +1,7 @@
 import Button from "components/elements/Button";
 import Input from "components/elements/Input";
 import DefaultLayout from "components/layout/DefaultLayout";
+import MerchantLayout from "components/layout/MerchantLayout";
 import { getSession, signOut } from "next-auth/react";
 
 export async function getServerSideProps(context: any) {
@@ -27,7 +28,7 @@ const Profile: React.FC = (): JSX.Element => {
     await signOut();
   };
   return (
-    <DefaultLayout location="akun">
+    <MerchantLayout location="akun">
       <div className="relative h-screen py-10 px-8">
         <h1 className="mb-6 font-bold">Informasi Akun</h1>
 
@@ -46,7 +47,7 @@ const Profile: React.FC = (): JSX.Element => {
           onClickHandler={() => handleLogout()}
         />
       </div>
-    </DefaultLayout>
+    </MerchantLayout>
   );
 };
 

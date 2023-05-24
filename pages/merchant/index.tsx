@@ -1,7 +1,12 @@
 import Image from "next/image";
 import MerchantLayout from "components/layout/MerchantLayout";
 import Button from "components/elements/Button";
-import { useSession, UseSessionOptions, getSession, signOut } from "next-auth/react";
+import {
+  useSession,
+  UseSessionOptions,
+  getSession,
+  signOut,
+} from "next-auth/react";
 import Navbar from "components/elements/Navbar";
 import React, { useEffect, useState } from "react";
 
@@ -52,7 +57,7 @@ const PopUpOrderMerchant: React.FC<{
     setIsOpen(false);
   };
   return isOpen ?(
-    <div>
+    <div className="hidden">
       <div className='w-full'>
         <div className='absolute inset-0 m-auto rounded-[20px] w-[352px] h-[375px] bg-[#FFF] z-50 p-8'>
           <div className="flex gap-10 items-center border-b-2 border-c-orange-500 pb-2">
@@ -180,6 +185,22 @@ const Merchant: React.FC = () => {
 
   const [logo, setLogo] = useState<string>("/images/preksu.png");
   const [name, setName] = useState<string>("");
+  const [merchantId, setMerchantId] = useState<string>("");
+  const [active, setActive] = useState<number>(1);
+  const [statusOrder, setStatusOrder] = useState<string>("");
+  const [order, setOrder] = useState<any>([]);
+
+  //untuk detail order
+  const [detailOpen, setDetailOpen] = useState<boolean>(false);
+  const [destination, setDestination] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
+  const [cartContent, setCartContent] = useState<any[]>([]);
+  const [driverName, setDriverName] = useState<string>("");
+  const [driverPhone, setDriverPhone] = useState<string>("");
+  const [orderTotal, setOrderTotal] = useState<number>(0);
+  const [merchantLogo, setMerchantLogo] = useState<string>("");
+
+  let merId = ""
 
   console.log(user);
 
@@ -193,15 +214,164 @@ const Merchant: React.FC = () => {
       console.log(data);
       setLogo(data.merchantLogo);
       setName(data.name);
-    });
+      setMerchantId(data.id);
+      setMerchantLogo(data.merchantLogo);
+      merId = data.id;
+    }).then(() => {
+      fetch("/api/order/getOrder", {
+        method: "POST",
+        body: JSON.stringify({
+          id: merId,
+          // id: '641f459cf632f91b866b4807'
+        }),
+      }).then((res) => res.json()).then((data) => {
+        // console.log(data);
+        setOrder(data);
+      })
+    })
   }, []);
+
+  // useEffect(() => {
+  //   fetch("/api/order/getOrder", {
+  //     method: "POST",
+  //     body: JSON.stringify({
+  //       id: ,
+  //     }),
+  //   }).then((res) => res.json()).then((data) => {
+  //     console.log(data);
+  //     setOrder(data);
+  //   });
+  // }, [])
 
   const logoutHandler = () => {
     signOut();
-  }
+  };
 
   return (
     <MerchantLayout location="home">
+      <div className={`fixed w-full min-h-screen bg-white ${detailOpen ? "" : "hidden"}`}>
+        <div className="w-full min-h-screen">
+          <div className="flex mx-4 mt-4 items-center mb-2">
+            <div onClick={() => setDetailOpen(false)}>
+              <Image
+                src="/images/icons/left-arrow.svg"
+                width={26}
+                height={26}
+                alt=""
+              />
+            </div>
+            <h1 className="font-semibold text-gray-500 text-3xl ml-8">
+              Detail Pemesanan
+            </h1>
+          </div>
+          <div className="w-full h-32 bg-[url('/images/yummy.jpg')] bg-cover bg-center flex items-end justify-between px-8 pb-3 shadow-[inset_0_-10px_14px_12px_rgb(20,20,20,0.6)]">
+            <div className="flex h-10">
+              <Image
+                src="/images/Profil.svg"
+                width={36}
+                height={36}
+                alt=""
+                className="bg-white rounded-full"
+              />
+              <div className="ml-3 text-white">
+                <h2 className="font-semibold">{username}</h2>
+                <p className="text-sm">+6281234567890</p>
+              </div>
+            </div>
+            <div className="text-white flex flex-col items-end">
+              <Image
+                src="/images/icons/Calender.svg"
+                width={25}
+                height={25}
+                alt=""
+              />
+              <p className="text-sm">{Date().toString().slice(0, 10)}</p>
+            </div>
+          </div>
+          <div className="mt-6 mx-8 flex flex-col">
+            <div className="flex mb-6">
+              <Image
+                src="/images/icons/Location.svg"
+                width={27}
+                height={42}
+                alt=""
+              />
+              <div className="ml-3">
+                <p className="text-sm">Alamat</p>
+                <h2 className="font-semibold">{destination}</h2>
+              </div>
+            </div>
+            <p className="font-bold text-sm mb-2">Rincian Pesanan</p>
+            {cartContent.map((item, index) => (
+              <ItemBox key={index} item={item} index={index} />
+            ))}
+            <div className="w-full h-48 rounded-lg shadow-card mt-9 flex flex-col items-center">
+              <p className="font-semibold text-base">Driver</p>
+              <Image
+                src="/images/Profil.svg"
+                width={62}
+                height={62}
+                alt=""
+                className="bg-white rounded-full"
+              />
+              <h2 className="text-xl font-bold">{driverName}</h2>
+              <p className="text-sm">{driverPhone}</p>
+              <div className="w-16 h-7 bg-c-orange-100 flex items-center justify-center gap-2 rounded-full shadow-[1px_3px_2px_1px_rgb(500,150,0,0.3)]">
+                <Image src={'/images/icons/star.svg'} width={16} height={16}/>
+                <p className="font-semibold">98</p>
+              </div>
+            </div>
+            <div className="text-lg font-semibold">
+              <p className="mb-4 font-extrabold mt-7">Ringkasan Pembayaran</p>
+              <div className="flex justify-between mb-4">
+                <p className="">Total Pesanan</p>
+                <p className="">
+                  Rp {orderTotal}
+                  {/* {cartContent.reduce(
+                    (total, item) => total + item.price * item.quantity,
+                    0
+                  )} */}
+                </p>
+              </div>
+              <div className="flex justify-between mb-4">
+                <p className="">Diskon</p>
+                <p className="">
+                  -Rp15.000
+                  {/* {cartContent.reduce(
+                    (total, item) => total + item.price * item.quantity,
+                    0
+                  )} */}
+                </p>
+              </div>
+              <div className="flex justify-between mb-4">
+                <p className="">Ongkos Kirim</p>
+                <p className="">Rp0</p>
+              </div>
+              <div className="flex justify-between mb-4">
+                <p className="">Biaya Layanan</p>
+                <p className="">Rp2.500</p>
+              </div>
+              <hr className="border-[1.5px] border-[#000000] mb-4" />
+              <div className="flex justify-between mb-4 font-extrabold">
+                <p className="">Total</p>
+                <p className="">
+                  Rp {orderTotal}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="w-full h-28 bg-c-orange-800 px-8 py-3">
+            <p className="text-white">Metode Pembayaran</p>
+            <div className="w-full h-14 bg-white flex items-center gap-5 rounded-3xl shadow-[2px_3px_10px_2px_rgb(70,70,0,0.4)] px-6">
+                <Image src={'/images/icons/SocketOrange.svg'} width={41} height={31}/>
+                <div className="text-sm">
+                  <p className="font-semibold">Soket</p>
+                  <h3 className="font-extrabold text-c-orange-800">Rp55.750</h3>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="p-8 h-full">
         <PopUpOrderMerchant />
         <h1 className="font-bold text-black text-lg mb-3">Informasi Akun</h1>
@@ -220,7 +390,7 @@ const Merchant: React.FC = () => {
                 className="mr-4"
               ></Image>
               <div className="ml-1">
-                <p className="text-semibold">Total Penjualan</p>
+                <p className="text-semibold text-sm">Total Penjualan</p>
                 <p className="font-bold">Rp 20.000.000</p>
               </div>
             </div>
@@ -246,10 +416,69 @@ const Merchant: React.FC = () => {
           </div>
         </div>
         <div className="mt-6">
-          <div className="rounded-full py-1 px-2 h-8 bg-[#FFE0C0] text-[#FE8304] mb-3 font-bold text-center shadow-md text shadow-[0_3px_3px_0.3px_rgb(400,100,0,0.4),inset_0_3px_7px_6px_rgb(500,500,500,0.3)] w-[45%] md:w-[25%]">
+          <div className="flex justify-between font-bold mb-4">
+            <div className={`cursor-pointer ${(active == 1) ? "text-[#FE8304] border-b-2 border-[#FE8304]" : "text-gray-400"}`} onClick={() => {
+                  setActive(1)
+                }
+              }>
+              All Order
+            </div>
+            <div className={`cursor-pointer ${(active == 2) ? "text-[#FE8304] border-b-2 border-[#FE8304]" : "text-gray-400"}`} onClick={() => {
+                  setActive(2)
+                  setStatusOrder('RECEIVED')
+                }
+              }>
+              Received
+            </div>
+            <div className={`cursor-pointer ${(active == 3) ? "text-[#FE8304] border-b-2 border-[#FE8304]" : "text-gray-400"}`} onClick={() => {
+                  setActive(3)
+                  setStatusOrder('PROCESSING')
+                }
+              }>
+              Processing
+            </div>
+            <div className={`cursor-pointer ${(active == 4) ? "text-[#FE8304] border-b-2 border-[#FE8304]" : "text-gray-400"}`} onClick={() => {
+                  setActive(4)
+                  setStatusOrder('DELIVERY')
+                }
+              }>
+              On Delivery
+            </div>
+          </div>
+          <div className="min-h-[70vh]">
+            {order.length > 0 && order.map((order, i) => {
+              return(
+                <div className={`${(order.status == statusOrder || active == 1) ? "" : "hidden"} flex w-full hover:cursor-pointer hover:scale-[.975] h-[15vw] ${order.status == 'DELIVERY' ? "bg-[url('/Del.png')]" : ""} ${order.status == 'POCESSING' ? "bg-[url('/Pro.png')]" : ""} ${order.status == 'RECEIVED' ? "bg-[url('/Rec.png')]" : ""} bg-contain bg-no-repeat`} onClick={
+                  () => {
+                    setDestination(order.destination);
+                    setUsername(order.user.name);
+                    setCartContent(order.cart.menuItems);
+                    // console.log(order.cart.menuItems);
+                    setDriverName(order.driver.name);
+                    setDriverPhone(order.driver.phoneNumber);
+                    setOrderTotal(parseInt(order.foodFee) + parseInt(order.costFee));
+                    setDetailOpen(true);
+                  }
+                }>
+                  <div className="px-10 flex font-bold text-[#FE8304] h-[10vw] items-center text-2xl">
+                    #{i+1}
+                  </div>
+                  <div className="flex flex-col justify-evenly h-[10vw]">
+                    <div className="font-bold text-lg">
+                      {order.user.name}
+                    </div>
+                    <div className="font-bold text-gray-400 text-sm">
+                      {order.cart.menuItems.length} Menu | Rp {parseInt(order.foodFee) + parseInt(order.costFee)}
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+          <div className="hidden rounded-full py-1 px-2 h-8 bg-[#FFE0C0] text-[#FE8304] mb-3 font-bold text-center shadow-md text shadow-[0_3px_3px_0.3px_rgb(400,100,0,0.4),inset_0_3px_7px_6px_rgb(500,500,500,0.3)] w-[45%] md:w-[25%]">
             Antrian Pesanan
           </div>
-          <div className="mb-10 flex flex-col gap-4 mt-6">
+          <div className="hidden mb-10 flex flex-col gap-4 mt-6">
             {orderData.map((order) => {
               return (
                 <OrderItem
@@ -267,10 +496,38 @@ const Merchant: React.FC = () => {
           <Button text="Tutup Toko" />
         </div>
       </div>
-      <div onClick={logoutHandler}>logout</div>
+      {/* <div onClick={logoutHandler}>logout</div> */}
     </MerchantLayout>
   );
 };
+
+const ItemBox: React.FC = ({
+  item,
+  index,
+  isEditing,
+}: {
+  item: CartContentProps;
+  index: number;
+  isEditing: boolean;
+}): JSX.Element => {
+  return (
+    <div className="flex justify-between mb-2 shadow-card rounded-2xl">
+      <div className="h-24 w-24 relative rounded-l-2xl">
+        <Image src={item.menu.image} alt="Phone" fill className="rounded-l-2xl" />
+      </div>
+      <div className="flex-1 mx-4 my-2">
+        <p className="font-bold mb-2">{item.menu.name}</p>
+        <div className="items-center flex justify-between">
+          <p className="font-bold">Rp {parseInt(item.menu.price) * parseInt(item.quantity)}</p>
+          <div className="flex justify-evenly items-center">
+            <h3 className="font-semibold ml-4">x {item.quantity}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 
 export default Merchant;
 
@@ -287,5 +544,5 @@ export const getServerSideProps = async ({ req }: { req: any }) => {
   }
   return {
     props: { session },
-  }
-}
+  };
+};
