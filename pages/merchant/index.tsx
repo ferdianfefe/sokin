@@ -182,6 +182,7 @@ const Merchant: React.FC = () => {
   const [name, setName] = useState<string>("");
   const [merchantId, setMerchantId] = useState<string>("");
   const [active, setActive] = useState<number>(1);
+  const [statusOrder, setStatusOrder] = useState<string>("");
   const [order, setOrder] = useState<any>([]);
 
   let merId = ""
@@ -277,23 +278,38 @@ const Merchant: React.FC = () => {
         </div>
         <div className="mt-6">
           <div className="flex justify-between font-bold mb-4">
-            <div className={`cursor-pointer ${(active == 1) ? "text-[#FE8304] border-b-2 border-[#FE8304]" : "text-gray-400"}`} onClick={() => setActive(1)}>
+            <div className={`cursor-pointer ${(active == 1) ? "text-[#FE8304] border-b-2 border-[#FE8304]" : "text-gray-400"}`} onClick={() => {
+                  setActive(1)
+                }
+              }>
               All Order
             </div>
-            <div className={`cursor-pointer ${(active == 2) ? "text-[#FE8304] border-b-2 border-[#FE8304]" : "text-gray-400"}`} onClick={() => setActive(2)}>
+            <div className={`cursor-pointer ${(active == 2) ? "text-[#FE8304] border-b-2 border-[#FE8304]" : "text-gray-400"}`} onClick={() => {
+                  setActive(2)
+                  setStatusOrder('RECEIVED')
+                }
+              }>
               Received
             </div>
-            <div className={`cursor-pointer ${(active == 3) ? "text-[#FE8304] border-b-2 border-[#FE8304]" : "text-gray-400"}`} onClick={() => setActive(3)}>
+            <div className={`cursor-pointer ${(active == 3) ? "text-[#FE8304] border-b-2 border-[#FE8304]" : "text-gray-400"}`} onClick={() => {
+                  setActive(3)
+                  setStatusOrder('PROCESSING')
+                }
+              }>
               Processing
             </div>
-            <div className={`cursor-pointer ${(active == 4) ? "text-[#FE8304] border-b-2 border-[#FE8304]" : "text-gray-400"}`} onClick={() => setActive(4)}>
+            <div className={`cursor-pointer ${(active == 4) ? "text-[#FE8304] border-b-2 border-[#FE8304]" : "text-gray-400"}`} onClick={() => {
+                  setActive(4)
+                  setStatusOrder('DELIVERY')
+                }
+              }>
               On Delivery
             </div>
           </div>
-          <div className="">
+          <div className="min-h-[70vh]">
             {order.length > 0 && order.map((order, i) => {
               return(
-                <div className={`flex w-full hover:cursor-pointer hover:scale-[.975] h-[15vw] ${order.status == 'DELIVERY' ? "bg-[url('/Del.png')]" : ""} ${order.status == 'POCESSING' ? "bg-[url('/Pro.png')]" : ""} ${order.status == 'RECEIVED' ? "bg-[url('/Rec.png')]" : ""} bg-contain bg-no-repeat`}>
+                <div className={`${(order.status == statusOrder || active == 1) ? "" : "hidden"} flex w-full hover:cursor-pointer hover:scale-[.975] h-[15vw] ${order.status == 'DELIVERY' ? "bg-[url('/Del.png')]" : ""} ${order.status == 'POCESSING' ? "bg-[url('/Pro.png')]" : ""} ${order.status == 'RECEIVED' ? "bg-[url('/Rec.png')]" : ""} bg-contain bg-no-repeat`}>
                   <div className="px-10 flex font-bold text-[#FE8304] h-[10vw] items-center text-2xl">
                     #{i+1}
                   </div>
