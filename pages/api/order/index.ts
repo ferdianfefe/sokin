@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import io from "socket.io-client";
-let socket = io("/api/socket");
+import { NextApiResponseServerIO } from "types/next";
 
 type OrderCreateRequestBody = {
   id: string;
@@ -30,13 +30,15 @@ type UpdateOrderData = {
 const prisma = new PrismaClient();
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponseServerIO
 ) {
   /*if (req.method === "GET") {
     const order = await prisma.order.findMany();
     console.log(order);
     return res.status(200).json(order);
   }*/
+  let socket = io("/api/socket");
+
   if (req.method === "GET") {
     const order = await prisma.order.findMany({
       include: {
@@ -108,7 +110,7 @@ export default async function handle(
     });
     console.log("success creating order");
 
-    socket.emit("newOrder", newOrder);
+    res?.socket?.server?.io?.emit("newOrder", newOrder);
 
     return res.status(201).json(newOrder);
   } /*else if (req.method === 'PUT') {

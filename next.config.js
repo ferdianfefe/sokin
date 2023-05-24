@@ -6,6 +6,13 @@ const withPWA = require("next-pwa")({
 
 const nextConfig = withPWA({
   reactStrictMode: true,
+  env: {},
+  devIndicators: {
+    autoPrerender: false,
+  },
+  pwa: {
+    dest: "public",
+  },
   images: {
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
@@ -18,17 +25,17 @@ const nextConfig = withPWA({
       test: /\.svg$/,
       issuer: {
         // test: /\.(js|ts)x?$/,
-       // for webpack 5 use
-       and: [/\.(js|ts)x?$/]
+        // for webpack 5 use
+        and: [/\.(js|ts)x?$/],
       },
-      
-      use: ['@svgr/webpack'],
+
+      use: ["@svgr/webpack"],
     });
 
     return config;
   },
   images: {
-    domains: ['cdn-icons-png.flaticon.com', 'res.cloudinary.com'],
+    domains: ["cdn-icons-png.flaticon.com", "res.cloudinary.com"],
   },
 });
 
