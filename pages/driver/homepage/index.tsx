@@ -8,15 +8,6 @@ let socket: any;
 export default function Homepage() {
   const [setActive, setActiveState] = useState(false);
 
-  useEffect(() => {
-    socket = io("/api/socket");
-    socket.emit("newOrder")
-    socket.on("order-to-client", () => {
-      console.log("new Order")
-    })
-  })
-
-
   return (
     <>
       <DriverLayout location="home">

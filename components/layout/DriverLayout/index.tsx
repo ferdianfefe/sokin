@@ -10,13 +10,15 @@ const DriverLayout: React.FC<{ children: any; location: string }> = ({
   const [newOrder, setNewOrder] = React.useState(null);
 
   useEffect(() => {
-    socketInitializer();
+    // socketInitializer();
   }, []);
 
   const socketInitializer = async () => {
     // let socket: any;
-    await fetch("/api/socket/");
-    const socket = io();
+    const socket = io("/api/socket");
+    socket.on("connect", () => {
+      console.log("connected");
+    });
 
     socket.on("newOrder", (newOrderData) => {
       console.log(newOrderData);

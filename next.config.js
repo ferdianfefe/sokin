@@ -6,13 +6,6 @@ const withPWA = require("next-pwa")({
 
 const nextConfig = withPWA({
   reactStrictMode: true,
-  env: {},
-  devIndicators: {
-    autoPrerender: false,
-  },
-  pwa: {
-    dest: "public",
-  },
   images: {
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
