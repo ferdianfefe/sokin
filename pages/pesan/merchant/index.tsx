@@ -201,7 +201,7 @@ const Merchant = (props: { menu: any }): JSX.Element => {
         menuData={addedMenuData}
         addToCart={addToCart}
       />
-      <div className="flex flex-col gap-4 px-4 pt-9">
+      <div className="flex flex-col gap-4 px-4 pt-9 mx-auto">
         <h1 className="font-extrabold mb-2">{name}</h1>
       </div>
       <div className="w-full h-20 bg-c-orange-600 justify-between px-7 flex items-center">
@@ -218,7 +218,7 @@ const Merchant = (props: { menu: any }): JSX.Element => {
             src={logo}
             width={80}
             height={80}
-            className="rounded-full bg-white object-cover"
+            className="rounded-full bg-white object-cover w-full h-full "
           ></Image>
         </div>
         <div className="w-3/5 flex justify-between">
@@ -372,13 +372,13 @@ const AddMenuPopUp = ({
       } `}
     >
       <div
-        className="bg-white bg-opacity-50 w-full h-full top-0 left-0 sticky"
+        className="backdrop-blur-sm w-full h-full top-0 left-0 sticky"
         onClick={() => {
           setAddMenuIsOpen(false);
         }}
       ></div>
-      <div className="bg-white sticky bottom-0 left-0 w-full h-[26rem] pt-4 px-8">
-        <h1 className="font-bold text-center mb-6">Tambah Menu</h1>
+      <div className="bg-[#FFF] sticky  left-0 bottom-0 w-full h-[26rem] pt-4 px-8 rounded-t-[25px] drop-shadow-xl overflow-hidden transition-transform duration-300 ease-in-out transform translate-y-10">
+        <h1 className="text-center mb-6 font-extrabold text-3xl">Tambah Menu</h1>
         <div className="flex mb-6">
           <div className="relative w-40 h-40 flex-1">
             <Image
