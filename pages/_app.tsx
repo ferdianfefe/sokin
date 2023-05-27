@@ -7,6 +7,7 @@ import { SessionProvider } from "next-auth/react";
 import { HeadlessInferencer } from "@pankod/refine-inferencer/headless";
 import { useEffect } from "react";
 import io from "socket.io-client";
+import SocketIOClient from "socket.io-client";
 let socket: any;
 
 import "../src/styles/global.css";
@@ -22,7 +23,7 @@ function MyApp({
   }, []);
 
   const socketInitializer = async () => {
-    await fetch("/api/socket/");
+    await fetch("/api/socket");
     socket = io();
     socket.on("connect", () => {
       console.log("connected");

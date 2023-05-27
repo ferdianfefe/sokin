@@ -85,7 +85,7 @@ const Checkout: React.FC = (): JSX.Element => {
   // ]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/promo", {
+    fetch("/api/promo", {
       method: "GET",
     })
       .then((res) => res.json())
