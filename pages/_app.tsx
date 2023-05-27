@@ -8,6 +8,7 @@ import { HeadlessInferencer } from "@pankod/refine-inferencer/headless";
 import { useEffect } from "react";
 import io from "socket.io-client";
 let socket: any;
+import './ProgressBar.css';
 
 import "../src/styles/global.css";
 
