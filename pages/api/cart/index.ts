@@ -68,7 +68,6 @@ export default async function handle(
       if (cart.merchantId !== merchantId) {
         return res.status(400).json({ message: "Merchant ID does not match" });
       }
-
       // if cart exists, add menu item to cart
       await prisma.menuItem.create({
         data: {
