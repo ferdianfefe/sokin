@@ -6,35 +6,58 @@ import SquareCardCarousel from "components/homepage-1/SquareCardCarousel";
 import VerticalCardCarousel from "components/homepage-1/VerticalCardCarousel";
 import DefaultLayout from "components/layout/DefaultLayout";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Search from "public/img/homepage/icon-search.png";
 import router from "next/router";
 
 export default function Pesan() {
   const [showLocation, setShowLocation] = useState(false);
-  const [showPopUp, setShowPopup] = useState("z-50 backdrop-blur-sm fixed w-full h-full translate-y-10 transition duration-300 hidden");
+  const [showPopUp, setShowPopup] = useState(
+    "z-50 backdrop-blur-sm fixed w-full h-full translate-y-10 transition duration-300 hidden"
+  );
+  const [userCoordinates, setUserCoordinates] = useState("");
+  const [userLocation, setUserLocation] = useState("");
+  const [userAddress, setUserAddress] = useState("");
   const [cartItemNumber, setCartItemNumber] = useState(0);
+  const [place, setPlace] = useState(() => {
+    const storedPlace = sessionStorage.getItem("place");
+    return storedPlace || "";
+  });
+
+  useEffect(() => {
+    sessionStorage.setItem("place", place);
+  }, [place]);
+
+  console.log(place);
 
   const toggleShowLocation = () => {
     setShowLocation(!showLocation);
   };
   const togglePopUp = () => {
-    if (showPopUp === "z-50 backdrop-blur-sm fixed w-full h-full translate-y-10 transition duration-300 hidden") {
-      setShowPopup("z-50 backdrop-blur-sm fixed w-full h-full transition duration-300");
+    if (
+      showPopUp ===
+      "z-50 backdrop-blur-sm fixed w-full h-full translate-y-10 transition duration-300 hidden"
+    ) {
+      setShowPopup(
+        "z-50 backdrop-blur-sm fixed w-full h-full transition duration-300"
+      );
     } else {
-        setShowPopup("z-50 backdrop-blur-sm fixed w-full h-full translate-y-10 transition duration-300 hidden");
+      setShowPopup(
+        "z-50 backdrop-blur-sm fixed w-full h-full translate-y-10 transition duration-300 hidden"
+      );
     }
     // setShowPopup(!showPopUp);
   };
 
   const tes = async () => {
-    await fetch('api/profile/merchant', {
-      method: 'GET',
-    }).then((res) => 
-      res.json()).then((data) => {
-        console.log(data);
+    await fetch("api/profile/merchant", {
+      method: "GET",
     })
-  }
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      });
+  };
   return (
     <DefaultLayout location="pesan">
       <div className="fixed p-4 bottom-20 right-6 bg-c-orange-800 rounded-full shadow-2xl shadow-neutral-900">
@@ -55,8 +78,10 @@ export default function Pesan() {
           <PopupLocation
             showLocation={showLocation}
             setShowLocation={setShowLocation}
+            setUserCoordinates={setUserCoordinates}
             togglePopup={togglePopUp}
             showPopUp={showPopUp}
+            setPlace={setPlace}
           />
         )}
         <div className="pl-5 flex items-center">
@@ -77,7 +102,7 @@ export default function Pesan() {
                 alt={""}
               />
             </div>
-            <h2 className="font-extrabold">Tempo Gelato</h2>
+            <h2 className="font-extrabold">{place}</h2>
           </div>
         </div>
         <div className="mt-6 px-4">
@@ -202,34 +227,59 @@ export default function Pesan() {
 }
 
 const SearchBar: React.FunctionComponent = (): JSX.Element => {
-    return (
-      <>
-        <div className="relative flex">
-          {/* ICON */}
-          <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-            <Image src={Search} alt={""} />
-          </span>
-          <input
-            placeholder="Cari makananmu"
-            type="text"
-            className="bg-[#FE8304] rounded-full bg-opacity-40 w-full py-[6px] px-14 font-bold text-sm placeholder-[#817A7A] bg-auto focus:outline-none"
-          ></input>
-        </div>
-      </>
-    );
-  };
+  return (
+    <>
+      <div className="relative flex">
+        {/* ICON */}
+        <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+          <Image src={Search} alt={""} />
+        </span>
+        <input
+          placeholder="Cari makananmu"
+          type="text"
+          className="bg-[#FE8304] rounded-full bg-opacity-40 w-full py-[6px] px-14 font-bold text-sm placeholder-[#817A7A] bg-auto focus:outline-none"
+        ></input>
+      </div>
+    </>
+  );
+};
 
 const PopupLocation = ({
   setShowLocation,
   showLocation,
   togglePopup,
   showPopUp,
+  userCoordinates,
+  setUserCoordinates,
+  setPlace,
 }: {
   setShowLocation: any;
   showLocation: boolean;
   togglePopup: () => void;
   showPopUp: string;
+  setUserCoordinates: (coordinates: string) => void;
+  setPlace: (place: string) => void;
 }) => {
+  const [searchKeyword, setSearchKeyword] = useState(() => {
+    const storedKeyword = sessionStorage.getItem("searchKeyword") || "";
+    return storedKeyword;
+  });
+
+  const [mapCoordinates, setMapCoordinates] = useState("");
+
+  const handleSubmit = (event: React.FormEvent) => {
+    setUserCoordinates(mapCoordinates);
+    setPlace(searchKeyword);
+    event.preventDefault();
+    togglePopup();
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const keyword = event.target.value;
+    setSearchKeyword(keyword);
+    sessionStorage.setItem("searchKeyword", keyword);
+  };
+
   return (
     <div className={showPopUp}>
       <div className="w-full px-5 pt-5 h-[650px] bg-white rounded-b-3xl drop-shadow-lg">
@@ -267,13 +317,27 @@ const PopupLocation = ({
             height={18}
             alt={""}
           />
-          <input className="mx-2 w-full bg-white"></input>
-          {/* <Image src="/images/Search.svg" width={14} height={15} alt={""} /> */}
+          <input
+            className="mx-2 w-full bg-white"
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+          ></input>
+          <button>
+            <Image src="/images/Search.svg" width={14} height={15} alt="" />
+          </button>
         </div>
         <div className="mt-3 border-gray-400 border-[1px]">
-          <MapContainer />
+          <MapContainer
+            setMapCoordinates={setMapCoordinates}
+            keywordProp={searchKeyword}
+            onSearch={setSearchKeyword}
+          />
         </div>
-        <Button text="Atur Lokasi" className="mt-4"/>
+        <Button
+          text="Atur Lokasi"
+          className="mt-4"
+          onClickHandler={handleSubmit}
+        />
       </div>
       <div className="h-full w-full" onClick={togglePopup}></div>
     </div>
