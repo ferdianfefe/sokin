@@ -39,8 +39,9 @@ const Cart: React.FC = (): JSX.Element => {
       )
         .then((res) => res.json())
         .then((data) => {
+          console.log(data)
           setIsLoading(false);
-          setCartContent(data.menuItems);
+          setCartContent(data);
         });
     }
   }, [user]);
@@ -68,7 +69,7 @@ const Cart: React.FC = (): JSX.Element => {
 
   return (
     <DefaultLayout location="cart" isLoading={isLoading}>
-      {cartContent?.length > 0 ? (
+      {cartContent?.menuItems.length > 0 ? (
         <div className="px-6 flex flex-col justify-between min-h-screen">
           <div className="">
             <div className="flex items-center mb-4  pt-6">
@@ -87,8 +88,8 @@ const Cart: React.FC = (): JSX.Element => {
             </div>
             <div className="">
               <div className="flex justify-between items-center mb-2">
-                <p className="font-bold text-2xl">
-                  {cartContent[0].restaurantName}
+                <p className="font-semibold text-2xl">
+                  {cartContent.merchant.name}
                 </p>
                 <div className="bg-c-orange-800 flex items-center justify-center w-8 h-8 rounded-full">
                   <div
@@ -103,7 +104,7 @@ const Cart: React.FC = (): JSX.Element => {
                   </div>
                 </div>
               </div>
-              {cartContent.map((item, index) => (
+              {cartContent.menuItems.map((item, index) => (
                 <ItemBox
                   item={item}
                   key={index}
@@ -119,7 +120,7 @@ const Cart: React.FC = (): JSX.Element => {
               <p className="">Total : </p>
               <p className="text-c-orange-700">
                 Rp{" "}
-                {cartContent.reduce(
+                {cartContent.menuItems.reduce(
                   (total, item) => total + item.menu.price * item.quantity,
                   0
                 )}
@@ -129,7 +130,7 @@ const Cart: React.FC = (): JSX.Element => {
           <div className="mb-10">
             <div
               onClick={() => {
-                let totalHarga = cartContent.reduce(
+                let totalHarga = cartContent.menuItems.reduce(
                   (total, item) => total + item.menu.price * item.quantity,
                   0
                 );

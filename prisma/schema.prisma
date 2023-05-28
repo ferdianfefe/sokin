@@ -99,6 +99,7 @@ model Merchant {
   merchantLogo String?
   owner        Owner?  @relation(fields: [ownerId], references: [id])
   Order        Order[]
+  Cart         Cart[]
 
   @@map("merchants")
 }
@@ -180,6 +181,7 @@ model Cart {
   merchantId  String     @map("merchant_id") @db.ObjectId
   menuItems   MenuItem[]
   Order       Order[]
+  merchant    Merchant?   @relation(fields: [merchantId], references: [id])
 }
 
 model MenuItem {
