@@ -40,8 +40,6 @@ export default async function handle(
   if (req.method === "POST") {
     const { id } = JSON.parse(req.body)
 
-    console.log(id);
-
     const order = await prisma.order.findMany({
         where: {
             merchantId: id

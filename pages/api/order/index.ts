@@ -91,6 +91,7 @@ export default async function handle(
       foodFee,
       costFee,
     } = req.body as OrderCreateRequestBody;
+
     const newOrder = await prisma.order.create({
       data: {
         driverId,
@@ -126,7 +127,7 @@ export default async function handle(
               },
             },
           },
-        }
+        },
       },
     });
 
