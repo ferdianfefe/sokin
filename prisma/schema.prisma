@@ -196,6 +196,6 @@ model MenuItem {
 enum OrderStatus {
   RECEIVED
   DELIVERY
-  PROCESS
+  PROCESSING
   DONE
 }

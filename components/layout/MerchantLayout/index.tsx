@@ -8,7 +8,15 @@ const MerchantLayout: React.FC<{
   children: any;
   location: string;
   setNewOrderData: Function;
-}> = ({ children, location, setNewOrderData = () => {} }): JSX.Element => {
+  order: [];
+  setOrder: Function;
+}> = ({
+  children,
+  location,
+  setNewOrderData = () => {},
+  order,
+  setOrder,
+}): JSX.Element => {
   const [newOrder, setNewOrder] = useState(null);
 
   useEffect(() => {
@@ -28,6 +36,38 @@ const MerchantLayout: React.FC<{
       //   });
     });
   }, []);
+
+  const handleProcessOrder = async (id: string) => {
+    setNewOrder(null);
+
+    await fetch(`/api/order`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status: "PROCESSING",
+        orderId: id,
+        isAccepted: true,
+        isCompleted: false,
+      }),
+    });
+
+    // update order
+    let newOrderData = order.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          status: "PROCESSING",
+          isAccepted: true,
+          isCompleted: false,
+        };
+      }
+      return item;
+    });
+
+    setOrder(newOrderData);
+  };
 
   return (
     <div className="relative min-h-screen">
@@ -62,7 +102,7 @@ const MerchantLayout: React.FC<{
                 <Button
                   text="Proses Orderan"
                   onClickHandler={() => {
-                    setNewOrder(null);
+                    handleProcessOrder(newOrder.id);
                   }}
                   className="bg-orange-500 text-white px-4 py-2 mt-3"
                 />
