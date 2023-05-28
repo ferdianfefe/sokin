@@ -14,6 +14,7 @@ import TargetHarianProgressBar from "components/elements/TargetHarianProgressBar
 const DriverDashboard = () => {
   const [showPopUp, setShowPopup] = useState(false);
   const [Reservation, setReservation] = useState(false);
+  const [reservationData, setReservationData] = useState(null);
   const [keyword, setKeyword] = useState("");
   const router = useRouter();
   const [isActive, setIsActive] = useState(false);
@@ -34,6 +35,26 @@ const DriverDashboard = () => {
       })
       .then((data) => {
         console.log(data);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/getOrder", {
+      method: "POST",
+      headers:{
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        driverId: driver.id,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.status === "success") {
+          setReservation(true);
+          setReservationData(data.data);
+        }
       });
   }, []);
 
@@ -94,7 +115,7 @@ const DriverDashboard = () => {
   };
 
   return (
-    <DriverLayout location="home">
+    <DriverLayout location="home" setReservationdata={setReservationData}>
       <div className="p-0 m-0">
         {showPopUp && (
           <PopUpDriver
@@ -255,7 +276,7 @@ const DriverDashboard = () => {
                   </p>
                 </div>
               ) : (
-                <OrderReservation />
+                <OrderReservation reservationData={reservationData}/>
               )}
             </div>
           )}
