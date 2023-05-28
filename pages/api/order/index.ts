@@ -106,7 +106,30 @@ export default async function handle(
         foodFee,
         costFee,
       },
+      include: {
+        user: {
+          select: {
+            name: true,
+          },
+        },
+        cart: {
+          include: {
+            menuItems: {
+              include: {
+                menu: {
+                  select: {
+                    name: true,
+                    price: true,
+                    image: true,
+                  },
+                },
+              },
+            },
+          },
+        }
+      },
     });
+
     console.log("success creating order");
 
     res?.socket?.server?.io?.emit("newOrder", newOrder);
