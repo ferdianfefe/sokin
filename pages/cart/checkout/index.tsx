@@ -468,7 +468,7 @@ const PaymentPopup: React.FC = ({
         foodFee,
         costFee,
       }),
-    });
+    }).then(() => router.push("/home"));
   };
 
   return (

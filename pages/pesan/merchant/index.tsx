@@ -218,7 +218,7 @@ const Merchant = (props: { menu: any }): JSX.Element => {
             src={logo}
             width={80}
             height={80}
-            className="rounded-full bg-white object-cover"
+            className="rounded-full bg-white object-cover w-full h-full "
           ></Image>
         </div>
         <div className="w-3/5 flex justify-between">
@@ -248,16 +248,19 @@ const Merchant = (props: { menu: any }): JSX.Element => {
           </div>
         </div>
       </div>
-      <div className="mt-4 px-4">
-        <div className="relative flex">
+      <div className={`mt-4 px-4 
+      `}>
+        <div className={`relative flex
+          ${addMenuIsOpen? '-z-10': 'z-10'}
+        `}>
           {/* ICON */}
-          <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+          <span className="absolute inset-y-0 left-0 flex items-center pl-3 ">
             <Image src={Search} alt={""} />
           </span>
           <input
             placeholder="Cari makananmu"
             type="text"
-            className="bg-[#FE8304] rounded-full bg-opacity-40 w-full py-[6px] px-14 font-bold text-sm placeholder-[#817A7A] bg-auto focus:outline-none"
+            className="bg-[#FE8304] rounded-full bg-opacity-40 w-full py-[6px] px-14 font-bold text-sm placeholder-[#817A7A] bg-auto focus:outline-none "
             onChange={change}
             onKeyDown={search}
           ></input>
@@ -266,7 +269,9 @@ const Merchant = (props: { menu: any }): JSX.Element => {
       <div className="flex flex-col gap-4 px-4 py-6">
         <div className="flex justify-end">
           <Menu as="div" className="relative inline-block">
-            <Menu.Button className="w-20 h-8 relative bg-c-orange-100 flex rounded-full justify-center items-center shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)] text-sm text-c-orange-700">
+            <Menu.Button className={`w-20 h-8 relative bg-c-orange-100 flex rounded-full justify-center items-center shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)] text-sm text-c-orange-700 z-10
+              ${addMenuIsOpen? '-z-10': 'z-10'}
+            `}>
               Sort By
             </Menu.Button>
             <Transition
@@ -358,27 +363,47 @@ const AddMenuPopUp = ({
   menuData,
   addToCart = () => {},
 }: {
-  show: Boolean;
+  show: boolean;
   setAddMenuIsOpen: Function;
   menuData: object;
   addToCart: Function;
 }): JSX.Element => {
   const [itemCount, setItemCount] = useState(1);
 
+  const handleClose = () => {
+    setAddMenuIsOpen(false);
+  };
+
   return (
     <div
-      className={`top-0 left-0 fixed w-screen h-screen z-[99] ${
-        show == true ? "block" : "hidden"
-      } `}
-    >
-      <div
-        className="bg-white bg-opacity-50 w-full h-full top-0 left-0 sticky"
-        onClick={() => {
-          setAddMenuIsOpen(false);
-        }}
-      ></div>
-      <div className="bg-white sticky bottom-0 left-0 w-full h-[26rem] pt-4 px-8">
-        <h1 className="font-bold text-center mb-6">Tambah Menu</h1>
+      className={`fixed w-full h-full top-0 left-0 flex items-center justify-center transition-transform duration-400 ease-in-out ${
+        show ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
+      }`}
+    > 
+      <div className="backdrop-blur w-full h-full absolute z-40">
+        <div className="absolute w-full h-full opacity-30"></div>
+      </div>
+      <div className="bg-white rounded-t-[25px] p-8 transform translate-y-0 transition-transform duration-300 ease-in-out mt-72 z-[99]">
+        <button
+          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 transition duration-300 "
+          onClick={handleClose}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-8 w-8 mr-2 mt-2"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+        <h1 className="text-center mb-6 font-extrabold text-3xl">Tambah Menu</h1>
         <div className="flex mb-6">
           <div className="relative w-40 h-40 flex-1">
             <Image

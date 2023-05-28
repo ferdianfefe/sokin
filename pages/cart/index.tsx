@@ -73,13 +73,13 @@ const Cart: React.FC = (): JSX.Element => {
           <div className="">
             <div className="flex items-center mb-4  pt-6">
               <div className="h-6 w-6 relative">
-                <Link href={"/pesan"}>
+                <div onClick={() => router.back()}>
                   <Image
                     src="/images/icons/left-arrow.svg"
                     alt="Left arrow"
                     fill
                   />
-                </Link>
+                </div>
               </div>
               <h1 className="text-2xl font-semibold text-neutral-700 ml-4">
                 Keranjang Saya
@@ -143,7 +143,7 @@ const Cart: React.FC = (): JSX.Element => {
       ) : (
         <div className="h-screen relative px-6">
           <div className="flex items-center mb-4 pt-6">
-            <Link href={"/pesan"}>
+            <div onClick={() => router.back()}>
               <div className="h-6 w-6 relative">
                 <Image
                   src="/images/icons/left-arrow.svg"
@@ -151,7 +151,7 @@ const Cart: React.FC = (): JSX.Element => {
                   fill
                 />
               </div>
-            </Link>
+            </div>
             <h1 className="text-2xl text-neutral-700 font-semibold ml-4">
               Keranjang Saya
             </h1>

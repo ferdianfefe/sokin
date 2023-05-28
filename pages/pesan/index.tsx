@@ -153,7 +153,7 @@ export default function Pesan() {
           </div>
         </div>
 
-        <div className="flex -mt-4">
+        <div className="flex">
           <HorizontalCardCarousel />
         </div>
         <div className="mt-4 flex px-7 justify-between">
@@ -183,7 +183,7 @@ export default function Pesan() {
           </div>
         </div>
 
-        <div className="flex -mt-2">
+        <div className="flex mt-4">
           <VerticalCardCarousel />
         </div>
         <div className="mt-4 flex px-7">
