@@ -141,7 +141,6 @@ export default async function handle(
       const { orderId, isAccepted, isCompleted, status } = req.body;
       console.log(orderId, isAccepted, isCompleted, status)
 
-      const dataToUpdate: UpdateOrderData = {};
 
       if (status !== undefined) {
         dataToUpdate["status"] = status;
@@ -158,7 +157,31 @@ export default async function handle(
       const order: any | null = await prisma.order.update({
         where: { id: orderId },
         data: dataToUpdate,
+        include: {
+          user: {
+            select: {
+              name: true,
+            },
+          },
+          cart: {
+            include: {
+              menuItems: {
+                include: {
+                  menu: {
+                    select: {
+                      name: true,
+                      price: true,
+                      image: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       });
+
+      res?.socket?.server?.io?.emit("updateOrder", order);
 
       return res.status(200).json(order);
     } catch (error) {
