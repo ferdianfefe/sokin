@@ -136,31 +136,34 @@ export default async function handle(
     res?.socket?.server?.io?.emit("newOrder", newOrder);
 
     return res.status(201).json(newOrder);
-  } /*else if (req.method === 'PUT') {
+  } else if (req.method === "PUT") {
     try {
-      const { orderId, isAccepted, isCompleted } = req.body;
+      const { orderId, isAccepted, isCompleted, status } = req.body;
+      console.log(orderId, isAccepted, isCompleted, status)
 
       const dataToUpdate: UpdateOrderData = {};
 
       if (status !== undefined) {
-        dataToUpdate['status'] = status;
+        dataToUpdate["status"] = status;
       }
 
       if (isAccepted !== undefined) {
-        dataToUpdate['isAccepted'] = isAccepted;
+        dataToUpdate["isAccepted"] = isAccepted;
       }
 
       if (isCompleted !== undefined) {
-        dataToUpdate['isCompleted'] = isCompleted;
+        dataToUpdate["isCompleted"] = isCompleted;
       }
 
-      const order: Order | null = await prisma.order.update({
+      const order: any | null = await prisma.order.update({
         where: { id: orderId },
         data: dataToUpdate,
       });
 
-      res.status(200).json(order);
+      return res.status(200).json(order);
     } catch (error) {
-      res.status(500).json({ message: 'Internal Server Error' });
-    } */
+      console.log(error);
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
 }

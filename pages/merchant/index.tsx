@@ -272,6 +272,9 @@ const Merchant: React.FC = () => {
     const socket = io();
     socket.on("newOrder", (data) => {
       setNewOrderData(data);
+      let newOrders = [...order];
+      newOrders.push(data);
+      setOrder(newOrders);
     });
   }, [merId]);
 
@@ -280,7 +283,12 @@ const Merchant: React.FC = () => {
   };
 
   return (
-    <MerchantLayout location="home" setNewOrderData={setNewOrderData}>
+    <MerchantLayout
+      location="home"
+      setNewOrderData={setNewOrderData}
+      order={order}
+      setOrder={setOrder}
+    >
       <div
         className={`fixed w-full min-h-screen bg-white ${
           detailOpen ? "" : "hidden"
@@ -508,7 +516,7 @@ const Merchant: React.FC = () => {
             </div>
           </div>
           <div className="min-h-[70vh]">
-            {order.length > 0 &&
+            {order.length > 0 ? (
               order.map((order, i) => {
                 return (
                   <div
@@ -517,7 +525,7 @@ const Merchant: React.FC = () => {
                     } flex w-full hover:cursor-pointer hover:scale-[.975] h-[15vw] ${
                       order.status == "DELIVERY" ? "bg-[url('/Del.png')]" : ""
                     } ${
-                      order.status == "POCESSING" ? "bg-[url('/Pro.png')]" : ""
+                      order.status == "PROCESSING" ? "bg-[url('/Pro.png')]" : ""
                     } ${
                       order.status == "RECEIVED" ? "bg-[url('/Rec.png')]" : ""
                     } bg-contain bg-no-repeat`}
@@ -546,7 +554,14 @@ const Merchant: React.FC = () => {
                     </div>
                   </div>
                 );
-              })}
+              })
+            ) : (
+              <div className="flex justify-center items-center h-[70vh]">
+                <h1 className="text-2xl font-bold text-gray-400">
+                  Belum ada pesanan
+                </h1>
+              </div>
+            )}
           </div>
           <div className="hidden rounded-full py-1 px-2 h-8 bg-[#FFE0C0] text-[#FE8304] mb-3 font-bold text-center shadow-md text shadow-[0_3px_3px_0.3px_rgb(400,100,0,0.4),inset_0_3px_7px_6px_rgb(500,500,500,0.3)] w-[45%] md:w-[25%]">
             Antrian Pesanan

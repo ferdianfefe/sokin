@@ -20,7 +20,6 @@ export default async function handle(
   res: NextApiResponse
 ) {
   if (req.method === "GET") {
-    console.log("userId", req.query.userId);
     const cart = await prisma.cart.findFirst({
       where: {
         userId: req.query.userId,
@@ -34,7 +33,6 @@ export default async function handle(
         merchant: true,
       },
     });
-    console.log("cart", cart);
     return res.json(cart);
   }
 
@@ -70,7 +68,7 @@ export default async function handle(
       if (cart.merchantId !== merchantId) {
         return res.status(400).json({ message: "Merchant ID does not match" });
       }
-      
+
       // if cart exists, add menu item to cart
       await prisma.menuItem.create({
         data: {
@@ -97,7 +95,6 @@ export default async function handle(
 
   if (req.method === "DELETE") {
     const data = req.body.menuId;
-    console.log(data);
     const deletedMenuItem = await prisma.menuItem.delete({
       where: { id: data },
     });
