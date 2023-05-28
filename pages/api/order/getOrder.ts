@@ -46,36 +46,39 @@ export default async function handle(
         where: {
             merchantId: id
         },
-      include: {
-        driver: {
-          select: {
-            name: true,
-            phoneNumber: true,
-            licenseNumber: true,
-            vehicle: true,
-          },
+        orderBy: {
+            createdAt: 'desc'
         },
-        user: {
-          select: {
-            name: true,
+        include: {
+          driver: {
+            select: {
+              name: true,
+              phoneNumber: true,
+              licenseNumber: true,
+              vehicle: true,
+            },
           },
-        },
-        cart: {
-          include: {
-            menuItems: {
-              include: {
-                menu: {
-                  select: {
-                    name: true,
-                    price: true,
-                    image: true,
+          user: {
+            select: {
+              name: true,
+            },
+          },
+          cart: {
+            include: {
+              menuItems: {
+                include: {
+                  menu: {
+                    select: {
+                      name: true,
+                      price: true,
+                      image: true,
+                    },
                   },
                 },
               },
             },
           },
         },
-      },
     });
 
     console.log(order);
