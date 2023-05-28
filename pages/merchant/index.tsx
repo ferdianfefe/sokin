@@ -9,6 +9,7 @@ import {
 } from "next-auth/react";
 import Navbar from "components/elements/Navbar";
 import React, { useEffect, useState } from "react";
+import { io } from "socket.io-client";
 
 // const PopUpOrderMerchant: React.FC<{
 //   orderNumber: number;
@@ -35,35 +36,44 @@ import React, { useEffect, useState } from "react";
 // }
 
 const PopUpOrderMerchant: React.FC<{
-    orderNumber?: number;
-    customerName?: string;
-    menuName?: string;
-    image?: String;
-    menuCount?: number;
-    totalPrice?: number;
-    customerRate?: number;
-}> = ({ 
-    orderNumber,
-    customerName,
-    menuName,
-    image,
-    menuCount,
-    totalPrice,
-    customerRate,
+  orderNumber?: number;
+  customerName?: string;
+  menuName?: string;
+  image?: String;
+  menuCount?: number;
+  totalPrice?: number;
+  customerRate?: number;
+}> = ({
+  orderNumber,
+  customerName,
+  menuName,
+  image,
+  menuCount,
+  totalPrice,
+  customerRate,
 }): JSXStyle.Element => {
   const [isOpen, setIsOpen] = useState(true);
 
   const handleClose = () => {
     setIsOpen(false);
   };
-  return isOpen ?(
+  return isOpen ? (
     <div className="hidden">
-      <div className='w-full'>
-        <div className='absolute inset-0 m-auto rounded-[20px] w-[352px] h-[375px] bg-[#FFF] z-50 p-8'>
+      <div className="w-full">
+        <div className="absolute inset-0 m-auto rounded-[20px] w-[352px] h-[375px] bg-[#FFF] z-50 p-8">
           <div className="flex gap-10 items-center border-b-2 border-c-orange-500 pb-2">
-
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={handleClose}>
-              <path d="M19.7208 2.41357L17.8073 0.5L10.2208 8.08643L2.6344 0.5L0.720825 2.41357L8.30725 10L0.720825 17.5864L2.6344 19.5L10.2208 11.9136L17.8073 19.5L19.7208 17.5864L12.1344 10L19.7208 2.41357Z" fill="#565351" />
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              onClick={handleClose}
+            >
+              <path
+                d="M19.7208 2.41357L17.8073 0.5L10.2208 8.08643L2.6344 0.5L0.720825 2.41357L8.30725 10L0.720825 17.5864L2.6344 19.5L10.2208 11.9136L17.8073 19.5L19.7208 17.5864L12.1344 10L19.7208 2.41357Z"
+                fill="#565351"
+              />
             </svg>
             <h1 className="font-black text-3xl">Orderan Masuk</h1>
           </div>
@@ -77,8 +87,21 @@ const PopUpOrderMerchant: React.FC<{
               </div>
             </div>
             <div className="w-[61px] py-[2px] flex my-auto rounded-full bg-c-orange-200 shadow-[0px_4px_4px_#FBC48A] justify-center items-center gap-[2px]">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8.01178 1.42135C8.26963 0.738456 9.24219 0.738456 9.50004 1.42135L11.1634 6.06059C11.2797 6.36866 11.5762 6.57276 11.9075 6.57276H15.9947C16.7495 6.57276 17.0791 7.51962 16.4857 7.98274L13.577 10.6182C13.3091 10.8272 13.2052 11.1825 13.3186 11.5015L14.3805 16.0351C14.639 16.7626 13.8012 17.3885 13.1692 16.94L9.21785 14.4165C8.94152 14.2204 8.5703 14.2204 8.29397 14.4165L4.34268 16.94C3.71058 17.3885 2.87282 16.7626 3.13135 16.0351L4.19328 11.5015C4.30664 11.1825 4.2027 10.8272 3.93486 10.6182L1.02611 7.98274C0.432657 7.51962 0.762384 6.57276 1.5171 6.57276H5.60428C5.93556 6.57276 6.23208 6.36866 6.34841 6.06059L8.01178 1.42135Z" fill="#FE8304" stroke="#FE8304" stroke-width="0.803675" stroke-linecap="round" stroke-linejoin="round" />
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 18 18"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M8.01178 1.42135C8.26963 0.738456 9.24219 0.738456 9.50004 1.42135L11.1634 6.06059C11.2797 6.36866 11.5762 6.57276 11.9075 6.57276H15.9947C16.7495 6.57276 17.0791 7.51962 16.4857 7.98274L13.577 10.6182C13.3091 10.8272 13.2052 11.1825 13.3186 11.5015L14.3805 16.0351C14.639 16.7626 13.8012 17.3885 13.1692 16.94L9.21785 14.4165C8.94152 14.2204 8.5703 14.2204 8.29397 14.4165L4.34268 16.94C3.71058 17.3885 2.87282 16.7626 3.13135 16.0351L4.19328 11.5015C4.30664 11.1825 4.2027 10.8272 3.93486 10.6182L1.02611 7.98274C0.432657 7.51962 0.762384 6.57276 1.5171 6.57276H5.60428C5.93556 6.57276 6.23208 6.36866 6.34841 6.06059L8.01178 1.42135Z"
+                  fill="#FE8304"
+                  stroke="#FE8304"
+                  stroke-width="0.803675"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
               </svg>
               <h3 className="flex font-extrabold text-xl">98</h3>
             </div>
@@ -104,17 +127,13 @@ const PopUpOrderMerchant: React.FC<{
           </div>
 
           <div className="mt-4">
-            <Button 
-              text='Pesanan diproses'
-            />
-
+            <Button text="Pesanan diproses" />
           </div>
         </div>
-
       </div>
     </div>
   ) : null;
-}
+};
 
 const OrderItem: React.FC<{
   orderNumber: number;
@@ -129,30 +148,43 @@ const OrderItem: React.FC<{
   totalPrice,
   time,
 }): JSX.Element => {
-    return (
-      <div className="flex px-4 py-2 items-center justify-between shadow-md shadow-list-order rounded-full border-[#b85f00]/15 border-[1px] border-opacity-30">
-        <div className="flex items-center">
-          <p className="text-3xl font-bold text-[#FE860B]">#{orderNumber}</p>
-          <div className="ml-4">
-            <p className="text-sm font-bold md:text-lg">{customerName}</p>
-            <div className="text-xs flex gap-1 md:text-base">
-              <p className="text-[#535353] font-semibold">{menuCount} Menu</p>
-              <p className="text-[#B3A5A5]">|</p>
-              <p className="text-[#535353] font-semibold">Rp{totalPrice}</p>
-            </div>
+  return (
+    <div className="flex px-4 py-2 items-center justify-between shadow-md shadow-list-order rounded-full border-[#b85f00]/15 border-[1px] border-opacity-30">
+      <div className="flex items-center">
+        <p className="text-3xl font-bold text-[#FE860B]">#{orderNumber}</p>
+        <div className="ml-4">
+          <p className="text-sm font-bold md:text-lg">{customerName}</p>
+          <div className="text-xs flex gap-1 md:text-base">
+            <p className="text-[#535353] font-semibold">{menuCount} Menu</p>
+            <p className="text-[#B3A5A5]">|</p>
+            <p className="text-[#535353] font-semibold">Rp{totalPrice}</p>
           </div>
         </div>
-        <div className="bg-[#FF7272] rounded-full text-white text-[10px] md:text-base font-bold px-2 py-2 md:px-4 flex gap-1 relative">
-          <svg className='flex md:mr-2 md:my-auto' width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M7.992 0C3.576 0 0 3.584 0 8C0 12.416 3.576 16 7.992 16C12.416 16 16 12.416 16 8C16 3.584 12.416 0 7.992 0ZM8 14.4C4.464 14.4 1.6 11.536 1.6 8C1.6 4.464 4.464 1.6 8 1.6C11.536 1.6 14.4 4.464 14.4 8C14.4 11.536 11.536 14.4 8 14.4Z" fill="white" />
-            <path d="M8.4002 4H7.2002V8.8L11.4002 11.32L12.0002 10.336L8.4002 8.2V4Z" fill="white" />
-          </svg>
-
-          {time}
-        </div>
       </div>
-    );
-  };
+      <div className="bg-[#FF7272] rounded-full text-white text-[10px] md:text-base font-bold px-2 py-2 md:px-4 flex gap-1 relative">
+        <svg
+          className="flex md:mr-2 md:my-auto"
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M7.992 0C3.576 0 0 3.584 0 8C0 12.416 3.576 16 7.992 16C12.416 16 16 12.416 16 8C16 3.584 12.416 0 7.992 0ZM8 14.4C4.464 14.4 1.6 11.536 1.6 8C1.6 4.464 4.464 1.6 8 1.6C11.536 1.6 14.4 4.464 14.4 8C14.4 11.536 11.536 14.4 8 14.4Z"
+            fill="white"
+          />
+          <path
+            d="M8.4002 4H7.2002V8.8L11.4002 11.32L12.0002 10.336L8.4002 8.2V4Z"
+            fill="white"
+          />
+        </svg>
+
+        {time}
+      </div>
+    </div>
+  );
+};
 
 const orderData = [
   {
@@ -200,9 +232,9 @@ const Merchant: React.FC = () => {
   const [orderTotal, setOrderTotal] = useState<number>(0);
   const [merchantLogo, setMerchantLogo] = useState<string>("");
 
-  let merId = ""
+  const [newOrderData, setNewOrderData] = useState<any[]>([]);
 
-  console.log(user);
+  let merId = "";
 
   useEffect(() => {
     fetch("/api/profile/merchant/merchantInfo", {
@@ -210,46 +242,50 @@ const Merchant: React.FC = () => {
       body: JSON.stringify({
         id: user?.id,
       }),
-    }).then((res) => res.json()).then((data) => {
-      console.log(data);
-      setLogo(data.merchantLogo);
-      setName(data.name);
-      setMerchantId(data.id);
-      setMerchantLogo(data.merchantLogo);
-      merId = data.id;
-    }).then(() => {
-      fetch("/api/order/getOrder", {
-        method: "POST",
-        body: JSON.stringify({
-          id: merId,
-          // id: '641f459cf632f91b866b4807'
-        }),
-      }).then((res) => res.json()).then((data) => {
-        // console.log(data);
-        setOrder(data);
-      })
     })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setLogo(data.merchantLogo);
+        setName(data.name);
+        setMerchantId(data.id);
+        setMerchantLogo(data.merchantLogo);
+        merId = data.id;
+      })
+      .then(() => {
+        fetch("/api/order/getOrder", {
+          method: "POST",
+          body: JSON.stringify({
+            id: merId,
+            // id: '641f459cf632f91b866b4807'
+          }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+            setOrder(data);
+          });
+      });
   }, []);
 
-  // useEffect(() => {
-  //   fetch("/api/order/getOrder", {
-  //     method: "POST",
-  //     body: JSON.stringify({
-  //       id: ,
-  //     }),
-  //   }).then((res) => res.json()).then((data) => {
-  //     console.log(data);
-  //     setOrder(data);
-  //   });
-  // }, [])
+  useEffect(() => {
+    const socket = io();
+    socket.on("newOrder", (data) => {
+      setNewOrderData(data);
+    });
+  }, [merId]);
 
   const logoutHandler = () => {
     signOut();
   };
 
   return (
-    <MerchantLayout location="home">
-      <div className={`fixed w-full min-h-screen bg-white ${detailOpen ? "" : "hidden"}`}>
+    <MerchantLayout location="home" setNewOrderData={setNewOrderData}>
+      <div
+        className={`fixed w-full min-h-screen bg-white ${
+          detailOpen ? "" : "hidden"
+        }`}
+      >
         <div className="w-full min-h-screen">
           <div className="flex mx-4 mt-4 items-center mb-2">
             <div onClick={() => setDetailOpen(false)}>
@@ -317,7 +353,7 @@ const Merchant: React.FC = () => {
               <h2 className="text-xl font-bold">{driverName}</h2>
               <p className="text-sm">{driverPhone}</p>
               <div className="w-16 h-7 bg-c-orange-100 flex items-center justify-center gap-2 rounded-full shadow-[1px_3px_2px_1px_rgb(500,150,0,0.3)]">
-                <Image src={'/images/icons/star.svg'} width={16} height={16}/>
+                <Image src={"/images/icons/star.svg"} width={16} height={16} />
                 <p className="font-semibold">98</p>
               </div>
             </div>
@@ -354,20 +390,22 @@ const Merchant: React.FC = () => {
               <hr className="border-[1.5px] border-[#000000] mb-4" />
               <div className="flex justify-between mb-4 font-extrabold">
                 <p className="">Total</p>
-                <p className="">
-                  Rp {orderTotal}
-                </p>
+                <p className="">Rp {orderTotal}</p>
               </div>
             </div>
           </div>
           <div className="w-full h-28 bg-c-orange-800 px-8 py-3">
             <p className="text-white">Metode Pembayaran</p>
             <div className="w-full h-14 bg-white flex items-center gap-5 rounded-3xl shadow-[2px_3px_10px_2px_rgb(70,70,0,0.4)] px-6">
-                <Image src={'/images/icons/SocketOrange.svg'} width={41} height={31}/>
-                <div className="text-sm">
-                  <p className="font-semibold">Soket</p>
-                  <h3 className="font-extrabold text-c-orange-800">Rp55.750</h3>
-                </div>
+              <Image
+                src={"/images/icons/SocketOrange.svg"}
+                width={41}
+                height={31}
+              />
+              <div className="text-sm">
+                <p className="font-semibold">Soket</p>
+                <h3 className="font-extrabold text-c-orange-800">Rp55.750</h3>
+              </div>
             </div>
           </div>
         </div>
@@ -401,7 +439,7 @@ const Merchant: React.FC = () => {
                   src={"/images/icons/up-arrow.svg"}
                   width={12}
                   height={22}
-                  className=''
+                  className=""
                 ></Image>
                 <div className="text-sm">
                   <p>Pemasukan</p>
@@ -417,63 +455,98 @@ const Merchant: React.FC = () => {
         </div>
         <div className="mt-6">
           <div className="flex justify-between font-bold mb-4">
-            <div className={`cursor-pointer ${(active == 1) ? "text-[#FE8304] border-b-2 border-[#FE8304]" : "text-gray-400"}`} onClick={() => {
-                  setActive(1)
-                }
-              }>
+            <div
+              className={`cursor-pointer ${
+                active == 1
+                  ? "text-[#FE8304] border-b-2 border-[#FE8304]"
+                  : "text-gray-400"
+              }`}
+              onClick={() => {
+                setActive(1);
+              }}
+            >
               All Order
             </div>
-            <div className={`cursor-pointer ${(active == 2) ? "text-[#FE8304] border-b-2 border-[#FE8304]" : "text-gray-400"}`} onClick={() => {
-                  setActive(2)
-                  setStatusOrder('RECEIVED')
-                }
-              }>
+            <div
+              className={`cursor-pointer ${
+                active == 2
+                  ? "text-[#FE8304] border-b-2 border-[#FE8304]"
+                  : "text-gray-400"
+              }`}
+              onClick={() => {
+                setActive(2);
+                setStatusOrder("RECEIVED");
+              }}
+            >
               Received
             </div>
-            <div className={`cursor-pointer ${(active == 3) ? "text-[#FE8304] border-b-2 border-[#FE8304]" : "text-gray-400"}`} onClick={() => {
-                  setActive(3)
-                  setStatusOrder('PROCESSING')
-                }
-              }>
+            <div
+              className={`cursor-pointer ${
+                active == 3
+                  ? "text-[#FE8304] border-b-2 border-[#FE8304]"
+                  : "text-gray-400"
+              }`}
+              onClick={() => {
+                setActive(3);
+                setStatusOrder("PROCESSING");
+              }}
+            >
               Processing
             </div>
-            <div className={`cursor-pointer ${(active == 4) ? "text-[#FE8304] border-b-2 border-[#FE8304]" : "text-gray-400"}`} onClick={() => {
-                  setActive(4)
-                  setStatusOrder('DELIVERY')
-                }
-              }>
+            <div
+              className={`cursor-pointer ${
+                active == 4
+                  ? "text-[#FE8304] border-b-2 border-[#FE8304]"
+                  : "text-gray-400"
+              }`}
+              onClick={() => {
+                setActive(4);
+                setStatusOrder("DELIVERY");
+              }}
+            >
               On Delivery
             </div>
           </div>
           <div className="min-h-[70vh]">
-            {order.length > 0 && order.map((order, i) => {
-              return(
-                <div className={`${(order.status == statusOrder || active == 1) ? "" : "hidden"} flex w-full hover:cursor-pointer hover:scale-[.975] h-[15vw] ${order.status == 'DELIVERY' ? "bg-[url('/Del.png')]" : ""} ${order.status == 'POCESSING' ? "bg-[url('/Pro.png')]" : ""} ${order.status == 'RECEIVED' ? "bg-[url('/Rec.png')]" : ""} bg-contain bg-no-repeat`} onClick={
-                  () => {
-                    setDestination(order.destination);
-                    setUsername(order.user.name);
-                    setCartContent(order.cart.menuItems);
-                    // console.log(order.cart.menuItems);
-                    setDriverName(order.driver.name);
-                    setDriverPhone(order.driver.phoneNumber);
-                    setOrderTotal(parseInt(order.foodFee) + parseInt(order.costFee));
-                    setDetailOpen(true);
-                  }
-                }>
-                  <div className="px-10 flex font-bold text-[#FE8304] h-[10vw] items-center text-2xl">
-                    #{i+1}
-                  </div>
-                  <div className="flex flex-col justify-evenly h-[10vw]">
-                    <div className="font-bold text-lg">
-                      {order.user.name}
+            {order.length > 0 &&
+              order.map((order, i) => {
+                return (
+                  <div
+                    className={`${
+                      order.status == statusOrder || active == 1 ? "" : "hidden"
+                    } flex w-full hover:cursor-pointer hover:scale-[.975] h-[15vw] ${
+                      order.status == "DELIVERY" ? "bg-[url('/Del.png')]" : ""
+                    } ${
+                      order.status == "POCESSING" ? "bg-[url('/Pro.png')]" : ""
+                    } ${
+                      order.status == "RECEIVED" ? "bg-[url('/Rec.png')]" : ""
+                    } bg-contain bg-no-repeat`}
+                    onClick={() => {
+                      setDestination(order.destination);
+                      setUsername(order.user.name);
+                      setCartContent(order.cart.menuItems);
+                      // console.log(order.cart.menuItems);
+                      setDriverName(order.driver.name);
+                      setDriverPhone(order.driver.phoneNumber);
+                      setOrderTotal(
+                        parseInt(order.foodFee) + parseInt(order.costFee)
+                      );
+                      setDetailOpen(true);
+                    }}
+                  >
+                    <div className="px-10 flex font-bold text-[#FE8304] h-[10vw] items-center text-2xl">
+                      #{i + 1}
                     </div>
-                    <div className="font-bold text-gray-400 text-sm">
-                      {order.cart.menuItems.length} Menu | Rp {parseInt(order.foodFee) + parseInt(order.costFee)}
+                    <div className="flex flex-col justify-evenly h-[10vw]">
+                      <div className="font-bold text-lg">{order.user.name}</div>
+                      <div className="font-bold text-gray-400 text-sm">
+                        {order.cart.menuItems.length} Menu | Rp{" "}
+                        {parseInt(order.foodFee) + parseInt(order.costFee)}
+                      </div>
                     </div>
                   </div>
-                </div>
-              )
-            })}
+                );
+              })}
           </div>
           <div className="hidden rounded-full py-1 px-2 h-8 bg-[#FFE0C0] text-[#FE8304] mb-3 font-bold text-center shadow-md text shadow-[0_3px_3px_0.3px_rgb(400,100,0,0.4),inset_0_3px_7px_6px_rgb(500,500,500,0.3)] w-[45%] md:w-[25%]">
             Antrian Pesanan
@@ -513,12 +586,19 @@ const ItemBox: React.FC = ({
   return (
     <div className="flex justify-between mb-2 shadow-card rounded-2xl">
       <div className="h-24 w-24 relative rounded-l-2xl">
-        <Image src={item.menu.image} alt="Phone" fill className="rounded-l-2xl" />
+        <Image
+          src={item.menu.image}
+          alt="Phone"
+          fill
+          className="rounded-l-2xl"
+        />
       </div>
       <div className="flex-1 mx-4 my-2">
         <p className="font-bold mb-2">{item.menu.name}</p>
         <div className="items-center flex justify-between">
-          <p className="font-bold">Rp {parseInt(item.menu.price) * parseInt(item.quantity)}</p>
+          <p className="font-bold">
+            Rp {parseInt(item.menu.price) * parseInt(item.quantity)}
+          </p>
           <div className="flex justify-evenly items-center">
             <h3 className="font-semibold ml-4">x {item.quantity}</h3>
           </div>
@@ -527,7 +607,6 @@ const ItemBox: React.FC = ({
     </div>
   );
 };
-
 
 export default Merchant;
 
