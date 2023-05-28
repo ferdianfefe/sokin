@@ -196,4 +196,5 @@ enum OrderStatus {
   DELIVERY
   PROCESS
   DONE
+  RECEIVED
 }
