@@ -280,17 +280,8 @@ const Merchant: React.FC = () => {
   };
 
   return (
-<<<<<<< HEAD
     <MerchantLayout location="home">
       <div className={`fixed w-full min-h-screen max-h-screen bg-white ${detailOpen ? "" : "hidden"} z-[1000] overflow-scroll`}>
-=======
-    <MerchantLayout location="home" setNewOrderData={setNewOrderData}>
-      <div
-        className={`fixed w-full min-h-screen bg-white ${
-          detailOpen ? "" : "hidden"
-        }`}
-      >
->>>>>>> b37d64277305add03fd68a699fcee5c150c3d027
         <div className="w-full min-h-screen">
           <div className="flex mx-4 mt-4 items-center mb-2">
             <div onClick={() => setDetailOpen(false)}>
