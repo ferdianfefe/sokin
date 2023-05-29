@@ -9,10 +9,12 @@ import DriverLayout from "components/layout/DriverLayout";
 import { useRouter } from "next/router";
 import { getSession, useSession, signOut } from "next-auth/react";
 import MapContainer from "components/elements/MapContainer";
+import TargetHarianProgressBar from "components/elements/TargetHarianProgressBar";
 
 const DriverDashboard = () => {
   const [showPopUp, setShowPopup] = useState(false);
   const [Reservation, setReservation] = useState(false);
+  const [reservationData, setReservationData] = useState(null);
   const [keyword, setKeyword] = useState("");
   const router = useRouter();
   const [isActive, setIsActive] = useState(false);
@@ -36,6 +38,26 @@ const DriverDashboard = () => {
       });
   }, []);
 
+  useEffect(() => {
+    fetch("/api/getOrder", {
+      method: "POST",
+      headers:{
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        driverId: driver.id,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.status === "success") {
+          setReservation(true);
+          setReservationData(data.data);
+        }
+      });
+  }, []);
+
   const toggleSwitch = () => {
     setIsActive(!isActive);
   };
@@ -48,7 +70,7 @@ const DriverDashboard = () => {
     setReservation(!Reservation);
   };
 
-  
+
   const logout = async () => {
     const status = await signOut();
     console.log(status);
@@ -63,8 +85,8 @@ const DriverDashboard = () => {
   // const [licence, setLicenceNumber] = useState<string>('');
   // const [isActive, setIsActive] = useState<boolean>(false);
   // const [dailyTarget, setDailyTarget] = useState<number>(0);
-   const [coordinates, setCoordinates] = useState<number[]>([0, 0]);
-  
+  const [coordinates, setCoordinates] = useState<number[]>([0, 0]);
+
   // useEffect(() => {
   //   fetch("/api/profile/merchant/driverInfo", {
   //     method: "POST",
@@ -88,8 +110,12 @@ const DriverDashboard = () => {
   }
 
 
+  const handleInputChange = (event) => {
+    setKeyword(event.target.value);
+  };
+
   return (
-    <DriverLayout location="home">
+    <DriverLayout location="home" setReservationdata={setReservationData}>
       <div className="p-0 m-0">
         {showPopUp && (
           <PopUpDriver
@@ -217,7 +243,13 @@ const DriverDashboard = () => {
             </span>
           </p>
 
-          <div className="mt-2 w-full h-[76px] bg-slate-200"></div>
+          <div className="mt-4 w-full px-4 h-[72px]">
+            <TargetHarianProgressBar
+              percent={driver.dailyTarget}
+            />
+          </div>
+
+
         </div>
 
         <div className="py-8 flex flex-col px-6 gap-6">
@@ -244,7 +276,7 @@ const DriverDashboard = () => {
                   </p>
                 </div>
               ) : (
-                <OrderReservation />
+                <OrderReservation reservationData={reservationData}/>
               )}
             </div>
           )}
@@ -288,13 +320,15 @@ const DriverDashboard = () => {
               type="text"
               placeholder="Cari lokasi"
               className="pl-10 font-semibold focus:ring-0 rounded-full w-full h-[35px] bg-white border-[1px] border-[#FE8304] drop-shadow-lg"
-            ></input>
+              value={keyword}
+              onChange={handleInputChange}
+            />
             {/* <SearchBar
                   
                   text="Cari lokasi"
                   onValueChangeHandler={(value: any) => setKeyword(value)}
             /> */}
-              
+
             <svg
               className="absolute left-5 top-2 "
               width="13"
@@ -326,12 +360,12 @@ const DriverDashboard = () => {
             </svg>
           </div>
           <div className="flex w-[95%] h-full overflow-hidden bg-slate-200 rounded-[15px] mx-auto">
-              <MapContainer keywordProp={keyword} getCenterHandler={(coordinatesProp) => {setCoordinates(coordinatesProp)}}/>
-          </div>
-          
+        <MapContainer keywordProp={keyword} />
+      </div>
+
           <Button
             text="Berhenti Sementara"
-            onClickHandler={setIsActive }
+            onClickHandler={setIsActive}
           />
           {/* {isActive === true ? (
             <div onClick={toggleSwitch}>
@@ -344,7 +378,7 @@ const DriverDashboard = () => {
           )} */}
         </div>
       </div>
-      <div onClick={logoutHandler}>logout</div>
+      {/* <div onClick={logoutHandler}>logout</div> */}
     </DriverLayout>
   );
 };
@@ -358,7 +392,7 @@ const PopUpDriver = ({
 }) => {
   return (
     <div className="fixed inset-0 flex flex-col justify-center items-center z-50 backdrop-blur-sm ">
-      <div className="bg-white py-10 rounded-[12px] border-[#FE8304]/20 border-[1px] shadow-lg mx-6">
+      <div className="bg-[#fff] py-10 rounded-[12px] border-[#FE8304]/20 border-[1px] shadow-lg mx-6">
         <div className="justify-center flex">
           <h2>
             <span className="text-center text-[20px] font-extrabold">
@@ -545,7 +579,7 @@ type PropsSearch = {
 //         value={value}
 //         onChange={onChangeHandler}
 //        >
-        
+
 //       </div>
 //     )
 // }
@@ -610,7 +644,7 @@ const OrderReservation = () => {
           </div>
         </div>
         <div className="justify-center flex mt-1">
-          <Button text="Detail" size="small" className="w-1/3"/>
+          <Button text="Detail" size="small" className="w-1/3" />
         </div>
       </div>
     </>
@@ -619,8 +653,8 @@ const OrderReservation = () => {
 
 export default DriverDashboard;
 
-export const getServerSideProps = async ({req}:{req: any}) => {
-  const session = await getSession({req});
+export const getServerSideProps = async ({ req }: { req: any }) => {
+  const session = await getSession({ req });
   // console.log(session);
   if (!session) {
     return {

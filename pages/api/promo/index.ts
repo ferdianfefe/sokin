@@ -18,17 +18,16 @@ export default async function handle(
 ) {
   if (req.method === "GET") {
     const promo = await prisma.promo.findMany();
-    console.log(promo);
     return res.status(200).json(promo);
   }
   if (req.method === "POST") {
-    const { promoType, title, discPercentage, discValue, minOrder, maxDisc } = req.body as PromoCreateRequestBody;
+    const { promoType, title, discPercentage, discValue, minOrder, maxDisc } =
+      req.body as PromoCreateRequestBody;
     const newPromo = await prisma.promo.create({
-        data: { promoType, title, discPercentage, discValue, minOrder, maxDisc },
+      data: { promoType, title, discPercentage, discValue, minOrder, maxDisc },
     });
     return res.status(201).json(newPromo);
-
-  }  
+  }
   if (req.method == "DELETE") {
     const { id } = JSON.parse(req.body);
     const deletePromo = await prisma.promo.delete({

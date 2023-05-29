@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import io from "socket.io-client";
-let socket = io("/api/socket");
+import { NextApiResponseServerIO } from "types/next";
 
 type OrderCreateRequestBody = {
   id: string;
@@ -30,13 +30,15 @@ type UpdateOrderData = {
 const prisma = new PrismaClient();
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponseServerIO
 ) {
   /*if (req.method === "GET") {
     const order = await prisma.order.findMany();
     console.log(order);
     return res.status(200).json(order);
   }*/
+  let socket = io("/api/socket");
+
   if (req.method === "GET") {
     const order = await prisma.order.findMany({
       include: {
@@ -71,7 +73,6 @@ export default async function handle(
       },
     });
 
-    console.log(order);
     return res.status(200).json(order);
   }
 
@@ -90,6 +91,7 @@ export default async function handle(
       foodFee,
       costFee,
     } = req.body as OrderCreateRequestBody;
+
     const newOrder = await prisma.order.create({
       data: {
         driverId,
@@ -105,37 +107,86 @@ export default async function handle(
         foodFee,
         costFee,
       },
+      include: {
+        user: {
+          select: {
+            name: true,
+          },
+        },
+        cart: {
+          include: {
+            menuItems: {
+              include: {
+                menu: {
+                  select: {
+                    name: true,
+                    price: true,
+                    image: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     });
+
     console.log("success creating order");
 
-    socket.emit("newOrder", newOrder);
+    res?.socket?.server?.io?.emit("newOrder", newOrder);
 
     return res.status(201).json(newOrder);
-  } /*else if (req.method === 'PUT') {
+  } else if (req.method === "PUT") {
     try {
-      const { orderId, isAccepted, isCompleted } = req.body;
+      const { orderId, isAccepted, isCompleted, status } = req.body;
+      console.log(orderId, isAccepted, isCompleted, status)
 
-      const dataToUpdate: UpdateOrderData = {};
 
       if (status !== undefined) {
-        dataToUpdate['status'] = status;
+        dataToUpdate["status"] = status;
       }
 
       if (isAccepted !== undefined) {
-        dataToUpdate['isAccepted'] = isAccepted;
+        dataToUpdate["isAccepted"] = isAccepted;
       }
 
       if (isCompleted !== undefined) {
-        dataToUpdate['isCompleted'] = isCompleted;
+        dataToUpdate["isCompleted"] = isCompleted;
       }
 
-      const order: Order | null = await prisma.order.update({
+      const order: any | null = await prisma.order.update({
         where: { id: orderId },
         data: dataToUpdate,
+        include: {
+          user: {
+            select: {
+              name: true,
+            },
+          },
+          cart: {
+            include: {
+              menuItems: {
+                include: {
+                  menu: {
+                    select: {
+                      name: true,
+                      price: true,
+                      image: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       });
 
-      res.status(200).json(order);
+      res?.socket?.server?.io?.emit("updateOrder", order);
+
+      return res.status(200).json(order);
     } catch (error) {
-      res.status(500).json({ message: 'Internal Server Error' });
-    } */
+      console.log(error);
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
 }

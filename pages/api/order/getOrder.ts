@@ -38,14 +38,22 @@ export default async function handle(
     return res.status(200).json(order);
   }*/
   if (req.method === "POST") {
-    const { id } = JSON.parse(req.body)
-
-    console.log(id);
-
+    const { id = undefined, driverId = undefined } = JSON.parse(req.body);
+    // find many where merchantId = id or driverId = id
     const order = await prisma.order.findMany({
-        where: {
-            merchantId: id
-        },
+      where: {
+        OR: [
+          {
+            merchantId: id,
+          },
+          {
+            driverId,
+          },
+        ],
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
       include: {
         driver: {
           select: {
@@ -78,7 +86,6 @@ export default async function handle(
       },
     });
 
-    console.log(order);
     return res.status(200).json(order);
   }
 }

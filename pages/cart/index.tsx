@@ -17,7 +17,6 @@ type CartContentProps = {
 const Cart: React.FC = (): JSX.Element => {
   const [cartContent, setCartContent] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-
   const { data: session, status } = useSession();
   const user = session?.user;
   const router = useRouter();
@@ -39,8 +38,9 @@ const Cart: React.FC = (): JSX.Element => {
       )
         .then((res) => res.json())
         .then((data) => {
+          console.log(data)
           setIsLoading(false);
-          setCartContent(data.menuItems);
+          setCartContent(data);
         });
     }
   }, [user]);
@@ -68,18 +68,18 @@ const Cart: React.FC = (): JSX.Element => {
 
   return (
     <DefaultLayout location="cart" isLoading={isLoading}>
-      {cartContent?.length > 0 ? (
+      {cartContent?.menuItems.length > 0 ? (
         <div className="px-6 flex flex-col justify-between min-h-screen">
           <div className="">
             <div className="flex items-center mb-4  pt-6">
               <div className="h-6 w-6 relative">
-                <Link href={"/pesan"}>
+                <div onClick={() => router.back()}>
                   <Image
                     src="/images/icons/left-arrow.svg"
                     alt="Left arrow"
                     fill
                   />
-                </Link>
+                </div>
               </div>
               <h1 className="text-2xl font-semibold text-neutral-700 ml-4">
                 Keranjang Saya
@@ -87,8 +87,8 @@ const Cart: React.FC = (): JSX.Element => {
             </div>
             <div className="">
               <div className="flex justify-between items-center mb-2">
-                <p className="font-bold text-2xl">
-                  {cartContent[0].restaurantName}
+                <p className="font-semibold text-2xl">
+                  {cartContent.merchant.name}
                 </p>
                 <div className="bg-c-orange-800 flex items-center justify-center w-8 h-8 rounded-full">
                   <div
@@ -103,7 +103,7 @@ const Cart: React.FC = (): JSX.Element => {
                   </div>
                 </div>
               </div>
-              {cartContent.map((item, index) => (
+              {cartContent.menuItems.map((item, index) => (
                 <ItemBox
                   item={item}
                   key={index}
@@ -119,7 +119,7 @@ const Cart: React.FC = (): JSX.Element => {
               <p className="">Total : </p>
               <p className="text-c-orange-700">
                 Rp{" "}
-                {cartContent.reduce(
+                {cartContent.menuItems.reduce(
                   (total, item) => total + item.menu.price * item.quantity,
                   0
                 )}
@@ -129,7 +129,7 @@ const Cart: React.FC = (): JSX.Element => {
           <div className="mb-10">
             <div
               onClick={() => {
-                let totalHarga = cartContent.reduce(
+                let totalHarga = cartContent.menuItems.reduce(
                   (total, item) => total + item.menu.price * item.quantity,
                   0
                 );
@@ -143,7 +143,7 @@ const Cart: React.FC = (): JSX.Element => {
       ) : (
         <div className="h-screen relative px-6">
           <div className="flex items-center mb-4 pt-6">
-            <Link href={"/pesan"}>
+            <div onClick={() => router.back()}>
               <div className="h-6 w-6 relative">
                 <Image
                   src="/images/icons/left-arrow.svg"
@@ -151,7 +151,7 @@ const Cart: React.FC = (): JSX.Element => {
                   fill
                 />
               </div>
-            </Link>
+            </div>
             <h1 className="text-2xl text-neutral-700 font-semibold ml-4">
               Keranjang Saya
             </h1>
