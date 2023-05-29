@@ -36,8 +36,8 @@ export default function Pesan() {
     })
   }
   return (
-    <DefaultLayout location="pesan">
-      <div className="fixed p-4 bottom-20 right-6 bg-c-orange-800 rounded-full shadow-2xl shadow-neutral-900">
+    <DefaultLayout location="pesan" notif={true} notifText="Menu berhasil ditambahkan">
+      <div className="fixed p-4 bottom-20 right-6 bg-c-orange-800 rounded-full shadow-2xl shadow-neutral-900 z-40">
         {/* <div className="w-6 h-6 absolute bg-c-red-700 -left-[10%] -top-[10%] rounded-full text-neutral-50 flex justify-center items-center">
           <small className="text-xs">{cartItemNumber}</small>
         </div> */}

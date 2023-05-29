@@ -1,17 +1,16 @@
 import React from 'react'
 import Button from 'components/elements/Button'
 import Navbar from 'components/elements/Navbar'
+import DefaultLayout from 'components/layout/DefaultLayout'
+import PopupNotif from 'components/elements/PopupNotif'
 
 export default function TestComponents() {
   return (
     <>
-      <div className='grid-flow-row max-w-sm align-middle'>
-        <Button text='Button' type='secondary' size='small'/>
-        <Button text='Masuk' size='big'/>
-      </div>
-      <div className='mt-2'>
-        <Navbar location='pesan'/>
-      </div>
+      <DefaultLayout location='home'>
+        <div className='min-h-screen'>
+        </div>
+      </DefaultLayout>
     </>
   )
 }
