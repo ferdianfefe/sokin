@@ -10,7 +10,7 @@ type Props = {
 
 const Navbar: React.FC<Props> = ({ location, role, className }: Props) => {
   return (
-    <div className={`sticky z-20 bottom-0 bg-white w-full ${className}`}>
+    <div className={`sticky z-50 bottom-0 bg-white w-full ${className}`}>
       <div className="flex w-auto h-[65px] shadow-[0_-1px_2px_0.1px_rgb(0,0,0,0.2)] justify-evenly p-3 rounded-t-2xl">
         <Link
           href={`${

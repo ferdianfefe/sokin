@@ -1,6 +1,8 @@
 // Create a layout with navbar
 import Navbar from "components/elements/Navbar";
+import PopupNotif from "components/elements/PopupNotif";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 //import loading spinner
 
 const DefaultLayout: React.FC<{
@@ -8,8 +10,22 @@ const DefaultLayout: React.FC<{
   location: string;
   className?: string;
   isLoading?: boolean;
-}> = ({ children, location, className, isLoading = false }): JSX.Element => {
+  notif: boolean;
+  notifText: string;
+  notifType: string;
+}> = ({ children, location, className, isLoading = false, notif = false, notifText, notifType = "success" }): JSX.Element => {
   const onAddMenu = () => {};
+  const [showNotif, setShowNotif] = useState(notif);
+
+  useEffect(() => {
+    if (showNotif) {
+      const timer = setTimeout(() => {
+        setShowNotif(false);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [showNotif]);
 
   return (
     <div className={`${className} relative min-h-screen`}>
@@ -38,7 +54,13 @@ const DefaultLayout: React.FC<{
       ) : (
         children
       )}
-
+  
+      <div className={`transform fixed left-4 rounded-xl bottom-0 h-8 w-60 shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_7px_6px_rgb(500,500,500,0.2)] flex items-center px-3
+        ${notifType === "success" ? "bg-c-green-700" : "bg-c-red-700"}
+        ${showNotif ? "-translate-y-20 transition-transform duration-300" : "-translate-y-0 transition-transform duration-300"}`}>
+        <Image src={'/images/icons/Notif.svg'} width={14} height={18} alt="check" />
+        <h3 className="ml-3 text-white font-semibold text-center text-sm">{notifText}</h3>
+      </div>
       <Navbar location={location} role="customer" />
     </div>
   );
