@@ -8,7 +8,11 @@ const DriverLayout: React.FC<{
   children: any;
   location: string;
   setReservationData: Function;
-}> = ({ children, location, setReservationData = () => {} }): JSX.Element => {
+  togglePopup: Function;
+}> = (
+  { children, location, setReservationData = () => {} },
+  togglePopUp = () => {}
+): JSX.Element => {
   const [newOrder, setNewOrder] = React.useState(null);
 
   useEffect(() => {
@@ -30,6 +34,7 @@ const DriverLayout: React.FC<{
 
     socket.on("updateOrder", (newOrderData) => {
       console.log(newOrderData);
+      togglePopUp();
       setNewOrder(newOrderData);
       setReservationData(newOrderData);
     });
