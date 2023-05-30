@@ -38,18 +38,13 @@ export default async function handle(
     return res.status(200).json(order);
   }*/
   if (req.method === "POST") {
-    const { id = undefined, driverId = undefined } = JSON.parse(req.body);
+    const { id = undefined, driverId = undefined } =
+      req.body as OrderCreateRequestBody;
+    console.log("id", id)
     // find many where merchantId = id or driverId = id
     const order = await prisma.order.findMany({
       where: {
-        OR: [
-          {
-            merchantId: id,
-          },
-          {
-            driverId,
-          },
-        ],
+        OR: id ? [{merchantId: id}] : [{driverId: driverId}],
       },
       orderBy: {
         createdAt: "desc",

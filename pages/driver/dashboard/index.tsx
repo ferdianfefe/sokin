@@ -20,35 +20,21 @@ const DriverDashboard = () => {
   const [isActive, setIsActive] = useState(false);
   const { data: session, status } = useSession();
   const driver = session?.user;
-  console.log(driver);
 
   useEffect(() => {
-    fetch(`/api/profile/driver?id=${driver.id}`, {
-      method: "GET",
+    fetch("/api/order/getOrder", {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
-      }
+      },
+      body: JSON.stringify({
+        driverId: driver?.id,
+      }),
     })
       .then((res) => {
         console.log(res);
         return res.json();
       })
-      .then((data) => {
-        console.log(data);
-      });
-  }, []);
-
-  useEffect(() => {
-    fetch("/api/getOrder", {
-      method: "POST",
-      headers:{
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        driverId: driver.id,
-      }),
-    })
-      .then((res) => res.json())
       .then((data) => {
         console.log(data);
         if (data.status === "success") {
@@ -70,52 +56,23 @@ const DriverDashboard = () => {
     setReservation(!Reservation);
   };
 
-
   const logout = async () => {
     const status = await signOut();
     console.log(status);
-  }
+  };
 
-  // const { data: session, status } = useSession();
-  // const user = session?.user;
-  // console.log(session?.user)
-  // const [name, setName] = useState<string>("");
-  // const [vehicle, setVehicle] = useState<string>("");
-  // const [balance, setBalance] = useState<Float32Array>();
-  // const [licence, setLicenceNumber] = useState<string>('');
-  // const [isActive, setIsActive] = useState<boolean>(false);
-  // const [dailyTarget, setDailyTarget] = useState<number>(0);
   const [coordinates, setCoordinates] = useState<number[]>([0, 0]);
-
-  // useEffect(() => {
-  //   fetch("/api/profile/merchant/driverInfo", {
-  //     method: "POST",
-  //     body: JSON.stringify({
-  //       id: user?.id,
-  //     }),
-  //   }).then((res) => res.json()).then((data) => {
-  //     console.log(data);
-  //     // setLogo(data.merchantLogo);
-  //     setName(data.name);
-  //     setVehicle(data.vehicle);
-  //     setBalance(data.balance);
-  //     setLicenceNumber(data.licence);
-  //     setIsActive(data.isActive);
-  //     setDailyTarget(data.dailyTarget);
-  //   });
-  // }, []);
 
   const logoutHandler = () => {
     signOut();
-  }
-
+  };
 
   const handleInputChange = (event) => {
     setKeyword(event.target.value);
   };
 
   return (
-    <DriverLayout location="home" setReservationdata={setReservationData}>
+    <DriverLayout location="home" setReservationdata={setReservationData} togglePopUp={togglePopup}>
       <div className="p-0 m-0">
         {showPopUp && (
           <PopUpDriver
@@ -134,7 +91,7 @@ const DriverDashboard = () => {
           />
           <div>
             <h2 className="font-extrabold">{driver?.name}</h2>
-            <p className="font-semibold text-sm">{driver.phoneNumber}</p>
+            <p className="font-semibold text-sm">{driver?.phoneNumber}</p>
           </div>
           <div className="bg-white rounded-lg p-1 w-[15%] h-[42px] flex-col justify-center items-center ml-2">
             <div className="flex justify-center">
@@ -158,7 +115,9 @@ const DriverDashboard = () => {
               />
               <p className="text-xs ml-1">Target Harian</p>
             </div>
-            <h3 className="font-semibold text-center">{driver.dailyTarget}%</h3>
+            <h3 className="font-semibold text-center">
+              {driver?.dailyTarget}%
+            </h3>
           </div>
         </div>
 
@@ -244,12 +203,8 @@ const DriverDashboard = () => {
           </p>
 
           <div className="mt-4 w-full px-4 h-[72px]">
-            <TargetHarianProgressBar
-              percent={driver.dailyTarget}
-            />
+            <TargetHarianProgressBar percent={driver.dailyTarget} />
           </div>
-
-
         </div>
 
         <div className="py-8 flex flex-col px-6 gap-6">
@@ -276,7 +231,7 @@ const DriverDashboard = () => {
                   </p>
                 </div>
               ) : (
-                <OrderReservation reservationData={reservationData}/>
+                <OrderReservation reservationData={reservationData} />
               )}
             </div>
           )}
@@ -360,13 +315,10 @@ const DriverDashboard = () => {
             </svg>
           </div>
           <div className="flex w-[95%] h-full overflow-hidden bg-slate-200 rounded-[15px] mx-auto">
-        <MapContainer keywordProp={keyword} />
-      </div>
+            <MapContainer keywordProp={keyword} />
+          </div>
 
-          <Button
-            text="Berhenti Sementara"
-            onClickHandler={setIsActive}
-          />
+          <Button text="Berhenti Sementara" onClickHandler={setIsActive} />
           {/* {isActive === true ? (
             <div onClick={toggleSwitch}>
               <Button type="primary" text="Selesai Bekerja" />
@@ -556,7 +508,7 @@ const PopUpDriver = ({
 type PropsSearch = {
   onValueChangeHandler?: Function;
   defaultValue?: string;
-}
+};
 
 // const SearchBar: React.FC<PropsSearch> =({
 //     onValueChangeHandler,
@@ -666,5 +618,5 @@ export const getServerSideProps = async ({ req }: { req: any }) => {
   }
   return {
     props: { session },
-  }
-}
+  };
+};

@@ -139,8 +139,9 @@ export default async function handle(
   } else if (req.method === "PUT") {
     try {
       const { orderId, isAccepted, isCompleted, status } = req.body;
-      console.log(orderId, isAccepted, isCompleted, status)
+      console.log(orderId, isAccepted, isCompleted, status);
 
+      let dataToUpdate: UpdateOrderData = {};
 
       if (status !== undefined) {
         dataToUpdate["status"] = status;
@@ -180,7 +181,7 @@ export default async function handle(
           },
         },
       });
-
+      console.log("success updating order");
       res?.socket?.server?.io?.emit("updateOrder", order);
 
       return res.status(200).json(order);
