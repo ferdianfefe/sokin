@@ -14,7 +14,7 @@ interface TargetHarianProgressBarProps {
         
         <div className='h-full'>
 
-            <ProgressBar
+            {/* <ProgressBar
                 filledBackground='#FE8304'
                 unfilledBackground='#FFF0E0'
                 height='37px'
@@ -135,7 +135,7 @@ interface TargetHarianProgressBarProps {
                 
 
 
-            </ProgressBar>
+            </ProgressBar> */}
         </div>
     )
 }

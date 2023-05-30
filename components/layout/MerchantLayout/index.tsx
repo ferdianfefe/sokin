@@ -66,6 +66,7 @@ const MerchantLayout: React.FC<{
       return item;
     });
 
+    console.log(newOrderData);
     setOrder(newOrderData);
   };
 

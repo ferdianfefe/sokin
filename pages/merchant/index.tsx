@@ -11,30 +11,6 @@ import Navbar from "components/elements/Navbar";
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
-// const PopUpOrderMerchant: React.FC<{
-//   orderNumber: number;
-//   customerName: string;
-//   menuName: string;
-//   image:String;
-//   menuCount: number;
-//   totalPrice: number;
-//   customerRate: number;
-// }> = ({
-//   orderNumber,
-//   customerName,
-//   menuName,
-//   image,
-//   menuCount,
-//   totalPrice,
-//   customerRate,
-// }): JSX.Element => {
-//   return(
-//     <div>
-
-//     </div>
-//   )
-// }
-
 const PopUpOrderMerchant: React.FC<{
   orderNumber?: number;
   customerName?: string;
@@ -245,7 +221,6 @@ const Merchant: React.FC = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         setLogo(data.merchantLogo);
         setName(data.name);
         setMerchantId(data.id);
@@ -255,9 +230,11 @@ const Merchant: React.FC = () => {
       .then(() => {
         fetch("/api/order/getOrder", {
           method: "POST",
+          headers:{
+            "Content-Type": "application/json"
+          },
           body: JSON.stringify({
             id: merId,
-            // id: '641f459cf632f91b866b4807'
           }),
         })
           .then((res) => res.json())
@@ -271,6 +248,7 @@ const Merchant: React.FC = () => {
   useEffect(() => {
     const socket = io();
     socket.on("newOrder", (data) => {
+      console.log("newOrder", data)
       setNewOrderData(data);
       let newOrders = [...order];
       newOrders.push(data);
@@ -532,8 +510,8 @@ const Merchant: React.FC = () => {
                     onClick={() => {
                       setDestination(order.destination);
                       setUsername(order.user.name);
+                      console.log("order", order)
                       setCartContent(order.cart.menuItems);
-                      // console.log(order.cart.menuItems);
                       setDriverName(order.driver.name);
                       setDriverPhone(order.driver.phoneNumber);
                       setOrderTotal(
@@ -548,7 +526,7 @@ const Merchant: React.FC = () => {
                     <div className="flex flex-col justify-evenly h-[10vw]">
                       <div className="font-bold text-lg">{order.user.name}</div>
                       <div className="font-bold text-gray-400 text-sm">
-                        {order.cart.menuItems.length} Menu | Rp{" "}
+                        {order?.cart?.menuItems.length} Menu | Rp{" "}
                         {parseInt(order.foodFee) + parseInt(order.costFee)}
                       </div>
                     </div>
