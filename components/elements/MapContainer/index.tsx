@@ -61,7 +61,7 @@ const MapContainer: React.FC<MapContainerProps> = ({
 
   return (
     <div className="relative">
-      <div ref={mapContainer} className="h-[400px] w-[400px]" />
+      <div ref={mapContainer} className="h-[430px] w-full" />
     </div>
   );
 };
