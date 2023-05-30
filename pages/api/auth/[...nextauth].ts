@@ -82,15 +82,15 @@ export default NextAuth({
           throw new Error("No driver found")
         }
 
-        if (!credentials?.password || !driver.password) {
-          throw new Error("An error occurred")
-        }
+        // if (!credentials?.password || !driver.password) {
+        //   throw new Error("An error occurred")
+        // }
 
-        const passwordMatch = await bcrypt.compare(credentials.password, driver.password)
+        // const passwordMatch = await bcrypt.compare(credentials.password, driver.password)
 
-        if (!passwordMatch) {
-          throw new Error("Password is incorrect")
-        }
+        // if (!passwordMatch) {
+        //   throw new Error("Password is incorrect")
+        // }
         return driver;
       }
     })

@@ -268,7 +268,7 @@ const Merchant: React.FC = () => {
       setOrder={setOrder}
     >
       <div
-        className={`fixed w-full min-h-screen bg-white ${
+        className={`fixed z-[1000] max-h-screen w-screen overflow-scroll min-h-screen bg-white ${
           detailOpen ? "" : "hidden"
         }`}
       >
