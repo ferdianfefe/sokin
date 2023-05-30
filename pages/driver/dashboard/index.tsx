@@ -44,6 +44,26 @@ const DriverDashboard = () => {
       });
   }, []);
 
+  useEffect(() => {
+    fetch("/api/getOrder", {
+      method: "POST",
+      headers:{
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        driverId: driver.id,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.status === "success") {
+          setReservation(true);
+          setReservationData(data.data);
+        }
+      });
+  }, []);
+
   const toggleSwitch = () => {
     setIsActive(!isActive);
   };

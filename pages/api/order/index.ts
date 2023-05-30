@@ -184,6 +184,8 @@ export default async function handle(
       console.log("success updating order");
       res?.socket?.server?.io?.emit("updateOrder", order);
 
+      res?.socket?.server?.io?.emit("updateOrder", order);
+
       return res.status(200).json(order);
     } catch (error) {
       console.log(error);

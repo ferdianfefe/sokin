@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, use } from "react";
 import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
 
 mapboxgl.accessToken =
@@ -7,13 +7,16 @@ mapboxgl.accessToken =
 interface MapContainerProps {
   children?: React.ReactNode;
   keywordProp?: string;
+  onSearch?: (keyword: string) => void;
   getCenterHandler?: (center: number[]) => void;
+  setMapCoordinates?: (coordinates: string) => void;
 }
 
 const MapContainer: React.FC<MapContainerProps> = ({
   children,
   keywordProp = "",
   getCenterHandler = () => {},
+  setMapCoordinates = () => {},
 }) => {
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -33,6 +36,7 @@ const MapContainer: React.FC<MapContainerProps> = ({
       console.log(data);
       setLng(data.features[0].center[0]);
       setLat(data.features[0].center[1]);
+      setMapCoordinates(`${lng},${lat}`);
       map.current?.jumpTo({
         center: [data.features[0].center[0], data.features[0].center[1]],
         zoom: 15,

@@ -28,15 +28,18 @@ interface Promo {
 
 const Checkout: React.FC = (): JSX.Element => {
   const router = useRouter();
-
+  const [isLoading, setIsLoading] = useState(true);
   const [cartContent, setCartContent] = useState<CartContentProps[]>([]);
-  const [merchantId, setMerchantId] = useState<string>("")
+  const [merchantId, setMerchantId, ] = useState<string>("")
+  const [merchantName, setMerchantName] = useState<string>("");
+  const [merchantAddress, setMerchantAddress] = useState<string>("");
   const [cartId, setCartId] = useState<string>("");
   const { data: session, status } = useSession();
   const user = session?.user;
 
   useEffect(() => {
     if (user) {
+      setIsLoading(true);
       fetch(
         "/api/cart?" +
           new URLSearchParams({
@@ -51,18 +54,21 @@ const Checkout: React.FC = (): JSX.Element => {
       )
         .then((res) => res.json())
         .then((data) => {
-          console.log(data.menuItems);
+          console.log(data);
+          setIsLoading(false);
           setCartContent(data.menuItems);
           setCartId(data.id);
-          setMerchantId(data.merchantId)
+          setMerchantName(data.merchant.name);
+          setMerchantAddress(data.merchant.address);
+          setMerchantId(data.merchantId);
         });
     }
   }, [user]);
 
   const [promo, setPromo] = useState<Promo[]>([]);
   const [orderInformation, setOrderInformation] = useState({
-    restaurantName: "McDonalds",
-    address: "Jl. Raya Bogor KM 30",
+    restaurantName: merchantName,
+    address: merchantAddress,
     deliveryFee: 5000,
     deliveryTime: 30,
   });
@@ -93,6 +99,8 @@ const Checkout: React.FC = (): JSX.Element => {
         setPromo(data);
       });
   }, []);
+
+  const place = sessionStorage.getItem("place") || "";
 
   const showPromo = () => {
     setShow(true);
@@ -153,7 +161,7 @@ const Checkout: React.FC = (): JSX.Element => {
   };
 
   return (
-    <DefaultLayout location="pesan" className="z-30">
+    <DefaultLayout location="pesan" isLoading={isLoading} className="z-30">
       {isSuccessful && <Success />}
       {show && (
         <div className="w-full min-h-full z-10 bg-[#FFFFFF] fixed">
@@ -231,7 +239,7 @@ const Checkout: React.FC = (): JSX.Element => {
             </h1>
           </div>
           <p className="text-2xl font-bold mb-3">
-            {orderInformation.restaurantName}
+            {merchantName}
           </p>
           <div className="flex mb-3 justify-between">
             <div className="flex items-center">
@@ -243,7 +251,7 @@ const Checkout: React.FC = (): JSX.Element => {
               />
               <div className="ml-2">
                 <small>Diantar ke</small>
-                <p className="font-bold text-lg">{orderInformation.address}</p>
+                <p className="font-bold text-lg">{place}</p>
               </div>
             </div>
             <div className="rounded-full flex p-2 bg-c-orange-200 shadow-[0_3px_3px_0.1px_rgb(400,100,0,0.3),inset_0_3px_6px_10px_rgb(500,500,500,0.4)]">
@@ -397,7 +405,7 @@ const ItemBox: React.FC = ({
         />
       </div>
       <div className="flex-1 mx-4 my-2">
-        <p className="font-bold mb-2">{item.name}</p>
+        <p className="font-bold mb-2">{item.menu.name}</p>
         <div className="items-center flex justify-between">
           <p className="font-bold">Rp {item.menu.price * item.quantity}</p>
           <div className="flex justify-evenly items-center">
@@ -430,7 +438,6 @@ const PaymentPopup: React.FC = ({
   const user = session?.user;
   const [saldo, setSaldo] = useState(0);
   const [balance, setBalance] = useState(0);
-
   const router = useRouter();
 
   useEffect(() => {
@@ -591,7 +598,7 @@ const PopUpOpsi = ({
               <p className="text-sm">
                 saldo:{" "}
                 <span className="text-c-orange-700 font-semibold">
-                  {user.balance}
+                  {balance}
                 </span>
               </p>
             </div>
