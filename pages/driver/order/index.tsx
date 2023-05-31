@@ -4,6 +4,7 @@ import MapContainer from "components/elements/MapContainer";
 import Draggable from "react-draggable";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "components/elements/Button";
+import { useRouter } from "next/router";
 
 type CartContentProps = {
   restaurantName: String;
@@ -15,9 +16,13 @@ type CartContentProps = {
 
 const Order = () => {
   const [statusOrder, setStatusOrder] = useState("Sedang menuju ke Restoran");
+  
+  const router = useRouter();
+
+  console.log(router.query.data);
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen max-h-screen overflow-hidden border-black border-2">
       <div className="h-25 w-full my-5 px-5">
         <div className="flex items-center">
           <Image
@@ -53,7 +58,9 @@ const Order = () => {
       <div className="">
         <Drag />
       </div>
-      <Button text="Pesanan Diambil" className="relative z-50" />
+      <div className="absolute bottom-0 z-50 w-screen p-5">
+        <Button text="Pesanan Diambil" />
+      </div>
     </div>
   );
 };
@@ -116,7 +123,7 @@ const Drag = () => {
                   onDrag={handleLoremDrag}
                   bounds={{ top: 0, bottom: 0 }}
                 >
-                  <div>
+                  <div className="">
                     <div className="p-4">
                       <div className="flex items-center justify-center">
                         <Image

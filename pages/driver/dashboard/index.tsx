@@ -558,6 +558,8 @@ const OrderReservation = (reservationData: any) => {
   const starth = new Date(reservationData.reservationData.createdAt).getHours();
   const startm = new Date(reservationData.reservationData.createdAt).getMinutes();
   const time = parseInt(reservationData.reservationData.eta)
+
+  const router = useRouter();
   return (
     <>
       <div className="w-full h-60 border-[1px] border-c-orange-200 rounded-2xl mt-3">
@@ -616,7 +618,14 @@ const OrderReservation = (reservationData: any) => {
             <h3 className="mt-9 font-bold text-gray-500">{(time+startm > 59) ? starth+1 : starth}:{((time+startm > 59) ? (startm+time)%59 : startm).toString().padStart(2, "0")}</h3>
           </div>
         </div>
-        <div className="justify-center flex mt-1">
+        <div className="justify-center flex mt-1" onClick={
+          () => {
+            router.push({
+                pathname: '/driver/order',
+                query: { data: JSON.stringify(reservationData.reservationData)}
+            })
+          }
+        }>
           <Button text="Detail" size="small" className="w-1/3" />
         </div>
       </div>
