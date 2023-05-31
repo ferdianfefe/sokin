@@ -1,10 +1,11 @@
 import Image from "next/image";
-import { useState } from "react";
+import { JSXElementConstructor, useState } from "react";
 import MapContainer from "components/elements/MapContainer";
 import Draggable from "react-draggable";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "components/elements/Button";
 import { useRouter } from "next/router";
+import { OrderStatus } from "@prisma/client";
 
 type CartContentProps = {
   restaurantName: String;
@@ -15,14 +16,26 @@ type CartContentProps = {
 };
 
 const Order = () => {
-  const [statusOrder, setStatusOrder] = useState("Sedang menuju ke Restoran");
-  
+  const [statusOrder, setStatusOrder] = useState(1);
+  const [showNotif, setShowNotif] = useState(false);
+
+  const toggleNotif = () => {
+    setShowNotif(!showNotif);
+  };
+
+  const continueOrder = () => {
+    setStatusOrder(statusOrder + 1);
+  };
+
   const router = useRouter();
 
-  console.log(router.query.data);
+  const data = JSON.parse(router.query.data)
+
+  console.log(data);
 
   return (
-    <div className="relative min-h-screen max-h-screen overflow-hidden border-black border-2">
+    <div className="relative min-h-screen max-h-screen overflow-scroll border-black border-2">
+      {showNotif && <Notif order={statusOrder} toggleNotif={toggleNotif} continueOrder={continueOrder} />}
       <div className="h-25 w-full my-5 px-5">
         <div className="flex items-center">
           <Image
@@ -31,9 +44,19 @@ const Order = () => {
             width={26}
             height={26}
           />
-          <h2 className="text-3xl font-semibold text-gray-600 ml-5">
-            {statusOrder}
-          </h2>
+          {statusOrder === 1 ? (
+            <h2 className="text-3xl font-semibold text-gray-600 ml-5">
+              Sedang menuju ke Restoran
+            </h2>
+          ) : statusOrder === 2 ? (
+            <h2 className="text-3xl font-semibold text-gray-600 ml-5">
+              Sedang mengantar pesanan
+            </h2>
+          ) : (
+            <h2 className="text-3xl font-semibold text-gray-600 ml-5">
+              Pesanan diantar
+            </h2>
+          )}
         </div>
         <div className="flex my-5 mx-1 justify-between">
           <Image
@@ -44,11 +67,11 @@ const Order = () => {
           />
           <div>
             <p className="text-base font-semibold text-gray-700">Tempat</p>
-            <h3 className="text-lg font-bold">McDonalds cabang Kaliurang</h3>
+            <h3 className="text-lg font-bold">{data.source}</h3>
           </div>
           <div>
             <p className="text-base font-semibold">Estimasi</p>
-            <h3 className="text-lg text-gray-500 font-semibold">20 mnt</h3>
+            <h3 className="text-lg text-gray-500 font-semibold">{data.eta} mnt</h3>
           </div>
         </div>
       </div>
@@ -56,10 +79,19 @@ const Order = () => {
         <MapContainer />
       </div>
       <div className="">
-        <Drag />
+        <Drag order={statusOrder} data={data}/>
       </div>
-      <div className="absolute bottom-0 z-50 w-screen p-5">
+      <div
+        className="absolute bottom-0 z-50 w-screen p-5"
+        onClick={toggleNotif}
+      >
+        {statusOrder === 1 ? (
         <Button text="Pesanan Diambil" />
+        ) : statusOrder === 2 ? (
+        <Button text="Pesanan Diantar" />
+        ) : (
+        <Button text="Selesai" />
+        )}
       </div>
     </div>
   );
@@ -67,7 +99,8 @@ const Order = () => {
 
 export default Order;
 
-const Drag = () => {
+const Drag: React.FC = ({ order, data }: { order: number, data: any }): JSX.Element => {
+  const [orderNumber, setOrderNumber] = useState(order);
   const [isDragged, setIsDragged] = useState(true);
   const [dragPosition, setDragPosition] = useState({ x: 0, y: 0 });
   const [cartContent, setCartContent] = useState<CartContentProps[]>([
@@ -124,6 +157,7 @@ const Drag = () => {
                   bounds={{ top: 0, bottom: 0 }}
                 >
                   <div className="">
+                    {orderNumber === 1 ? (
                     <div className="p-4">
                       <div className="flex items-center justify-center">
                         <Image
@@ -139,11 +173,44 @@ const Drag = () => {
                         <p className="text-c-orange-400">Selesai</p>
                       </div>
                     </div>
+                    ) : orderNumber === 2 ? (
+                      <div className="p-4">
+                      <div className="flex items-center justify-center">
+                        <Image
+                          src={"/images/driver/order/status2.svg"}
+                          width={283}
+                          height={32}
+                          alt={""}
+                        />
+                      </div>
+                      <div className="flex justify-center gap-12 text-sm pr-4 font-semibold mt-1">
+                        <p className="text-c-orange-400">Ambil Makanan</p>
+                        <p className="text-c-orange-800">Antar Makanan</p>
+                        <p className="text-c-orange-400">Selesai</p>
+                      </div>
+                    </div>
+                    ) : (
+                      <div className="p-4">
+                      <div className="flex items-center justify-center">
+                        <Image
+                          src={"/images/driver/order/status3.svg"}
+                          width={283}
+                          height={32}
+                          alt={""}
+                        />
+                      </div>
+                      <div className="flex justify-center gap-12 text-sm pr-4 font-semibold mt-1">
+                        <p className="text-c-orange-400">Ambil Makanan</p>
+                        <p className="text-c-orange-400">Antar Makanan</p>
+                        <p className="text-c-orange-800">Selesai</p>
+                      </div>
+                    </div>
+                    )}
                     <div className="w-full h-[1px] bg-c-orange-800"></div>
                     <div className="flex h-full w-full items-center justify-between px-6 my-3">
                       <div className="">
                         <p className="font-bold">Pemesan</p>
-                        <p>Muhammad Irfan</p>
+                        <p>{data.user.name}</p>
                       </div>
                       <div className="flex rounded-full bg-[#FFF0E0] w-16 px-1 h-7 drop-shadow-lg items-center justify-center gap-2 drop-shadow-[#FE8304]/20">
                         <svg
@@ -170,7 +237,7 @@ const Drag = () => {
                     </div>
                     <div className="px-5">
                       <p className="font-bold mb-4">Pesanan</p>
-                      {cartContent.map((item, index) => (
+                      {data.cart.menuItems.map((item, index) => (
                         <ItemBox key={index} item={item} index={index} />
                       ))}
                       <div className="text-lg font-semibold">
@@ -180,7 +247,7 @@ const Drag = () => {
                         <div className="flex justify-between mb-4">
                           <p className="">Total Pesanan</p>
                           <p className="">
-                            Rp55.750
+                            Rp{data.foodFee}
                             {/* {cartContent.reduce(
                   (total, item) => total + item.price * item.quantity,
                   0
@@ -190,7 +257,7 @@ const Drag = () => {
                         <div className="flex justify-between mb-4">
                           <p className="">Diskon</p>
                           <p className="">
-                            -Rp15.000
+                            -Rp0
                             {/* {cartContent.reduce(
                   (total, item) => total + item.price * item.quantity,
                   0
@@ -199,7 +266,7 @@ const Drag = () => {
                         </div>
                         <div className="flex justify-between mb-4">
                           <p className="">Ongkos Kirim</p>
-                          <p className="">Rp0</p>
+                          <p className="">Rp{data.costFee}</p>
                         </div>
                         <div className="flex justify-between mb-4">
                           <p className="">Biaya Layanan</p>
@@ -208,7 +275,7 @@ const Drag = () => {
                         <hr className="border-[1.5px] border-[#000000] mb-4" />
                         <div className="flex justify-between mb-4 font-extrabold">
                           <p className="">Total</p>
-                          <p className="">Rp55.750</p>
+                          <p className="">Rp{(parseInt(data.foodFee) +  parseInt(data.costFee))}</p>
                         </div>
                       </div>
                     </div>
@@ -251,15 +318,70 @@ const ItemBox: React.FC = ({
   return (
     <div className="flex justify-between mb-2 shadow-card rounded-2xl">
       <div className="h-24 w-24 relative rounded-l-2xl">
-        <Image src={item.imageURL} alt="Phone" fill className="rounded-l-2xl" />
+        <Image src={item.menu.image} alt="Phone" fill className="rounded-l-2xl" />
       </div>
       <div className="flex-1 mx-4 my-2">
-        <p className="font-bold mb-2">{item.name}</p>
+        <p className="font-bold mb-2">{item.menu.name}</p>
         <div className="items-center flex justify-between">
-          <p className="font-bold">Rp {item.price * item.quantity}</p>
+          <p className="font-bold">Rp {item.menu.price * item.quantity}</p>
           <div className="flex justify-evenly items-center">
             <h3 className="font-semibold ml-4">x {item.quantity}</h3>
           </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const Notif: React.FC = ({
+  order,
+  toggleNotif,
+  continueOrder,
+}: {
+  order: Number;
+  toggleNotif: () => void;
+  continueOrder: () => void;
+}): JSX.Element => {
+  const [orderNumber, setOrderNumber] = useState(order);
+  return (
+    <div className="fixed inset-0 justify-center items-center z-[100] backdrop-blur-sm">
+      <div className="bg-[#fff] h-48 py-2 my-64 rounded-[12px] border-[#FE8304]/20 border-[1px] shadow-lg mx-8 flex flex-col items-center justify-center">
+        <h2 className="font-bold text-xl my-1">Konfirmasi Kembali</h2>
+        <div className="w-full h-[1px] bg-c-orange-300"></div>
+        <div className="font-semibold text-sm py-3 px-6 text-center">
+          {orderNumber === 1 ? (
+            <p>
+              Apakah anda yakin untuk mengubah status order dari "Ambil Makanan"
+              menjadi "Antar Makanan"?
+            </p>
+          ) : orderNumber === 2 ? (
+            <p>
+              Apakah anda yakin untuk mengubah status order dari "Antar Makanan"
+              menjadi "Selesai"?
+            </p>
+          ) : (
+            <p>Apakah anda yakin ingin menyelesaikan orderan?</p>
+          )}
+          <p></p>
+        </div>
+        <div className="flex gap-8 mt-3">
+          <Button
+            text="Tolak"
+            type="red"
+            className="!w-24"
+            size="small"
+            onClickHandler={toggleNotif}
+          />
+          <Button
+            text="Terima"
+            type="green"
+            className="!w-24"
+            size="small"
+            onClickHandler={() => {
+              toggleNotif();
+              continueOrder();
+            }}
+          />
         </div>
       </div>
     </div>
