@@ -248,7 +248,6 @@ const Merchant: React.FC = () => {
   useEffect(() => {
     const socket = io();
     socket.on("updateOrder", (data) => {
-      console.log("order", order)
       setNewOrderData(data);
       let newOrders = [...order];
       newOrders.push(data);
@@ -266,7 +265,7 @@ const Merchant: React.FC = () => {
       setNewOrderData={setNewOrderData}
     >
       <div
-        className={`fixed w-full min-h-screen bg-white ${
+        className={`fixed z-[1000] max-h-screen w-screen overflow-scroll min-h-screen bg-white ${
           detailOpen ? "" : "hidden"
         }`}
       >

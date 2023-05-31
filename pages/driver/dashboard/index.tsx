@@ -14,7 +14,7 @@ import TargetHarianProgressBar from "components/elements/TargetHarianProgressBar
 const DriverDashboard = () => {
   const [showPopUp, setShowPopup] = useState(false);
   const [Reservation, setReservation] = useState(false);
-  const [reservationData, setReservationData] = useState(null);
+  const [reservationData, setReservationData] = useState({user: {name: ""}, source: "tes", destination: "", createdAt: ""});
   const [keyword, setKeyword] = useState("");
   const router = useRouter();
   const [isActive, setIsActive] = useState(false);
@@ -40,8 +40,29 @@ const DriverDashboard = () => {
         if (data.status === "success") {
           setReservation(true);
         }
+        // alert(data.length);
       });
   }, []);
+
+  // useEffect(() => {
+  //   fetch("/api/getOrder", {
+  //     method: "POST",
+  //     headers:{
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       driverId: driver.id,
+  //     }),
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       console.log(data);
+  //       if (data.status === "success") {
+  //         setReservation(true);
+  //         setReservationData(data.data);
+  //       }
+  //     });
+  // }, []);
 
   const toggleSwitch = () => {
     setIsActive(!isActive);
@@ -627,18 +648,25 @@ const OrderReservation = ({ reservationData }: { reservationData: any }) => {
             />
             <div>
               <p>Pengambilan pesanan</p>
-              <h3 className="font-extrabold">McDonalds cabang Kaliurang</h3>
+              <h3 className="font-extrabold">{reservationData.reservationData.source}</h3>
               <p className="mt-5">Tujuan akhir</p>
               <h3 className="font-extrabold">J{reservationData.destination}</h3>
             </div>
           </div>
           <div className="text-right">
             <p className="font-bold">Estimasi</p>
-            <h3 className="font-bold text-gray-500">8:45</h3>
-            <h3 className="mt-9 font-bold text-gray-500">9:32</h3>
+            <h3 className="font-bold text-gray-500">{starth}:{startm.toString().padStart(2, "0")}</h3>
+            <h3 className="mt-9 font-bold text-gray-500">{(time+startm > 59) ? starth+1 : starth}:{((time+startm > 59) ? (startm+time)%59 : startm).toString().padStart(2, "0")}</h3>
           </div>
         </div>
-        <div className="justify-center flex mt-1">
+        <div className="justify-center flex mt-1" onClick={
+          () => {
+            router.push({
+                pathname: '/driver/order',
+                query: { data: JSON.stringify(reservationData.reservationData)}
+            })
+          }
+        }>
           <Button text="Detail" size="small" className="w-1/3" />
         </div>
       </div>
