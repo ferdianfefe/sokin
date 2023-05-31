@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useState } from "react";
+import { JSXElementConstructor, useState } from "react";
 import MapContainer from "components/elements/MapContainer";
 import Draggable from "react-draggable";
 import { motion, AnimatePresence } from "framer-motion";
@@ -14,7 +14,12 @@ type CartContentProps = {
 };
 
 const Order = () => {
-  const [statusOrder, setStatusOrder] = useState("Sedang menuju ke Restoran");
+  const [statusOrder, setStatusOrder] = useState(1);
+  const [showNotif, setShowNotif] = useState(false);
+
+  const toggleNotif = () => {
+    setShowNotif(!showNotif);
+  };
 
   return (
     <div className="relative min-h-screen">
@@ -26,9 +31,20 @@ const Order = () => {
             width={26}
             height={26}
           />
-          <h2 className="text-3xl font-semibold text-gray-600 ml-5">
-            {statusOrder}
-          </h2>
+            {statusOrder === 1 ? (
+
+              <h2 className="text-3xl font-semibold text-gray-600 ml-5">
+                Sedang menuju ke Restoran
+              </h2>
+            ) : statusOrder === 2 ? (
+              <h2 className="text-3xl font-semibold text-gray-600 ml-5">
+                Sedang mengantar pesanan
+              </h2>
+            ) : (
+              <h2 className="text-3xl font-semibold text-gray-600 ml-5">
+                Pesanan diantar
+              </h2>)
+            }
         </div>
         <div className="flex my-5 mx-1 justify-between">
           <Image
@@ -60,7 +76,11 @@ const Order = () => {
 
 export default Order;
 
-const Drag = () => {
+const Drag: React.FC = ({
+  order
+}: {
+  order: number;
+}): JSX.Element=> {
   const [isDragged, setIsDragged] = useState(true);
   const [dragPosition, setDragPosition] = useState({ x: 0, y: 0 });
   const [cartContent, setCartContent] = useState<CartContentProps[]>([
@@ -255,6 +275,17 @@ const ItemBox: React.FC = ({
           </div>
         </div>
       </div>
+    </div>
+  );
+};
+
+const Notif: React.FC = ({
+  order,
+}: {
+  order: number
+}): JSX.Element => {
+  return (
+    <div className="fixed inset-0 flex flex-col justify-center items-center z-60 backdrop-blur-sm">
     </div>
   );
 };
