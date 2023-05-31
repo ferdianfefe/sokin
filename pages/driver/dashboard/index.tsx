@@ -37,8 +37,9 @@ const DriverDashboard = () => {
       })
       .then((data) => {
         console.log(data);
-        if (data.status === "success") {
+        if (data[0]) {
           setReservation(true);
+          setReservationData(data[0]);
         }
         // alert(data.length);
       });
@@ -599,6 +600,11 @@ type PropsSearch = {
 // }
 
 const OrderReservation = ({ reservationData }: { reservationData: any }) => {
+  const starth = new Date(reservationData.createdAt).getHours();
+  const startm = new Date(reservationData.createdAt).getMinutes();
+  const time = parseInt(reservationData.eta)
+
+  const router = useRouter();
   return (
     <>
       <div className="w-full h-60 border-[1px] border-c-orange-200 rounded-2xl mt-3">
@@ -648,7 +654,7 @@ const OrderReservation = ({ reservationData }: { reservationData: any }) => {
             />
             <div>
               <p>Pengambilan pesanan</p>
-              <h3 className="font-extrabold">{reservationData.reservationData.source}</h3>
+              <h3 className="font-extrabold">{reservationData.source}</h3>
               <p className="mt-5">Tujuan akhir</p>
               <h3 className="font-extrabold">J{reservationData.destination}</h3>
             </div>
@@ -663,7 +669,7 @@ const OrderReservation = ({ reservationData }: { reservationData: any }) => {
           () => {
             router.push({
                 pathname: '/driver/order',
-                query: { data: JSON.stringify(reservationData.reservationData)}
+                query: { data: JSON.stringify(reservationData)}
             })
           }
         }>
