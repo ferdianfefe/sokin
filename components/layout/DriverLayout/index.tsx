@@ -7,12 +7,14 @@ import io from "socket.io-client";
 const DriverLayout: React.FC<{
   children: any;
   location: string;
-  setReservationData: Function;
-  togglePopup: Function;
-}> = (
-  { children, location, setReservationData = () => {} },
-  togglePopUp = () => {}
-): JSX.Element => {
+  setReservationData?: React.Dispatch<React.SetStateAction<null>>;
+  setShowPopup?: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({
+  children,
+  location,
+  setReservationData = () => {},
+  setShowPopup = () => {},
+}): JSX.Element => {
   const [newOrder, setNewOrder] = React.useState(null);
 
   useEffect(() => {
@@ -29,14 +31,14 @@ const DriverLayout: React.FC<{
     await fetch("/api/socket");
     const socket = io();
     socket.on("connect", () => {
-      console.log("connected");
+      console.log("connescted");
     });
 
     socket.on("updateOrder", (newOrderData) => {
       console.log(newOrderData);
-      togglePopUp();
-      setNewOrder(newOrderData);
+      setShowPopup(true);
       setReservationData(newOrderData);
+      setNewOrder(newOrderData);
     });
   };
 
@@ -46,7 +48,7 @@ const DriverLayout: React.FC<{
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ orderId: newOrder.id, status: "DELIVERY" }),
+      body: JSON.stringify({ orderId: newOrder.id, status: "DELIVERY", from: "driver" }),
     });
 
     setNewOrder(null);
@@ -54,7 +56,7 @@ const DriverLayout: React.FC<{
 
   return (
     <div className="relative min-h-screen">
-      {newOrder && (
+      {/* {newOrder && (
         <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex justify-center items-center">
           <div className="bg-white rounded-lg py-4 fixed top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] min-w-[300px]">
             <div className="font-bold text-3xl px-4">
@@ -93,7 +95,7 @@ const DriverLayout: React.FC<{
             </div>
           </div>
         </div>
-      )}
+      )} */}
       {children}
       <Navbar location={location} role="driver" />
     </div>

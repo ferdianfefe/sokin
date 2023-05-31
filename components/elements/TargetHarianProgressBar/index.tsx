@@ -1,20 +1,18 @@
-import React, { FC } from 'react';
-import { ProgressBar, Step } from 'react-step-progress-bar';
-import 'react-step-progress-bar/styles.css';
-import AccomplishedStep from 'public/images/progress-bar-accomplished-step.svg'
-
+import React, { FC } from "react";
+import { ProgressBar, Step } from "react-step-progress-bar";
+import "react-step-progress-bar/styles.css";
+import AccomplishedStep from "public/images/progress-bar-accomplished-step.svg";
 
 interface TargetHarianProgressBarProps {
-    percent: number;
-  }
-  
-  const TargetHarianProgressBar: FC<TargetHarianProgressBarProps> = ({ percent }) => {
+  percent: number;
+}
 
-    return (
-        
-        <div className='h-full'>
-
-            {/* <ProgressBar
+const TargetHarianProgressBar: FC<TargetHarianProgressBarProps> = ({
+  percent,
+}) => {
+  return (
+    <div className="h-full">
+      {/* <ProgressBar
                 filledBackground='#FE8304'
                 unfilledBackground='#FFF0E0'
                 height='37px'
@@ -136,9 +134,8 @@ interface TargetHarianProgressBarProps {
 
 
             </ProgressBar> */}
-        </div>
-    )
-}
+    </div>
+  );
+};
 
-
-export default TargetHarianProgressBar
+export default TargetHarianProgressBar;
