@@ -17,7 +17,7 @@ export default async function handle(
   res: NextApiResponse
 ) {
   if (req.method === "GET") {
-    const promo = await prisma.driver.findMany();
+    const promo = await prisma.order.findMany();
     console.log(promo);
     return res.status(200).json(promo);
     // const cart = await prisma.cart.findFirst({
