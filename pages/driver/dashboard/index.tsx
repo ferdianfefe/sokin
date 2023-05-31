@@ -14,7 +14,7 @@ import TargetHarianProgressBar from "components/elements/TargetHarianProgressBar
 const DriverDashboard = () => {
   const [showPopUp, setShowPopup] = useState(false);
   const [Reservation, setReservation] = useState(false);
-  const [reservationData, setReservationData] = useState(null);
+  const [reservationData, setReservationData] = useState({user: {name: ""}, source: "tes", destination: "", createdAt: ""});
   const [keyword, setKeyword] = useState("");
   const router = useRouter();
   const [isActive, setIsActive] = useState(false);
@@ -31,38 +31,36 @@ const DriverDashboard = () => {
         driverId: driver?.id,
       }),
     })
-      .then((res) => {
-        console.log(res);
-        return res.json();
-      })
-      .then((data) => {
-        console.log(data);
-        if (data.status === "success") {
-          setReservation(true);
-          setReservationData(data.data);
-        }
-      });
-  }, []);
-
-  useEffect(() => {
-    fetch("/api/getOrder", {
-      method: "POST",
-      headers:{
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        driverId: driver.id,
-      }),
-    })
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        if (data.status === "success") {
+        if (data[0]) {
           setReservation(true);
-          setReservationData(data.data);
+          setReservationData(data[0]);
         }
+        // alert(data.length);
       });
   }, []);
+
+  // useEffect(() => {
+  //   fetch("/api/getOrder", {
+  //     method: "POST",
+  //     headers:{
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       driverId: driver.id,
+  //     }),
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       console.log(data);
+  //       if (data.status === "success") {
+  //         setReservation(true);
+  //         setReservationData(data.data);
+  //       }
+  //     });
+  // }, []);
 
   const toggleSwitch = () => {
     setIsActive(!isActive);
@@ -556,14 +554,17 @@ type PropsSearch = {
 //     )
 // }
 
-const OrderReservation = () => {
+const OrderReservation = (reservationData: any) => {
+  const starth = new Date(reservationData.reservationData.createdAt).getHours();
+  const startm = new Date(reservationData.reservationData.createdAt).getMinutes();
+  const time = parseInt(reservationData.reservationData.eta)
   return (
     <>
       <div className="w-full h-60 border-[1px] border-c-orange-200 rounded-2xl mt-3">
         <div className="flex justify-between py-2 px-4 items-center">
           <div className="">
             <p>Pemesan</p>
-            <p className="font-extrabold">Muhammad Irfan</p>
+            <p className="font-extrabold">{reservationData.reservationData.user.name}</p>
           </div>
           <div className="flex rounded-full bg-[#FFF0E0] w-16 px-1 h-7 drop-shadow-lg items-center justify-center gap-2 drop-shadow-[#FE8304]/20">
             <svg
@@ -588,7 +589,7 @@ const OrderReservation = () => {
             </h2>
           </div>
           <div className="text-sm text-right">
-            <p className="font-extrabold">Rp47.500</p>
+            <p className="font-extrabold">Rp{parseInt(reservationData.reservationData.costFee) + parseInt(reservationData.reservationData.foodFee)}</p>
             <p className="">Soket</p>
           </div>
         </div>
@@ -604,15 +605,15 @@ const OrderReservation = () => {
             />
             <div>
               <p>Pengambilan pesanan</p>
-              <h3 className="font-extrabold">McDonalds cabang Kaliurang</h3>
+              <h3 className="font-extrabold">{reservationData.reservationData.source}</h3>
               <p className="mt-5">Tujuan akhir</p>
-              <h3 className="font-extrabold">JL.Sendowo no. 120</h3>
+              <h3 className="font-extrabold">{reservationData.reservationData.destination}</h3>
             </div>
           </div>
           <div className="text-right">
             <p className="font-bold">Estimasi</p>
-            <h3 className="font-bold text-gray-500">8:45</h3>
-            <h3 className="mt-9 font-bold text-gray-500">9:32</h3>
+            <h3 className="font-bold text-gray-500">{starth}:{startm.toString().padStart(2, "0")}</h3>
+            <h3 className="mt-9 font-bold text-gray-500">{(time+startm > 59) ? starth+1 : starth}:{((time+startm > 59) ? (startm+time)%59 : startm).toString().padStart(2, "0")}</h3>
           </div>
         </div>
         <div className="justify-center flex mt-1">
