@@ -9,7 +9,7 @@ const Order = () => {
   const [statusOrder, setStatusOrder] = useState("Sedang menuju ke Restoran");
 
   return (
-    <div>
+    <div className="relative min-h-screen">
       <div className="h-25 w-full my-5 px-5">
         <div className="flex items-center">
           <Image
@@ -43,6 +43,7 @@ const Order = () => {
         <MapContainer />
       </div>
       <Drag />
+      <Button text="Pesanan Diambil" className="z-50"/>
     </div>
   );
 };
@@ -149,9 +150,6 @@ const Drag = () => {
           </AnimatePresence>
         </div>
       </Draggable>
-      <div className="absolute bottom-0">
-        <Button text={"Pesanan Diambil"} />
-      </div>
     </div>
   );
 };
