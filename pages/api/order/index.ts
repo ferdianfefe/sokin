@@ -138,7 +138,7 @@ export default async function handle(
     return res.status(201).json(newOrder);
   } else if (req.method === "PUT") {
     try {
-      const { orderId, isAccepted, isCompleted, status } = req.body;
+      const { orderId, isAccepted, isCompleted, from="merchant", status} = req.body;
       console.log(orderId, isAccepted, isCompleted, status);
 
       let dataToUpdate: UpdateOrderData = {};
@@ -182,9 +182,11 @@ export default async function handle(
         },
       });
       console.log("success updating order");
-      res?.socket?.server?.io?.emit("updateOrder", order);
-
-      res?.socket?.server?.io?.emit("updateOrder", order);
+      if(from == "merchant"){
+        res?.socket?.server?.io?.emit("updateOrder", order);
+      }else{
+        res?.socket?.server?.io?.emit("updateOrderDriver", order);
+      }
 
       return res.status(200).json(order);
     } catch (error) {
