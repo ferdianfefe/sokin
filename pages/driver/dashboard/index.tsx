@@ -3,7 +3,7 @@ import Navbar from "components/elements/Navbar";
 import Input from "components/elements/Input";
 import TargetBar from "public/images/driver/dashboard/target-bar-driver.png";
 import Vector from "public/images/driver/dashboard/vector-pesanan.png";
-import React, { useEffect, useState } from "react";
+import React, { SetStateAction, useEffect, useState } from "react";
 import Image from "next/image";
 import DriverLayout from "components/layout/DriverLayout";
 import { useRouter } from "next/router";
@@ -31,7 +31,10 @@ const DriverDashboard = () => {
         driverId: driver?.id,
       }),
     })
-      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        return res.json();
+      })
       .then((data) => {
         console.log(data);
         if (data[0]) {
@@ -90,12 +93,19 @@ const DriverDashboard = () => {
   };
 
   return (
-    <DriverLayout location="home" setReservationdata={setReservationData} togglePopUp={togglePopup}>
+    <DriverLayout
+      location="home"
+      setReservationData={setReservationData}
+      setShowPopup={setShowPopup}
+    >
       <div className="p-0 m-0">
         {showPopUp && (
           <PopUpDriver
             togglePopup={togglePopup}
             toggleReservation={toggleReservation}
+            reservationData={reservationData}
+            setIsActive={setIsActive}
+            setReservation={setReservation}
           />
         )}
 
@@ -353,13 +363,35 @@ const DriverDashboard = () => {
   );
 };
 
-const PopUpDriver = ({
-  togglePopup,
-  toggleReservation,
-}: {
+const PopUpDriver: React.FC<{
   togglePopup: () => void;
   toggleReservation: () => void;
+  reservationData?: any;
+  setIsActive?: React.Dispatch<React.SetStateAction<boolean>>;
+  setReservation?: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({
+  togglePopup,
+  toggleReservation,
+  reservationData,
+  setIsActive = () => {},
+  setReservation = () => {},
 }) => {
+  const handleAccept = async () => {
+    await fetch("/api/order", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        orderId: reservationData.id,
+        status: "DELIVERY",
+        from: "driver",
+      }),
+    });
+    setReservation(true);
+    setIsActive(true);
+  };
+
   return (
     <div className="fixed inset-0 flex flex-col justify-center items-center z-50 backdrop-blur-sm ">
       <div className="bg-[#fff] py-10 rounded-[12px] border-[#FE8304]/20 border-[1px] shadow-lg mx-6">
@@ -379,7 +411,9 @@ const PopUpDriver = ({
                   <span className="font-extrabold">Pemesan</span>
                 </h3>
                 <p>
-                  <span className="font-semibold">Muhammad Irfan</span>
+                  <span className="font-semibold">
+                    {reservationData?.user.name}
+                  </span>
                 </p>
               </div>
               <div className="flex rounded-full bg-[#FFF0E0] w-20 px-1 h-7 drop-shadow-lg items-center justify-center gap-2 drop-shadow-[#FE8304]/20">
@@ -466,7 +500,9 @@ const PopUpDriver = ({
                     <span className="text-[#464545]">Lokasi Pengantaran</span>
                   </p>
                   <h2>
-                    <span className="font-extrabold">Jl. Sendowo no. 120</span>
+                    <span className="font-extrabold">
+                      {reservationData.destination}
+                    </span>
                   </h2>
                 </div>
               </div>
@@ -480,13 +516,16 @@ const PopUpDriver = ({
             </h2>
           </div>
           <div className="flex flex-col gap-2 font-medium">
-            <div className="flex justify-between">
-              <p>Paket Panas 1</p>
-              <p>Rp40.000</p>
-            </div>
+            {reservationData.cart.menuItems.map((item) => (
+              <div className="flex justify-between">
+                <p className="">{item.menu.name}</p>
+                <p className="">{item.quantity}x</p>
+                <p className="">Rp {item.menu.price * item.quantity}</p>
+              </div>
+            ))}
             <div className="flex justify-between">
               <p>Ongkos Kirim</p>
-              <p>Rp10.000</p>
+              <p>{reservationData.costFee}</p>
             </div>
             <div className="flex justify-between">
               <p>Biaya Administrasi</p>
@@ -496,7 +535,9 @@ const PopUpDriver = ({
             <div className="h-[1px] w-full bg-black/20"></div>
             <div className="flex justify-between font-semibold">
               <p>Total</p>
-              <p>Rp52.500</p>
+              <p>
+                Rp {reservationData.costFee + reservationData.foodFee + 2500}
+              </p>
             </div>
           </div>
 
@@ -508,12 +549,16 @@ const PopUpDriver = ({
 
             <div
               className="flex w-1/2 bg-slate-100"
-              onClick={() => {
-                togglePopup();
-                toggleReservation();
-              }}
             >
-              <Button type="green" text="Terima" />
+              <Button
+                type="green"
+                text="Terima"
+                onClickHandler={() => {
+                  togglePopup();
+                  toggleReservation();
+                  handleAccept();
+                }}
+              />
             </div>
           </div>
         </div>
@@ -554,10 +599,10 @@ type PropsSearch = {
 //     )
 // }
 
-const OrderReservation = (reservationData: any) => {
-  const starth = new Date(reservationData.reservationData.createdAt).getHours();
-  const startm = new Date(reservationData.reservationData.createdAt).getMinutes();
-  const time = parseInt(reservationData.reservationData.eta)
+const OrderReservation = ({ reservationData }: { reservationData: any }) => {
+  const starth = new Date(reservationData.createdAt).getHours();
+  const startm = new Date(reservationData.createdAt).getMinutes();
+  const time = parseInt(reservationData.eta)
 
   const router = useRouter();
   return (
@@ -566,7 +611,7 @@ const OrderReservation = (reservationData: any) => {
         <div className="flex justify-between py-2 px-4 items-center">
           <div className="">
             <p>Pemesan</p>
-            <p className="font-extrabold">{reservationData.reservationData.user.name}</p>
+            <p className="font-extrabold">{reservationData.user.name}</p>
           </div>
           <div className="flex rounded-full bg-[#FFF0E0] w-16 px-1 h-7 drop-shadow-lg items-center justify-center gap-2 drop-shadow-[#FE8304]/20">
             <svg
@@ -591,7 +636,9 @@ const OrderReservation = (reservationData: any) => {
             </h2>
           </div>
           <div className="text-sm text-right">
-            <p className="font-extrabold">Rp{parseInt(reservationData.reservationData.costFee) + parseInt(reservationData.reservationData.foodFee)}</p>
+            <p className="font-extrabold">
+              Rp {reservationData.costFee + reservationData.foodFee + 2500}
+            </p>
             <p className="">Soket</p>
           </div>
         </div>
@@ -607,9 +654,9 @@ const OrderReservation = (reservationData: any) => {
             />
             <div>
               <p>Pengambilan pesanan</p>
-              <h3 className="font-extrabold">{reservationData.reservationData.source}</h3>
+              <h3 className="font-extrabold">{reservationData.source}</h3>
               <p className="mt-5">Tujuan akhir</p>
-              <h3 className="font-extrabold">{reservationData.reservationData.destination}</h3>
+              <h3 className="font-extrabold">J{reservationData.destination}</h3>
             </div>
           </div>
           <div className="text-right">
@@ -622,7 +669,7 @@ const OrderReservation = (reservationData: any) => {
           () => {
             router.push({
                 pathname: '/driver/order',
-                query: { data: JSON.stringify(reservationData.reservationData)}
+                query: { data: JSON.stringify(reservationData)}
             })
           }
         }>

@@ -9,13 +9,11 @@ const MerchantLayout: React.FC<{
   location: string;
   setNewOrderData: Function;
   order: [];
-  setOrder: Function;
+  setOrder?: Function;
 }> = ({
   children,
   location,
   setNewOrderData = () => {},
-  order,
-  setOrder,
 }): JSX.Element => {
   const [newOrder, setNewOrder] = useState(null);
 
@@ -23,17 +21,7 @@ const MerchantLayout: React.FC<{
     const socket = io();
     socket.on("newOrder", (data) => {
       setNewOrder(data);
-      // fetch("/api/order/getOrder", {
-      //   method: "POST",
-      //   body: JSON.stringify({
-      //     id: merId,
-      //   }),
-      // })
-      //   .then((res) => res.json())
-      //   .then((data) => {
-      //     console.log(data);
-      //     setOrder(data);
-      //   });
+      setNewOrderData(data);
     });
   }, []);
 
@@ -52,22 +40,6 @@ const MerchantLayout: React.FC<{
         isCompleted: false,
       }),
     });
-
-    // update order
-    let newOrderData = order.map((item) => {
-      if (item.id === id) {
-        return {
-          ...item,
-          status: "PROCESSING",
-          isAccepted: true,
-          isCompleted: false,
-        };
-      }
-      return item;
-    });
-
-    console.log(newOrderData);
-    setOrder(newOrderData);
   };
 
   return (

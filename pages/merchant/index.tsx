@@ -239,7 +239,7 @@ const Merchant: React.FC = () => {
         })
           .then((res) => res.json())
           .then((data) => {
-            console.log(data);
+            console.log("fetched order", data);
             setOrder(data);
           });
       });
@@ -247,8 +247,7 @@ const Merchant: React.FC = () => {
 
   useEffect(() => {
     const socket = io();
-    socket.on("newOrder", (data) => {
-      console.log("newOrder", data)
+    socket.on("updateOrder", (data) => {
       setNewOrderData(data);
       let newOrders = [...order];
       newOrders.push(data);
@@ -264,8 +263,6 @@ const Merchant: React.FC = () => {
     <MerchantLayout
       location="home"
       setNewOrderData={setNewOrderData}
-      order={order}
-      setOrder={setOrder}
     >
       <div
         className={`fixed z-[1000] max-h-screen w-screen overflow-scroll min-h-screen bg-white ${
