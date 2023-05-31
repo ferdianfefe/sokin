@@ -5,6 +5,14 @@ import Draggable from "react-draggable";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "components/elements/Button";
 
+type CartContentProps = {
+  restaurantName: String;
+  name: String;
+  imageURL: String;
+  price: Number;
+  quantity: Number;
+};
+
 const Order = () => {
   const [statusOrder, setStatusOrder] = useState("Sedang menuju ke Restoran");
 
@@ -42,8 +50,10 @@ const Order = () => {
       <div className="h-[400px]">
         <MapContainer />
       </div>
-      <Drag />
-      <Button text="Pesanan Diambil" className="z-50"/>
+      <div className="">
+        <Drag />
+      </div>
+      <Button text="Pesanan Diambil" className="relative z-50" />
     </div>
   );
 };
@@ -53,9 +63,18 @@ export default Order;
 const Drag = () => {
   const [isDragged, setIsDragged] = useState(true);
   const [dragPosition, setDragPosition] = useState({ x: 0, y: 0 });
+  const [cartContent, setCartContent] = useState<CartContentProps[]>([
+    {
+      restaurantName: "McDonalds",
+      imageURL: "/images/pesan/nasgor-enak.jpg",
+      name: "Paket Panas 1",
+      price: 35000,
+      quantity: 1,
+    },
+  ]);
 
   const handleDrag = (e: any, ui: any) => {
-    if (ui.y >= -400 && ui.y <= 30) {
+    if (ui.y >= -350 && ui.y <= 30) {
       setIsDragged(true);
       setDragPosition({ x: 0, y: ui.y });
     } else {
@@ -72,12 +91,12 @@ const Drag = () => {
   };
 
   return (
-    <div className="relative">
+    <div className="">
       <Draggable
         axis="y"
         onDrag={handleDrag}
         position={dragPosition}
-        bounds={{ top: -400, bottom: 0 }}
+        bounds={{ top: -350, bottom: 0 }}
       >
         <div className="bg-white rounded-t-3xl flex flex-col justify-center z-30 items-center absolute bottom-30 left-0 right-0 cursor-pointer">
           <div className="w-24 h-3 bg-c-orange-400 rounded-full my-2 z-40"></div>
@@ -142,14 +161,100 @@ const Drag = () => {
                         </h2>
                       </div>
                     </div>
+                    <div className="px-5">
+                      <p className="font-bold mb-4">Pesanan</p>
+                      {cartContent.map((item, index) => (
+                        <ItemBox key={index} item={item} index={index} />
+                      ))}
+                      <div className="text-lg font-semibold">
+                        <p className="mb-4 font-extrabold mt-7">
+                          Ringkasan Pembayaran
+                        </p>
+                        <div className="flex justify-between mb-4">
+                          <p className="">Total Pesanan</p>
+                          <p className="">
+                            Rp55.750
+                            {/* {cartContent.reduce(
+                  (total, item) => total + item.price * item.quantity,
+                  0
+                )} */}
+                          </p>
+                        </div>
+                        <div className="flex justify-between mb-4">
+                          <p className="">Diskon</p>
+                          <p className="">
+                            -Rp15.000
+                            {/* {cartContent.reduce(
+                  (total, item) => total + item.price * item.quantity,
+                  0
+                )} */}
+                          </p>
+                        </div>
+                        <div className="flex justify-between mb-4">
+                          <p className="">Ongkos Kirim</p>
+                          <p className="">Rp0</p>
+                        </div>
+                        <div className="flex justify-between mb-4">
+                          <p className="">Biaya Layanan</p>
+                          <p className="">Rp2.500</p>
+                        </div>
+                        <hr className="border-[1.5px] border-[#000000] mb-4" />
+                        <div className="flex justify-between mb-4 font-extrabold">
+                          <p className="">Total</p>
+                          <p className="">Rp55.750</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="w-full h-28 bg-c-orange-800 px-8 py-3">
+                      <p className="text-white">Metode Pembayaran</p>
+                      <div className="w-full h-14 bg-white flex items-center gap-5 rounded-3xl shadow-[2px_3px_10px_2px_rgb(70,70,0,0.4)] px-6">
+                        <Image
+                          src={"/images/icons/SocketOrange.svg"}
+                          width={41}
+                          height={31}
+                        />
+                        <div className="text-sm">
+                          <p className="font-semibold">Soket</p>
+                          <h3 className="font-extrabold text-c-orange-800">
+                            Rp55.750
+                          </h3>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  {/* <div className="w-full h-[1px] bg-c-orange-800"></div> */}
                 </Draggable>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
       </Draggable>
+    </div>
+  );
+};
+
+const ItemBox: React.FC = ({
+  item,
+  index,
+  isEditing,
+}: {
+  item: CartContentProps;
+  index: number;
+  isEditing: boolean;
+}): JSX.Element => {
+  return (
+    <div className="flex justify-between mb-2 shadow-card rounded-2xl">
+      <div className="h-24 w-24 relative rounded-l-2xl">
+        <Image src={item.imageURL} alt="Phone" fill className="rounded-l-2xl" />
+      </div>
+      <div className="flex-1 mx-4 my-2">
+        <p className="font-bold mb-2">{item.name}</p>
+        <div className="items-center flex justify-between">
+          <p className="font-bold">Rp {item.price * item.quantity}</p>
+          <div className="flex justify-evenly items-center">
+            <h3 className="font-semibold ml-4">x {item.quantity}</h3>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
