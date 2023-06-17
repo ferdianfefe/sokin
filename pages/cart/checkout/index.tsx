@@ -80,15 +80,6 @@ const Checkout: React.FC = (): JSX.Element => {
   const [promoFood, setPromoFood] = useState<number>(0);
   const [promoOngkir, setPromoOngkir] = useState<number>(0);
   const [isSuccessful, setIsSuccessful] = useState(false);
-  // const [cartContent, setCartContent] = useState<CartContentProps[]>([
-  //   {
-  //     restaurantName: "McDonalds",
-  //     imageURL: "/images/pesan/nasgor-enak.jpg",
-  //     name: "Paket Panas 1",
-  //     price: 35000,
-  //     quantity: 1,
-  //   },
-  // ]);
 
   useEffect(() => {
     fetch("/api/promo", {
