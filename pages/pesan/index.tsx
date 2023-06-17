@@ -9,18 +9,21 @@ import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import Search from "public/img/homepage/icon-search.png";
 import router from "next/router";
+import { useSession } from "next-auth/react";
 
 export default function Pesan() {
   const [showLocation, setShowLocation] = useState(false);
   const [showPopUp, setShowPopup] = useState(
     "z-50 backdrop-blur-sm fixed w-full h-full translate-y-10 transition duration-300 hidden"
   );
+  const [isMapToggled, setIsMapToggled] = useState(false);
   const [userCoordinates, setUserCoordinates] = useState("");
   const [userLocation, setUserLocation] = useState("");
   const [userAddress, setUserAddress] = useState("");
   const [cartItemNumber, setCartItemNumber] = useState(0);
   const [place, setPlace] = useState(() => {
-    const storedPlace = sessionStorage.getItem("place");
+    const storedPlace =
+      typeof window !== "undefined" ? sessionStorage.getItem("place") : false;
     return storedPlace || "";
   });
 
@@ -38,10 +41,12 @@ export default function Pesan() {
       showPopUp ===
       "z-50 backdrop-blur-sm fixed w-full h-full translate-y-10 transition duration-300 hidden"
     ) {
+      setIsMapToggled(true);
       setShowPopup(
         "z-50 backdrop-blur-sm fixed w-full h-full transition duration-300"
       );
     } else {
+      setIsMapToggled(false);
       setShowPopup(
         "z-50 backdrop-blur-sm fixed w-full h-full translate-y-10 transition duration-300 hidden"
       );
@@ -59,7 +64,11 @@ export default function Pesan() {
       });
   };
   return (
-    <DefaultLayout location="pesan" notif={true} notifText="Menu berhasil ditambahkan">
+    <DefaultLayout
+      location="pesan"
+      notif={true}
+      notifText="Menu berhasil ditambahkan"
+    >
       <div className="fixed p-4 bottom-20 right-6 bg-c-orange-800 rounded-full shadow-2xl shadow-neutral-900 z-40">
         {/* <div className="w-6 h-6 absolute bg-c-red-700 -left-[10%] -top-[10%] rounded-full text-neutral-50 flex justify-center items-center">
           <small className="text-xs">{cartItemNumber}</small>
@@ -82,6 +91,7 @@ export default function Pesan() {
             togglePopup={togglePopUp}
             showPopUp={showPopUp}
             setPlace={setPlace}
+            isMapToggled={isMapToggled}
           />
         )}
         <div className="pl-5 flex items-center">
@@ -249,27 +259,46 @@ const PopupLocation = ({
   showLocation,
   togglePopup,
   showPopUp,
-  userCoordinates,
   setUserCoordinates,
   setPlace,
+  isMapToggled,
 }: {
   setShowLocation: any;
   showLocation: boolean;
   togglePopup: () => void;
   showPopUp: string;
+  isMapToggled: boolean;
   setUserCoordinates: (coordinates: string) => void;
   setPlace: (place: string) => void;
 }) => {
+  const { data: session, status } = useSession();
+  const user = session?.user;
+  
   const [searchKeyword, setSearchKeyword] = useState(() => {
-    const storedKeyword = sessionStorage.getItem("searchKeyword") || "";
+    const storedKeyword =
+      typeof window !== "undefined"
+        ? sessionStorage.getItem("searchKeyword")
+        : false;
     return storedKeyword;
   });
 
   const [mapCoordinates, setMapCoordinates] = useState("");
 
-  const handleSubmit = (event: React.FormEvent) => {
+
+  const handleSubmit = async (event: React.FormEvent) => {
     setUserCoordinates(mapCoordinates);
     setPlace(searchKeyword);
+    console.log(mapCoordinates)
+    await fetch("api/profile/user/userProfile", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        coordinates: mapCoordinates,
+        userId: user.id,
+      }),
+    });
     event.preventDefault();
     togglePopup();
   };
@@ -331,6 +360,7 @@ const PopupLocation = ({
             setMapCoordinates={setMapCoordinates}
             keywordProp={searchKeyword}
             onSearch={setSearchKeyword}
+            isMapToggled={isMapToggled}
           />
         </div>
         <Button

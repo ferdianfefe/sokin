@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState, use } from "react";
 import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
+import Image from "next/image";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmljaGFyZHVzZmVyZGlhbiIsImEiOiJjbGV5MnA4bDQwZnJjM3B2MnNmN2RtNDlpIn0.oW2ip7haPp80SzKKb1KY_A";
@@ -8,6 +9,7 @@ interface MapContainerProps {
   children?: React.ReactNode;
   keywordProp?: string;
   onSearch?: (keyword: string) => void;
+  isMapToggled?: () => void;
   getCenterHandler?: (center: number[]) => void;
   setMapCoordinates?: (coordinates: string) => void;
 }
@@ -15,6 +17,7 @@ interface MapContainerProps {
 const MapContainer: React.FC<MapContainerProps> = ({
   children,
   keywordProp = "",
+  isMapToggled = false,
   getCenterHandler = () => {},
   setMapCoordinates = () => {},
 }) => {
@@ -25,6 +28,11 @@ const MapContainer: React.FC<MapContainerProps> = ({
   const [zoom, setZoom] = useState(9);
   const [keyword, setKeyword] = useState("Yogyakarta");
 
+  /* Resize map on initialization */
+  useEffect(() => {
+    map.current?.resize();
+  }, [isMapToggled]);
+
   useEffect(() => {
     const fetchAPI = async () => {
       setKeyword(keywordProp != "" ? keywordProp : "Yogyakarta");
@@ -33,7 +41,6 @@ const MapContainer: React.FC<MapContainerProps> = ({
         { method: "GET" }
       );
       const data = await result.json();
-      console.log(data);
       setLng(data.features[0].center[0]);
       setLat(data.features[0].center[1]);
       setMapCoordinates(`${lng},${lat}`);
@@ -41,11 +48,13 @@ const MapContainer: React.FC<MapContainerProps> = ({
         center: [data.features[0].center[0], data.features[0].center[1]],
         zoom: 15,
       });
+
       getCenterHandler([
         data.features[0].center[0],
         data.features[0].center[1],
       ]);
     };
+
     fetchAPI();
   }, [keywordProp]);
 
@@ -57,10 +66,23 @@ const MapContainer: React.FC<MapContainerProps> = ({
       center: [lng, lat],
       zoom: zoom,
     });
+
+    map.current?.on("moveend", () => {
+      setLng(map.current?.getCenter().lng.toFixed(4));
+      setLat(map.current?.getCenter().lat.toFixed(4));
+    });
   }, [lng, lat, zoom]);
 
   return (
     <div className="relative">
+      <div className="fixed left-[50%] top-[55%] -translate-x-[50%] -translate-y-[50%] z-10">
+        <Image
+          src="/images/icons/location.svg"
+          height={41}
+          width={27}
+          alt={""}
+        />
+      </div>
       <div ref={mapContainer} className="h-[430px] w-full" />
     </div>
   );
