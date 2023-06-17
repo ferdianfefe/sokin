@@ -29,7 +29,9 @@ const Order = () => {
 
   const router = useRouter();
 
-  console.log(router.query.data);
+  const data = JSON.parse(router.query.data)
+
+  console.log(data);
 
   return (
     <div className="relative min-h-screen max-h-screen overflow-scroll border-black border-2">
@@ -65,11 +67,11 @@ const Order = () => {
           />
           <div>
             <p className="text-base font-semibold text-gray-700">Tempat</p>
-            <h3 className="text-lg font-bold">McDonalds cabang Kaliurang</h3>
+            <h3 className="text-lg font-bold">{data.source}</h3>
           </div>
           <div>
             <p className="text-base font-semibold">Estimasi</p>
-            <h3 className="text-lg text-gray-500 font-semibold">20 mnt</h3>
+            <h3 className="text-lg text-gray-500 font-semibold">{data.eta} mnt</h3>
           </div>
         </div>
       </div>
@@ -77,7 +79,7 @@ const Order = () => {
         <MapContainer />
       </div>
       <div className="">
-        <Drag order={statusOrder}/>
+        <Drag order={statusOrder} data={data}/>
       </div>
       <div
         className="absolute bottom-0 z-50 w-screen p-5"
@@ -97,7 +99,7 @@ const Order = () => {
 
 export default Order;
 
-const Drag: React.FC = ({ order }: { order: number }): JSX.Element => {
+const Drag: React.FC = ({ order, data }: { order: number, data: any }): JSX.Element => {
   const [orderNumber, setOrderNumber] = useState(order);
   const [isDragged, setIsDragged] = useState(true);
   const [dragPosition, setDragPosition] = useState({ x: 0, y: 0 });
@@ -208,7 +210,7 @@ const Drag: React.FC = ({ order }: { order: number }): JSX.Element => {
                     <div className="flex h-full w-full items-center justify-between px-6 my-3">
                       <div className="">
                         <p className="font-bold">Pemesan</p>
-                        <p>Muhammad Irfan</p>
+                        <p>{data.user.name}</p>
                       </div>
                       <div className="flex rounded-full bg-[#FFF0E0] w-16 px-1 h-7 drop-shadow-lg items-center justify-center gap-2 drop-shadow-[#FE8304]/20">
                         <svg
@@ -235,7 +237,7 @@ const Drag: React.FC = ({ order }: { order: number }): JSX.Element => {
                     </div>
                     <div className="px-5">
                       <p className="font-bold mb-4">Pesanan</p>
-                      {cartContent.map((item, index) => (
+                      {data.cart.menuItems.map((item, index) => (
                         <ItemBox key={index} item={item} index={index} />
                       ))}
                       <div className="text-lg font-semibold">
@@ -245,7 +247,7 @@ const Drag: React.FC = ({ order }: { order: number }): JSX.Element => {
                         <div className="flex justify-between mb-4">
                           <p className="">Total Pesanan</p>
                           <p className="">
-                            Rp55.750
+                            Rp{data.foodFee}
                             {/* {cartContent.reduce(
                   (total, item) => total + item.price * item.quantity,
                   0
@@ -255,7 +257,7 @@ const Drag: React.FC = ({ order }: { order: number }): JSX.Element => {
                         <div className="flex justify-between mb-4">
                           <p className="">Diskon</p>
                           <p className="">
-                            -Rp15.000
+                            -Rp0
                             {/* {cartContent.reduce(
                   (total, item) => total + item.price * item.quantity,
                   0
@@ -264,7 +266,7 @@ const Drag: React.FC = ({ order }: { order: number }): JSX.Element => {
                         </div>
                         <div className="flex justify-between mb-4">
                           <p className="">Ongkos Kirim</p>
-                          <p className="">Rp0</p>
+                          <p className="">Rp{data.costFee}</p>
                         </div>
                         <div className="flex justify-between mb-4">
                           <p className="">Biaya Layanan</p>
@@ -273,7 +275,7 @@ const Drag: React.FC = ({ order }: { order: number }): JSX.Element => {
                         <hr className="border-[1.5px] border-[#000000] mb-4" />
                         <div className="flex justify-between mb-4 font-extrabold">
                           <p className="">Total</p>
-                          <p className="">Rp55.750</p>
+                          <p className="">Rp{(parseInt(data.foodFee) +  parseInt(data.costFee))}</p>
                         </div>
                       </div>
                     </div>
@@ -316,12 +318,12 @@ const ItemBox: React.FC = ({
   return (
     <div className="flex justify-between mb-2 shadow-card rounded-2xl">
       <div className="h-24 w-24 relative rounded-l-2xl">
-        <Image src={item.imageURL} alt="Phone" fill className="rounded-l-2xl" />
+        <Image src={item.menu.image} alt="Phone" fill className="rounded-l-2xl" />
       </div>
       <div className="flex-1 mx-4 my-2">
-        <p className="font-bold mb-2">{item.name}</p>
+        <p className="font-bold mb-2">{item.menu.name}</p>
         <div className="items-center flex justify-between">
-          <p className="font-bold">Rp {item.price * item.quantity}</p>
+          <p className="font-bold">Rp {item.menu.price * item.quantity}</p>
           <div className="flex justify-evenly items-center">
             <h3 className="font-semibold ml-4">x {item.quantity}</h3>
           </div>

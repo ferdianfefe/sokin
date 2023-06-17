@@ -131,9 +131,24 @@ export default async function handle(
       },
     });
 
-    console.log("success creating order");
-
     res?.socket?.server?.io?.emit("newOrder", newOrder);
+
+    // delete cart
+    await prisma.cart.delete({
+      where: { id: cartId },
+    });
+
+    // update user balance
+    const user = await prisma.user.findFirst({
+      where: { id: userId },
+    });
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        balance: user.balance - foodFee - costFee,
+      },
+    });
 
     return res.status(201).json(newOrder);
   } else if (req.method === "PUT") {
