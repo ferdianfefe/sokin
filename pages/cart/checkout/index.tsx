@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { set } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { setTimeout } from "timers";
+import { profile } from "console";
 
 type CartContentProps = {
   restaurantName: String;
@@ -35,6 +36,7 @@ const Checkout: React.FC = (): JSX.Element => {
   const [merchantAddress, setMerchantAddress] = useState<string>("");
   const [cartId, setCartId] = useState<string>("");
   const { data: session, status } = useSession();
+  const [userData, setUserData] = useState({balance: 0, creditScore: 0});
   const user = session?.user;
 
   useEffect(() => {
@@ -55,14 +57,13 @@ const Checkout: React.FC = (): JSX.Element => {
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
-          setIsLoading(false);
           setCartContent(data.menuItems);
           setCartId(data.id);
           setMerchantName(data.merchant.name);
           setMerchantAddress(data.merchant.address);
-          setMerchantId(data.merchantId);
-        });
-    }
+          setMerchantId(data.merchantId);}); 
+          setIsLoading(false);
+              }
   }, [user]);
 
   const [promo, setPromo] = useState<Promo[]>([]);
@@ -360,6 +361,7 @@ const Checkout: React.FC = (): JSX.Element => {
         opsiPembayaran={opsiPembayaran}
         successful={successful}
         merchantId={merchantId}
+        merchantAddress={merchantAddress}
         cartId={cartId}
         foodFee={parseInt(router.query.total as string)}
         costFee={ongkir}
@@ -413,6 +415,7 @@ const PaymentPopup: React.FC = ({
   opsiPembayaran,
   successful,
   merchantId,
+  merchantAddress,
   cartId,
   costFee,
   foodFee,
@@ -421,13 +424,14 @@ const PaymentPopup: React.FC = ({
   opsiPembayaran: string;
   successful?: Function;
   merchantId?: string;
+  merchantAddress?: string;
   cartId?: string;
   costFee?: number;
   foodFee?: number;
 }): JSX.Element => {
   const { data: session, status } = useSession();
   const user = session?.user;
-  const [saldo, setSaldo] = useState(0);
+  const [userData, setUserData] = useState();
   const [balance, setBalance] = useState(0);
   const router = useRouter();
 
@@ -441,6 +445,7 @@ const PaymentPopup: React.FC = ({
       })
         .then((res) => res.json())
         .then((data) => {
+          setUserData(data);
           setBalance(data.balance);
         });
     }
@@ -457,8 +462,8 @@ const PaymentPopup: React.FC = ({
         userId: user?.id,
         merchantId,
         cartId,
-        source: "Yogyakarta",
-        destination: "Jl. Raya Bogor KM 30",
+        source: userData?.coordinates,
+        destination: merchantAddress,
         distance: 2.6,
         eta: 30,
         isAccepted: false,

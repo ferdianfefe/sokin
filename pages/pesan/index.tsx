@@ -301,7 +301,6 @@ const PopupLocation = ({
 }) => {
   const { data: session, status } = useSession();
   const user = session?.user;
-
   const [searchKeyword, setSearchKeyword] = useState(() => {
     const storedKeyword =
       typeof window !== "undefined"
