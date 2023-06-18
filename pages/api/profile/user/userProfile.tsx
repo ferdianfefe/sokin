@@ -43,5 +43,18 @@ export default async function handler(
     return res.status(200).json(user);
   }
 
+  if (req.method === "PATCH") {
+    const { coordinates, userId } = req.body;
+    const user = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        coordinates: coordinates,
+      },
+    });
+    return res.status(200).json(user);
+  }
+
   return res.status(405).json({ message: "Method unallowed" });
 }
