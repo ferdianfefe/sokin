@@ -26,6 +26,9 @@ export default function Pesan() {
       typeof window !== "undefined" ? sessionStorage.getItem("place") : false;
     return storedPlace || "";
   });
+  const [keyword, setKeyword] = useState("");
+
+  const [filteredMerchant, setFilteredMerchant] = useState([] as any[]);
 
   useEffect(() => {
     sessionStorage.setItem("place", place);
@@ -54,15 +57,21 @@ export default function Pesan() {
     // setShowPopup(!showPopUp);
   };
 
-  const tes = async () => {
-    await fetch("api/profile/merchant", {
+  const keywordChangeHandler = (keyword: string) => {
+    if (keyword === "") {
+      setKeyword("");
+      setFilteredMerchant([]);
+      return;
+    }
+    fetch("api/profile/merchant?keyword=" + keyword, {
       method: "GET",
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        setFilteredMerchant(data);
       });
   };
+
   return (
     <DefaultLayout
       location="pesan"
@@ -116,7 +125,11 @@ export default function Pesan() {
           </div>
         </div>
         <div className="mt-6 px-4">
-          <SearchBar />
+          <SearchBar
+            onKeywordChangeHandler={(keyword) => {
+              keywordChangeHandler(keyword);
+            }}
+          />
         </div>
         <div className="flex justify-between mt-7 px-6">
           <div className="flex flex-col items-center gap-2">
@@ -219,7 +232,7 @@ export default function Pesan() {
         </div>
 
         <div className="flex mt-4">
-          <VerticalCardCarousel />
+          <VerticalCardCarousel data={filteredMerchant}/>
         </div>
         <div className="mt-4 flex px-7">
           <div className="flex-col flex gap-3">
@@ -236,7 +249,12 @@ export default function Pesan() {
   );
 }
 
-const SearchBar: React.FunctionComponent = (): JSX.Element => {
+const SearchBar = ({
+  onKeywordChangeHandler,
+}: {
+  onKeywordChangeHandler: (keyword: string) => void;
+}): JSX.Element => {
+  const [keyword, setKeyword] = useState("");
   return (
     <>
       <div className="relative flex">
@@ -244,11 +262,21 @@ const SearchBar: React.FunctionComponent = (): JSX.Element => {
         <span className="absolute inset-y-0 left-0 flex items-center pl-3">
           <Image src={Search} alt={""} />
         </span>
-        <input
-          placeholder="Cari makananmu"
-          type="text"
-          className="bg-[#FE8304] rounded-full bg-opacity-40 w-full py-[6px] px-14 font-bold text-sm placeholder-[#817A7A] bg-auto focus:outline-none"
-        ></input>
+        <form
+          className="w-full"
+          onSubmit={(e) => {
+            e.preventDefault();
+            onKeywordChangeHandler(keyword);
+          }}
+        >
+          <input
+            onChange={(e) => setKeyword(e.target.value)}
+            placeholder="Cari makananmu"
+            type="text"
+            className="bg-[#FE8304] rounded-full bg-opacity-40 w-full py-[6px] px-14 font-bold text-sm placeholder-[#817A7A] bg-auto focus:outline-none"
+          ></input>
+          <button type="submit"></button>
+        </form>
       </div>
     </>
   );
@@ -273,7 +301,6 @@ const PopupLocation = ({
 }) => {
   const { data: session, status } = useSession();
   const user = session?.user;
-  
   const [searchKeyword, setSearchKeyword] = useState(() => {
     const storedKeyword =
       typeof window !== "undefined"
@@ -284,11 +311,10 @@ const PopupLocation = ({
 
   const [mapCoordinates, setMapCoordinates] = useState("");
 
-
   const handleSubmit = async (event: React.FormEvent) => {
     setUserCoordinates(mapCoordinates);
     setPlace(searchKeyword);
-    console.log(mapCoordinates)
+    console.log(mapCoordinates);
     await fetch("api/profile/user/userProfile", {
       method: "PATCH",
       headers: {
