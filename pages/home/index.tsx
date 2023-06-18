@@ -16,6 +16,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
   const session = useSession();
   const user = session?.user;
   const [searchResult, setSearchResult] = useState([]);
+  const [reservationData, setReservationData] = useState({user: {name: ""}, source: "tes", destination: "", createdAt: ""});
   const [similar, setSimilar] = useState([]);
   const { data, status } = useSession();
   const [profile, setProfile] = useState({balance: 0, creditScore: 0});
@@ -266,7 +267,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
             <div className="px-5">
               <h2 className="text-xl font-bold">Reservasi Order</h2>
               <p className="font-semibold text-gray-400 text-sm">Sedang berlangsung</p>
-              <OrderReservation reservationData={undefined} />
+              <OrderReservation reservationData={reservationData} />
             </div>
           )}
 
@@ -475,7 +476,7 @@ const OrderReservation = ({ reservationData }: { reservationData: any }) => {
         <div className="justify-center flex mt-1" onClick={
           () => {
             router.push({
-                pathname: '/driver/order',
+                pathname: '/order',
                 query: { data: JSON.stringify(reservationData)}
             })
           }
