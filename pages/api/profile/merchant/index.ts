@@ -7,14 +7,20 @@ type MerchantGetRequestBody = {
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
-    // const { ownerId } = req.query as MerchantGetRequestBody;
-    // const merchant = await prisma.merchant.findFirst({
-    //     where: {
-    //         ownerId
-    //     }
-    // });
+    const { keyword } = req.query;
+    if (keyword) {
+      const data = await prisma.merchant.findMany({
+        where: {
+          name: {
+            contains: keyword.toString(),
+            mode: "insensitive",
+          },
+        },
+      });
+      return res.status(200).json(data);
+    }
+
     const data = await prisma.merchant.findMany({});
-    console.log("GET");
 
     return res.status(200).json(data);
   } else if (req.method === "POST") {
