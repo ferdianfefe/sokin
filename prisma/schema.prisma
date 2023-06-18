@@ -26,6 +26,7 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   Order         Order[]
+  role          String    @default("user")
 
   @@map("users")
 }
@@ -84,6 +85,7 @@ model Owner {
   balance          Int?       @default(0)
   menus            Menu[]
   Merchant         Merchant[]
+  role             String     @default("owner")
 
   @@map("owners")
 }
@@ -122,6 +124,7 @@ model Driver {
   dailyTarget     Int     @default(20)
   password        String  @map("hashed_password")
   orders          Order[]
+  role            String  @default("driver")
 
   @@map("drivers")
 }

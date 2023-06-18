@@ -13,8 +13,8 @@ import { useState, useEffect } from "react";
 
 const Homepage: React.FunctionComponent = (): JSX.Element => {
   const [keyword, setKeyword] = useState("");
-  const session = useSession();
-  const user = session?.user;
+  // const session = useSession();
+  // const user = session?.user;
   const [searchResult, setSearchResult] = useState([]);
   const [reservationData, setReservationData] = useState({user: {name: ""}, source: "tes", destination: "", createdAt: ""});
   const [similar, setSimilar] = useState([]);
@@ -23,13 +23,23 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState(true);
   const [order, setOrder] = useState(true);
 
+  // console.log(data?.user.role);
+
+  const router = useRouter();
+
+  if (data?.user.role != "user") {
+    signOut().then(() => {
+      router.push("/signin");
+    })
+  }
+
   useEffect(() => {
     setIsLoading(true);
     fetch(`/api/profile/user/userProfile`, {
       method: "POST",
-      body: JSON.stringify({id: data?.user?.id})
+      body: JSON.stringify({id: (data) ? data?.user?.id : ''})
     }).then(res => res.json()).then(data => {
-      console.log(data);
+      // console.log(data);
       setProfile(data);
       setIsLoading(false);
     })
