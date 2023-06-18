@@ -15,7 +15,7 @@ import { set } from "react-hook-form";
 
 const Merchant = (props: { menu: any }): JSX.Element => {
   const router = useRouter();
-
+  const [isLoading, setIsLoading] = useState(true);
   const [menu, setMenu] = useState([]);
   const [name, setName] = useState("");
   const [logo, setLogo] = useState("");
@@ -65,6 +65,7 @@ const Merchant = (props: { menu: any }): JSX.Element => {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     fetch("/api/profile/merchant", {
       method: "POST",
       body: JSON.stringify({ id: router.query.id }),
@@ -74,6 +75,7 @@ const Merchant = (props: { menu: any }): JSX.Element => {
         setMenu(data.data);
         setName(data.name);
         setLogo(data.logo);
+        setIsLoading(false);
       });
   }, []);
 
@@ -175,7 +177,7 @@ const Merchant = (props: { menu: any }): JSX.Element => {
   };
 
   return (
-    <DefaultLayout location="pesan">
+    <DefaultLayout location="pesan" isLoading={isLoading}>
       <div className="fixed p-4 bottom-20 right-6 bg-c-orange-800 rounded-full shadow-2xl shadow-neutral-900">
         <div className="w-6 h-6 absolute bg-c-red-700 -left-[10%] -top-[10%] rounded-full text-neutral-50 flex justify-center items-center">
           <small className="text-xs">{cartItemNumber}</small>

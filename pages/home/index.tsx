@@ -13,18 +13,23 @@ import { useState, useEffect } from "react";
 
 const Homepage: React.FunctionComponent = (): JSX.Element => {
   const [keyword, setKeyword] = useState("");
+  const session = useSession();
+  const user = session?.user;
   const [searchResult, setSearchResult] = useState([]);
   const [similar, setSimilar] = useState([]);
   const { data, status } = useSession();
   const [profile, setProfile] = useState({balance: 0, creditScore: 0});
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     fetch(`/api/profile/user/userProfile`, {
       method: "POST",
       body: JSON.stringify({id: data?.user?.id})
     }).then(res => res.json()).then(data => {
       console.log(data);
       setProfile(data);
+      setIsLoading(false);
     })
   }, [])
 
@@ -57,7 +62,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
   }
 
   return (
-    <DefaultLayout location="home">
+    <DefaultLayout location="home" isLoading={isLoading}>
       <div className="flex flex-col w-full h-full overflow-y-scroll min-h-screen">
         <div className="mt-7 flex flex-col gap-4">
           {/* SEARCH BAR */}
