@@ -11,11 +11,19 @@ export default async function handler(
   if (req.method === "POST") {
     const { id } = JSON.parse(req.body);
 
-    const user = await prisma.user.findFirst({
+    // console.log(id, 'halo');
+
+    if (id == "") {
+      return res.status(400).json({ message: "failed to get user" });
+    }
+
+    const user = await prisma.user.findUnique({
       where: {
         id: id,
       },
     });
+
+    // console.log(user, "user");
 
     if (!user) {
       return res.status(400).json({ message: "failed to get user" });

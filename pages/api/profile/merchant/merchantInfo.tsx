@@ -11,6 +11,10 @@ export default async function handle(
 
     console.log(id);
 
+    if (id == "") {
+        return res.status(400).json({ message: "failed to get merchant" });
+    }
+
     const merchant = await prisma.merchant.findFirst({
         where: {
             ownerId: id,

@@ -15,7 +15,7 @@ type CartContentProps = {
 };
 
 const Cart: React.FC = (): JSX.Element => {
-  const [cartContent, setCartContent] = useState(null);
+  const [cartContent, setCartContent] = useState({menuItems: [{quantity: 0}]});
   const [isLoading, setIsLoading] = useState(true);
   const { data: session, status } = useSession();
   const user = session?.user;
@@ -48,8 +48,8 @@ const Cart: React.FC = (): JSX.Element => {
   const [isEditing, setIsEditing] = useState(false);
 
   const changeItemQuantity = (index: number, quantity: number) => {
-    const newCartContent = [...cartContent];
-    newCartContent[index].quantity = quantity;
+    const newCartContent = cartContent;
+    newCartContent.menuItems[index].quantity = quantity;
     setCartContent(newCartContent);
   };
 
@@ -88,7 +88,7 @@ const Cart: React.FC = (): JSX.Element => {
             <div className="">
               <div className="flex justify-between items-center mb-2">
                 <p className="font-semibold text-2xl">
-                  {cartContent.merchant.name}
+                  {cartContent?.merchant?.name}
                 </p>
                 <div className="bg-c-orange-800 flex items-center justify-center w-8 h-8 rounded-full">
                   <div
@@ -120,7 +120,7 @@ const Cart: React.FC = (): JSX.Element => {
               <p className="text-c-orange-700">
                 Rp{" "}
                 {cartContent.menuItems.reduce(
-                  (total, item) => total + item.menu.price * item.quantity,
+                  (total, item) => total + item.menu?.price * item.quantity,
                   0
                 )}
               </p>
@@ -185,11 +185,12 @@ const ItemBox: React.FC = ({
   set: any;
   content: any;
 }): JSX.Element => {
+  const router = useRouter();
   const delMenu = (item) => {
-    let newCart = [...content];
-    for (let i = 0; i < newCart.length; i++) {
-      if (newCart[i].menu.id === item.menu.id) {
-        newCart.splice(i, 1);
+    let newCart = content;
+    for (let i = 0; i < newCart.menuItems.length; i++) {
+      if (newCart.menuItems[i].menu.id === item.menu.id) {
+        newCart.menuItems.splice(i, 1);
       }
     }
     set(newCart);
@@ -202,6 +203,8 @@ const ItemBox: React.FC = ({
       body: JSON.stringify({
         menuId: item.id,
       }),
+    }).then((res) => {
+      router.reload();
     });
   };
 

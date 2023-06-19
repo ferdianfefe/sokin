@@ -7,27 +7,39 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import HorizontalCardCarousel from "components/homepage-1/HorizontalCardCarousel";
 import VerticalCardCarousel from "components/homepage-1/VerticalCardCarousel";
 import SquareCardCarousel from "components/homepage-1/SquareCardCarousel";
-import { Router } from "next/router";
+import { Router, useRouter } from "next/router";
 import DefaultLayout from "components/layout/DefaultLayout";
 import { useState, useEffect } from "react";
 
 const Homepage: React.FunctionComponent = (): JSX.Element => {
   const [keyword, setKeyword] = useState("");
-  const session = useSession();
-  const user = session?.user;
+  // const session = useSession();
+  // const user = session?.user;
   const [searchResult, setSearchResult] = useState([]);
+  const [reservationData, setReservationData] = useState({user: {name: ""}, source: "tes", destination: "", createdAt: ""});
   const [similar, setSimilar] = useState([]);
   const { data, status } = useSession();
   const [profile, setProfile] = useState({balance: 0, creditScore: 0});
   const [isLoading, setIsLoading] = useState(true);
+  const [order, setOrder] = useState(true);
+
+  // console.log(data?.user.role);
+
+  const router = useRouter();
+
+  if (data && data?.user.role != "user") {
+    signOut().then(() => {
+      router.push("/signin");
+    })
+  }
 
   useEffect(() => {
     setIsLoading(true);
     fetch(`/api/profile/user/userProfile`, {
       method: "POST",
-      body: JSON.stringify({id: data?.user?.id})
+      body: JSON.stringify({id: (data) ? data?.user?.id : ''})
     }).then(res => res.json()).then(data => {
-      console.log(data);
+      // console.log(data);
       setProfile(data);
       setIsLoading(false);
     })
@@ -84,7 +96,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
           </div>
 
           {status == "unauthenticated" && (
-            <div className="px-7">
+            <div className="px-5">
               <div className="bg-slate-200 rounded-[30px] w-full flex py-8 px-8 justify-center items-center gap-6 relative overflow-hidden">
                 <Image
                   src="public/img/homepage/bg-login-daftar.svg"
@@ -116,7 +128,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
             </div>
           )}
           {(status == "authenticated" && searchResult.length == 0) && (
-            <div className="px-7">
+            <div className="px-5">
               <div className=" rounded-[30px] w-full flex py-3 px-auto justify-center items-center gap-6 relative overflow-hidden">
                 <Image
                 priority
@@ -261,6 +273,13 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
               </div>
             </div>
           )}
+          {order && (
+            <div className="px-5">
+              <h2 className="text-xl font-bold">Reservasi Order</h2>
+              <p className="font-semibold text-gray-400 text-sm">Sedang berlangsung</p>
+              <OrderReservation reservationData={reservationData} />
+            </div>
+          )}
 
           {searchResult.length == 0 && (
             <>
@@ -397,6 +416,87 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
 };
 
 export default Homepage;
+
+const OrderReservation = ({ reservationData }: { reservationData: any }) => {
+  const starth = new Date(reservationData.createdAt).getHours();
+  const startm = new Date(reservationData.createdAt).getMinutes();
+  const time = parseInt(reservationData.eta)
+
+  const router = useRouter();
+  return (
+    <>
+      <div className="w-full h-60 border-[1px] border-c-orange-200 rounded-2xl mt-3">
+        <div className="flex justify-between py-2 px-4 items-center">
+          <div className="">
+            <p>Driver</p>
+            <p className="font-extrabold">{reservationData.user.name}</p>
+          </div>
+          <div className="flex rounded-full bg-[#FFF0E0] w-16 px-1 h-7 drop-shadow-lg items-center justify-center gap-2 drop-shadow-[#FE8304]/20">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 18 18"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M8.29096 1.51217C8.5488 0.829277 9.52137 0.829277 9.77921 1.51217L11.4426 6.15141C11.5589 6.45948 11.8554 6.66358 12.1867 6.66358H16.2739C17.0286 6.66358 17.3583 7.61045 16.7649 8.07356L13.8561 10.709C13.5883 10.918 13.4844 11.2733 13.5977 11.5923L14.6596 16.1259C14.9182 16.8534 14.0804 17.4793 13.4484 17.0308L9.49702 14.5073C9.22069 14.3113 8.84947 14.3113 8.57315 14.5073L4.62186 17.0308C3.98976 17.4793 3.152 16.8534 3.41053 16.1259L4.47245 11.5923C4.58582 11.2733 4.48188 10.918 4.21403 10.709L1.30529 8.07356C0.711831 7.61045 1.04156 6.66358 1.79628 6.66358H5.88346C6.21474 6.66358 6.51126 6.45948 6.62758 6.15141L8.29096 1.51217Z"
+                fill="#FE8304"
+                stroke="#FE8304"
+                stroke-width="0.803675"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            <h2>
+              <span className="font-black">98</span>
+            </h2>
+          </div>
+          <div className="text-sm text-right">
+            <p className="font-extrabold">
+              Rp {reservationData.costFee + reservationData.foodFee + 2500}
+            </p>
+            <p className="">Soket</p>
+          </div>
+        </div>
+        <div className="w-full h-[1px] bg-c-orange-700"></div>
+        <div className="py-3 flex px-4 text-sm justify-between">
+          <div className="flex">
+            <Image
+              src="/Images/driver/dashboard/Destination.svg"
+              width={26}
+              height={77}
+              alt=""
+              className="mr-2 mt-1"
+            />
+            <div>
+              <p>Pengambilan pesanan</p>
+              <h3 className="font-extrabold">{reservationData.source}</h3>
+              <p className="mt-5">Tujuan akhir</p>
+              <h3 className="font-extrabold">J{reservationData.destination}</h3>
+            </div>
+          </div>
+          <div className="text-right">
+            <p className="font-bold">Estimasi</p>
+            <h3 className="font-bold text-gray-500">{starth}:{startm.toString().padStart(2, "0")}</h3>
+            <h3 className="mt-9 font-bold text-gray-500">{(time+startm > 59) ? starth+1 : starth}:{((time+startm > 59) ? (startm+time)%59 : startm).toString().padStart(2, "0")}</h3>
+          </div>
+        </div>
+        <div className="justify-center flex mt-1" onClick={
+          () => {
+            router.push({
+                pathname: '/order',
+                query: { data: JSON.stringify(reservationData)}
+            })
+          }
+        }>
+          <Button text="Detail" size="small" className="w-1/3" />
+        </div>
+      </div>
+    </>
+  );
+};
 
 const SearchBar: React.FunctionComponent = (): JSX.Element => {
   return (

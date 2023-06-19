@@ -365,6 +365,9 @@ const Checkout: React.FC = (): JSX.Element => {
         cartId={cartId}
         foodFee={parseInt(router.query.total as string)}
         costFee={ongkir}
+        serviceFee={layanan}
+        foodDisc={promoFood}
+        costDisc={promoOngkir}
       />
       {showOpsi && (
         <PopUpOpsi
@@ -419,6 +422,9 @@ const PaymentPopup: React.FC = ({
   cartId,
   costFee,
   foodFee,
+  serviceFee,
+  foodDisc,
+  costDisc,
 }: {
   toggleShowOpsi: Function;
   opsiPembayaran: string;
@@ -428,6 +434,9 @@ const PaymentPopup: React.FC = ({
   cartId?: string;
   costFee?: number;
   foodFee?: number;
+  serviceFee?: number;
+  foodDisc?: number;
+  costDisc?: number;
 }): JSX.Element => {
   const { data: session, status } = useSession();
   const user = session?.user;
@@ -470,14 +479,18 @@ const PaymentPopup: React.FC = ({
         isCompleted: false,
         foodFee,
         costFee,
+        serviceFee,
+        foodDisc,
+        costDisc,
       }),
-    }).then(() => router.push("/home"));
+    })
+    .then(() => router.push("/home"));
   };
 
   return (
     <div className="sticky bottom-0 left-0">
       {opsiPembayaran === "Soket" &&
-        balance < parseInt(router.query.total as string) && (
+        balance < parseInt(router.query.total as string) + (serviceFee? serviceFee : 0) + (costFee? costFee : 0) && (
           <div className="bg-c-red-700 flex items-center h-12 justify-evenly shadow-[inset_0_0px_15px_7px_rgb(500,500,500,0.2)]">
             <div className="relative w-6 h-6">
               <Image src={"/images/icons/bell.svg"} alt="bell-icon" fill />
@@ -519,7 +532,7 @@ const PaymentPopup: React.FC = ({
               />
               <div className="flex-2 ml-4">
                 <p className="font-semibold">Cash</p>
-                <p className="font-bold text-c-orange-700">Rp {100000}</p>
+                <p className="font-bold text-c-orange-700">Rp {foodFee + costFee + serviceFee}</p>
               </div>
             </div>
           )}
@@ -564,6 +577,24 @@ const PopUpOpsi = ({
   opsiPembayaran: String;
   user: any;
 }) => {
+
+  const {data:session, status} = useSession();
+  const [balance, setBalance] = useState(0);
+
+  useEffect(() => {
+    if (session) {
+      fetch("/api/profile/user/userProfile", {
+        method: "POST",
+        body: JSON.stringify({
+          id: session?.user.id,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setBalance(data.balance);
+        });
+    }
+  }, []);
   return (
     <div className="fixed inset-0 flex flex-col justify-end z-10 backdrop-blur-sm">
       <div className="w-full h-[60%]" onClick={toggleShowOpsi}></div>

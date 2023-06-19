@@ -19,6 +19,9 @@ type OrderCreateRequestBody = {
   isCompleted: boolean;
   foodFee: number;
   costFee: number;
+  serviceFee: number;
+  foodDisc: number;
+  costDisc: number;
 };
 
 type UpdateOrderData = {
@@ -77,6 +80,8 @@ export default async function handle(
   }
 
   if (req.method === "POST") {
+    // console.log(req.body);
+
     const {
       driverId,
       userId,
@@ -90,7 +95,14 @@ export default async function handle(
       isCompleted,
       foodFee,
       costFee,
+      serviceFee,
+      foodDisc,
+      costDisc,
     } = req.body as OrderCreateRequestBody;
+
+    console.log(driverId);
+
+    // return res.status(201).json({message: 'sukses'});
 
     const newOrder = await prisma.order.create({
       data: {
@@ -106,6 +118,9 @@ export default async function handle(
         isCompleted,
         foodFee,
         costFee,
+        serviceFee,
+        foodDisc,
+        costDisc,
       },
       include: {
         user: {
@@ -134,9 +149,9 @@ export default async function handle(
     res?.socket?.server?.io?.emit("newOrder", newOrder);
 
     // delete cart
-    await prisma.cart.delete({
-      where: { id: cartId },
-    });
+    // await prisma.cart.delete({
+    //   where: { id: cartId },
+    // });
 
     // update user balance
     const user = await prisma.user.findFirst({
