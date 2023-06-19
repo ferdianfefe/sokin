@@ -12,6 +12,11 @@ declare module "next-auth/" {
         name: string;
         email: string;
         role: string;
+        phoneNumber: string;
+        dailyTarget: number;
+        balance: number;
+        vehicle: string;
+        licenseNumber: string;
     }
   }
 }

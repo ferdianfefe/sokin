@@ -27,7 +27,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
 
   const router = useRouter();
 
-  if (data?.user.role != "user") {
+  if (data && data?.user.role != "user") {
     signOut().then(() => {
       router.push("/signin");
     })

@@ -18,14 +18,14 @@ export default async function handle(
 ) {
   if (req.method === "GET") {
     const promo = await prisma.order.findMany();
-    console.log(promo);
+    // console.log(promo);
     return res.status(200).json(promo);
     // const cart = await prisma.cart.findFirst({
     //     where: { userId: '6458f87ec5de7d3000e553cd' },
     //     include: { menuItems: { include: { menu: true } } },
     //   });
     //   return res.json(cart);
-    // const delCart = await prisma.cart.deleteMany({})
+    // const delCart = await prisma.order.deleteMany({})
     // return res.status(200).json(delCart);
   }
   if (req.method === "POST") {
