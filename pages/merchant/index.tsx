@@ -10,6 +10,7 @@ import {
 import Navbar from "components/elements/Navbar";
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import { useRouter } from "next/router";
 
 const PopUpOrderMerchant: React.FC<{
   orderNumber?: number;
@@ -212,11 +213,20 @@ const Merchant: React.FC = () => {
 
   let merId = "";
 
+  const router = useRouter();
+
+  // console.log("user", user);
+  if (user?.role !== "owner") {
+    signOut().then(() => {
+      router.push("/merchant/signin");
+    })
+  }
+
   useEffect(() => {
     fetch("/api/profile/merchant/merchantInfo", {
       method: "POST",
       body: JSON.stringify({
-        id: user?.id,
+        id: (user) ? user?.id : '',
       }),
     })
       .then((res) => res.json())
@@ -252,6 +262,7 @@ const Merchant: React.FC = () => {
       let newOrders = [...order];
       newOrders.push(data);
       setOrder(newOrders);
+      // setOrder((order) => {return [data, ...order]});
     });
   }, [merId]);
 
@@ -600,18 +611,18 @@ const ItemBox: React.FC = ({
 
 export default Merchant;
 
-export const getServerSideProps = async ({ req }: { req: any }) => {
-  const session = await getSession({ req });
-  // console.log(session);
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/merchant/signin",
-        permanent: false,
-      },
-    };
-  }
-  return {
-    props: { session },
-  };
-};
+// export const getServerSideProps = async ({ req }: { req: any }) => {
+//   const session = await getSession({ req });
+//   // console.log(session);
+//   if (!session) {
+//     return {
+//       redirect: {
+//         destination: "/merchant/signin",
+//         permanent: false,
+//       },
+//     };
+//   }
+//   return {
+//     props: { session },
+//   };
+// };

@@ -21,6 +21,14 @@ const DriverDashboard = () => {
   const { data: session, status } = useSession();
   const driver = session?.user;
 
+  // console.log(session?.user.role);
+
+  if (session?.user.role !== "driver") {
+    signOut().then(() => {
+      router.push("/driver/signin");
+    })
+  }
+  
   useEffect(() => {
     fetch("/api/order/getOrder", {
       method: "POST",
@@ -37,7 +45,7 @@ const DriverDashboard = () => {
       })
       .then((data) => {
         console.log(data);
-        if (data.status === "success") {
+        if (data.length > 0) {
           setReservation(true);
         }
         // alert(data.length);
@@ -160,7 +168,7 @@ const DriverDashboard = () => {
               <p className="text-xs ml-2">Saldomu</p>
             </div>
             <h3 className="text-sm mt-1 text-center font-semibold">
-              {driver.balance}
+              {driver?.balance}
             </h3>
           </div>
           <div className="py-[6px] bg-orange-500 h-14 w-[30%] text-white rounded-[21px] shadow-[-2px_2px_5px_0.1px_rgb(120,30,0,0.7),inset_0_0px_6px_6px_rgb(0,0,0,0.1)]">
@@ -174,7 +182,7 @@ const DriverDashboard = () => {
               <p className="text-xs ml-2">Kendaraan</p>
             </div>
             <h3 className="text-sm mt-1 text-center font-semibold">
-              {driver.vehicle}
+              {driver?.vehicle}
             </h3>
           </div>
           <div className="py-[6px] bg-orange-500 h-14 w-[30%] text-white rounded-[21px] shadow-[-2px_2px_5px_0.1px_rgb(120,30,0,0.7),inset_0_0px_6px_6px_rgb(0,0,0,0.1)]">
@@ -188,7 +196,7 @@ const DriverDashboard = () => {
               <p className="text-xs ml-1">Plat Nomor</p>
             </div>
             <h3 className="text-sm mt-1 text-center font-semibold">
-              {driver.licenseNumber}
+              {driver?.licenseNumber}
             </h3>
           </div>
         </div>
@@ -230,7 +238,7 @@ const DriverDashboard = () => {
           </p>
 
           <div className="mt-4 w-full px-4 h-[72px]">
-            <TargetHarianProgressBar percent={driver.dailyTarget} />
+            <TargetHarianProgressBar percent={driver? driver.dailyTarget : 0} />
           </div>
         </div>
 
@@ -681,18 +689,18 @@ const OrderReservation = ({ reservationData }: { reservationData: any }) => {
 
 export default DriverDashboard;
 
-export const getServerSideProps = async ({ req }: { req: any }) => {
-  const session = await getSession({ req });
-  // console.log(session);
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/driver/signin",
-        permanent: false,
-      },
-    };
-  }
-  return {
-    props: { session },
-  };
-};
+// export const getServerSideProps = async ({ req }: { req: any }) => {
+//   const session = await getSession({ req });
+//   // console.log(session);
+//   if (!session) {
+//     return {
+//       redirect: {
+//         destination: "/driver/signin",
+//         permanent: false,
+//       },
+//     };
+//   }
+//   return {
+//     props: { session },
+//   };
+// };
