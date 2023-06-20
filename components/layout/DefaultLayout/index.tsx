@@ -10,9 +10,9 @@ const DefaultLayout: React.FC<{
   location: string;
   className?: string;
   isLoading?: boolean;
-  notif: boolean;
-  notifText: string;
-  notifType: string;
+  notif?: boolean;
+  notifText?: string;
+  notifType?: string;
 }> = ({ children, location, className, isLoading = false, notif = false, notifText, notifType = "success" }): JSX.Element => {
   const onAddMenu = () => {};
   const [showNotif, setShowNotif] = useState(notif);
