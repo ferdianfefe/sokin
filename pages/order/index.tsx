@@ -52,15 +52,15 @@ const Order = () => {
           />
           {statusOrder === 1 ? (
             <h2 className="text-3xl font-semibold text-gray-600 ml-5">
-              Sedang menuju ke Restoran
+              Sedang mencari driver
             </h2>
           ) : statusOrder === 2 ? (
             <h2 className="text-3xl font-semibold text-gray-600 ml-5">
-              Sedang mengantar pesanan
+              Driver menuju restoran
             </h2>
           ) : (
             <h2 className="text-3xl font-semibold text-gray-600 ml-5">
-              Pesanan diantar
+              Driver menuju tempatmu
             </h2>
           )}
         </div>
