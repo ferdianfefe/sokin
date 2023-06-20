@@ -262,6 +262,7 @@ const Merchant: React.FC = () => {
       let newOrders = [...order];
       newOrders.push(data);
       setOrder(newOrders);
+      // setOrder((order) => {return [data, ...order]});
     });
   }, [merId]);
 

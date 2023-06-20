@@ -45,7 +45,7 @@ const DriverDashboard = () => {
       })
       .then((data) => {
         console.log(data);
-        if (data.status === "success") {
+        if (data.length > 0) {
           setReservation(true);
         }
         // alert(data.length);
