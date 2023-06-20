@@ -11,6 +11,7 @@ import Navbar from "components/elements/Navbar";
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { useRouter } from "next/router";
+import { set } from "react-hook-form";
 
 const PopUpOrderMerchant: React.FC<{
   orderNumber?: number;
@@ -207,6 +208,9 @@ const Merchant: React.FC = () => {
   const [driverName, setDriverName] = useState<string>("");
   const [driverPhone, setDriverPhone] = useState<string>("");
   const [orderTotal, setOrderTotal] = useState<number>(0);
+  const [discTotal, setDiscTotal] = useState<number>(0);
+  const [costFee, setCostFee] = useState<number>(0);
+  const [serviceFee, setServiceFee] = useState<number>(0);
   const [merchantLogo, setMerchantLogo] = useState<string>("");
 
   const [newOrderData, setNewOrderData] = useState<any[]>([]);
@@ -216,11 +220,11 @@ const Merchant: React.FC = () => {
   const router = useRouter();
 
   // console.log("user", user);
-  if (user?.role !== "owner") {
-    signOut().then(() => {
-      router.push("/merchant/signin");
-    })
-  }
+  // if (user?.role !== "owner") {
+  //   signOut().then(() => {
+  //     router.push("/merchant/signin");
+  //   })
+  // }
 
   useEffect(() => {
     fetch("/api/profile/merchant/merchantInfo", {
@@ -366,7 +370,7 @@ const Merchant: React.FC = () => {
               <div className="flex justify-between mb-4">
                 <p className="">Diskon</p>
                 <p className="">
-                  -Rp15.000
+                  Rp {discTotal}
                   {/* {cartContent.reduce(
                     (total, item) => total + item.price * item.quantity,
                     0
@@ -375,16 +379,16 @@ const Merchant: React.FC = () => {
               </div>
               <div className="flex justify-between mb-4">
                 <p className="">Ongkos Kirim</p>
-                <p className="">Rp0</p>
+                <p className="">Rp {costFee}</p>
               </div>
               <div className="flex justify-between mb-4">
                 <p className="">Biaya Layanan</p>
-                <p className="">Rp2.500</p>
+                <p className="">Rp {serviceFee}</p>
               </div>
               <hr className="border-[1.5px] border-[#000000] mb-4" />
               <div className="flex justify-between mb-4 font-extrabold">
                 <p className="">Total</p>
-                <p className="">Rp {orderTotal}</p>
+                <p className="">Rp { orderTotal + costFee + serviceFee - discTotal }</p>
               </div>
             </div>
           </div>
@@ -398,7 +402,7 @@ const Merchant: React.FC = () => {
               />
               <div className="text-sm">
                 <p className="font-semibold">Soket</p>
-                <h3 className="font-extrabold text-c-orange-800">Rp55.750</h3>
+                <h3 className="font-extrabold text-c-orange-800">Rp{ orderTotal + costFee + serviceFee - discTotal }</h3>
               </div>
             </div>
           </div>
@@ -523,8 +527,17 @@ const Merchant: React.FC = () => {
                       setDriverName(order.driver.name);
                       setDriverPhone(order.driver.phoneNumber);
                       setOrderTotal(
-                        parseInt(order.foodFee) + parseInt(order.costFee)
+                        parseInt(order.foodFee)
                       );
+                      setDiscTotal(
+                        parseInt(order.foodDisc) + parseInt(order.costDisc)
+                      );
+                      setCostFee(
+                        parseInt(order.costFee)
+                      )
+                      setServiceFee(
+                        parseInt(order.serviceFee)
+                      )
                       setDetailOpen(true);
                     }}
                   >
@@ -535,7 +548,7 @@ const Merchant: React.FC = () => {
                       <div className="font-bold text-lg">{order.user.name}</div>
                       <div className="font-bold text-gray-400 text-sm">
                         {order?.cart?.menuItems.length} Menu | Rp{" "}
-                        {parseInt(order.foodFee) + parseInt(order.costFee)}
+                        {parseInt(order.foodFee) + parseInt(order.costFee) + parseInt(order.serviceFee) - parseInt(order.foodDisc) - parseInt(order.costDisc)}
                       </div>
                     </div>
                   </div>

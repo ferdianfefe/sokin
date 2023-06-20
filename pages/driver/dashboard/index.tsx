@@ -14,7 +14,7 @@ import TargetHarianProgressBar from "components/elements/TargetHarianProgressBar
 const DriverDashboard = () => {
   const [showPopUp, setShowPopup] = useState(false);
   const [Reservation, setReservation] = useState(false);
-  const [reservationData, setReservationData] = useState({user: {name: ""}, source: "tes", destination: "", createdAt: ""});
+  const [reservationData, setReservationData] = useState({/*user: {name: ""}, source: "tes", destination: "", createdAt: ""*/});
   const [keyword, setKeyword] = useState("");
   const router = useRouter();
   const [isActive, setIsActive] = useState(false);
@@ -23,11 +23,11 @@ const DriverDashboard = () => {
 
   // console.log(session?.user.role);
 
-  if (session?.user.role !== "driver") {
-    signOut().then(() => {
-      router.push("/driver/signin");
-    })
-  }
+  // if (session?.user.role !== "driver") {
+  //   signOut().then(() => {
+  //     router.push("/driver/signin");
+  //   })
+  // }
   
   useEffect(() => {
     fetch("/api/order/getOrder", {
@@ -47,6 +47,7 @@ const DriverDashboard = () => {
         console.log(data);
         if (data.length > 0) {
           setReservation(true);
+          setReservationData(data[0])
         }
         // alert(data.length);
       });
@@ -384,17 +385,17 @@ const PopUpDriver: React.FC<{
   setReservation = () => {},
 }) => {
   const handleAccept = async () => {
-    await fetch("/api/order", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        orderId: reservationData.id,
-        status: "DELIVERY",
-        from: "driver",
-      }),
-    });
+    // await fetch("/api/order", {
+    //   method: "PUT",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     orderId: reservationData.id,
+    //     status: "DELIVERY",
+    //     from: "driver",
+    //   }),
+    // });
     setReservation(true);
     setIsActive(true);
   };
