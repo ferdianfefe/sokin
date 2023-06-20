@@ -14,30 +14,56 @@ import { useRouter } from "next/router";
 import { set } from "react-hook-form";
 
 const PopUpOrderMerchant: React.FC<{
-  orderNumber?: number;
-  customerName?: string;
-  menuName?: string;
-  image?: String;
-  menuCount?: number;
-  totalPrice?: number;
-  customerRate?: number;
+  // orderNumber?: number;
+  // customerName?: string;
+  // menuName?: string;
+  // image?: String;
+  // menuCount?: number;
+  // totalPrice?: number;
+  // customerRate?: number;
+  data?: any;
+  isOpen?: boolean;
+  setIsOpen: (React.Dispatch<React.SetStateAction<boolean>>);
+  urutan?: number;
 }> = ({
-  orderNumber,
-  customerName,
-  menuName,
-  image,
-  menuCount,
-  totalPrice,
-  customerRate,
+  // orderNumber,
+  // customerName,
+  // menuName,
+  // image,
+  // menuCount,
+  // totalPrice,
+  // customerRate,
+  data,
+  isOpen,
+  setIsOpen,
+  urutan,
 }): JSXStyle.Element => {
-  const [isOpen, setIsOpen] = useState(true);
+  // const [isOpen, setIsOpen] = useState(true);
+  // console.log(data);
 
   const handleClose = () => {
     setIsOpen(false);
   };
+
+  const proses = async () => {
+    await fetch(`/api/order`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status: "PROCESSING",
+        orderId: data.id,
+        from: 'merchant',
+        isAccepted: true,
+        isCompleted: false,
+      }),
+    }).then(() => {setIsOpen(false)});
+  }
+
   return isOpen ? (
-    <div className="hidden">
-      <div className="w-full">
+    <div className="">
+      <div className="w-full h-screen fixed top-0 left-0 border-2 border-black z-50">
         <div className="absolute inset-0 m-auto rounded-[20px] w-[352px] h-[375px] bg-[#FFF] z-50 p-8">
           <div className="flex gap-10 items-center border-b-2 border-c-orange-500 pb-2">
             <svg
@@ -61,7 +87,7 @@ const PopUpOrderMerchant: React.FC<{
               <p className="text-3xl font-bold text-[#FE860B]">#123</p>
               <div className="flex flex-col">
                 <p className="font-bold text-base">Pemesan</p>
-                <p className="text-base">Rachel Naragifta</p>
+                <p className="text-base">{data.user.name}</p>
               </div>
             </div>
             <div className="w-[61px] py-[2px] flex my-auto rounded-full bg-c-orange-200 shadow-[0px_4px_4px_#FBC48A] justify-center items-center gap-[2px]">
@@ -87,24 +113,28 @@ const PopUpOrderMerchant: React.FC<{
 
           <div>
             <h1 className="font-bold text-2xl mt-2">Pesanan</h1>
-            <div className="mt-2 w-full h-20 shadow-[0px_4.35606px_3.48485px_rgba(215, 134, 50, 0.4)] radius-[18px] overflow-hidden border-2 rounded-[16px] flex">
-              <div className="bg-slate-200 w-[40%] h-full object-cover"></div>
-              <div className="flex flex-col items-center text-lg mx-6 font-bold justify-center gap-4 w-full">
-                <p className="flex w-full justify-start">Nama Menu</p>
-                <div className="flex w-full justify-between">
-                  <p className="flex">Rp20.000</p>
-                  <p className="flex justify-end">x2</p>
+            {(data.cart.menuItems.length > 0) && data.cart.menuItems.map((item:any) => {
+              return (
+                <div className="mt-2 w-full h-20 shadow-[0px_4.35606px_3.48485px_rgba(215, 134, 50, 0.4)] radius-[18px] overflow-hidden border-2 rounded-[16px] flex">
+                  <div className="bg-slate-200 w-[40%] h-full object-cover"></div>
+                  <div className="flex flex-col items-center text-lg mx-6 font-bold justify-center gap-4 w-full">
+                    <p className="flex w-full justify-start">{item.menu.name}</p>
+                    <div className="flex w-full justify-between">
+                      <p className="flex">Rp{item.menu.price}</p>
+                      <p className="flex justify-end">x{item.quantity}</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+              )
+            })}
           </div>
 
           <div className="flex w-full justify-between mt-4 font-bold">
             <p>Total</p>
-            <p>Rp35.000</p>
+            <p>Rp{data.foodFee}</p>
           </div>
 
-          <div className="mt-4">
+          <div className="mt-4" onClick={proses}>
             <Button text="Pesanan diproses" />
           </div>
         </div>
@@ -213,7 +243,8 @@ const Merchant: React.FC = () => {
   const [serviceFee, setServiceFee] = useState<number>(0);
   const [merchantLogo, setMerchantLogo] = useState<string>("");
 
-  const [newOrderData, setNewOrderData] = useState<any[]>([]);
+  const [newOrderData, setNewOrderData] = useState<any>({});
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   let merId = "";
 
@@ -253,11 +284,11 @@ const Merchant: React.FC = () => {
         })
           .then((res) => res.json())
           .then((data) => {
-            console.log("fetched order", data);
+            // console.log("fetched order", data);
             setOrder(data);
           });
       });
-  }, []);
+  }, [isOpen]);
 
   useEffect(() => {
     const socket = io();
@@ -268,7 +299,23 @@ const Merchant: React.FC = () => {
       setOrder(newOrders);
       // setOrder((order) => {return [data, ...order]});
     });
-  }, [merId]);
+    socket.on("updateOrderDriver", (data) => {
+      fetch("/api/order/getOrder", {
+        method: "POST",
+        headers:{
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          id: merId,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          // console.log("fetched order", data);
+          setOrder(data);
+        });
+    });
+  }, []);
 
   const logoutHandler = () => {
     signOut();
@@ -278,6 +325,7 @@ const Merchant: React.FC = () => {
     <MerchantLayout
       location="home"
       setNewOrderData={setNewOrderData}
+      setIsOpen={setIsOpen}
     >
       <div
         className={`fixed z-[1000] max-h-screen w-screen overflow-scroll min-h-screen bg-white ${
@@ -408,8 +456,8 @@ const Merchant: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className="p-8 h-full">
-        <PopUpOrderMerchant />
+      <PopUpOrderMerchant isOpen={isOpen} setIsOpen={setIsOpen} data={newOrderData} urutan={order.length + 1}/>
+      <div className={`p-8 h-full ${isOpen ? 'blur-sm' : ''}`}>
         <h1 className="font-bold text-black text-lg mb-3">Informasi Akun</h1>
         <div className="bg-[#FCBF86] w-full h-44 flex rounded-3xl px-2 py-6 mb-3 items-center justify-evenly text-[14px]">
           <div className="w-[94px] h-[94px] rounded-full overflow-hidden shadow-[inset_0px_2.70504px_2.70504px_rgba(255, 255, 255, 0.25)]">
@@ -518,6 +566,8 @@ const Merchant: React.FC = () => {
                       order.status == "PROCESSING" ? "bg-[url('/Pro.png')]" : ""
                     } ${
                       order.status == "RECEIVED" ? "bg-[url('/Rec.png')]" : ""
+                    } ${
+                      order.status == "DONE" ? "bg-[url('/Don.png')]" : ""
                     } bg-contain bg-no-repeat`}
                     onClick={() => {
                       setDestination(order.destination);
@@ -538,7 +588,12 @@ const Merchant: React.FC = () => {
                       setServiceFee(
                         parseInt(order.serviceFee)
                       )
-                      setDetailOpen(true);
+                      if (order.status == "RECEIVED") {
+                        setNewOrderData(order);
+                        setIsOpen(true);
+                      } else {
+                        setDetailOpen(true);
+                      }
                     }}
                   >
                     <div className="px-10 flex font-bold text-[#FE8304] h-[10vw] items-center text-2xl">

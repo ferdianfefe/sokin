@@ -45,9 +45,13 @@ const DriverDashboard = () => {
       })
       .then((data) => {
         console.log(data);
-        if (data.length > 0) {
+        let newArray = data.filter(function(item:any){
+              return item.status == "PROCESSING" || item.status == "DELIVERY";
+        });
+        console.log(newArray);
+        if (newArray.length > 0) {
           setReservation(true);
-          setReservationData(data[0])
+          setReservationData(newArray[0])
         }
         // alert(data.length);
       });
@@ -99,6 +103,8 @@ const DriverDashboard = () => {
   const handleInputChange = (event) => {
     setKeyword(event.target.value);
   };
+
+  console.log(driver)
 
   return (
     <DriverLayout
@@ -482,7 +488,7 @@ const PopUpDriver: React.FC<{
                   </p>
                   <h2>
                     <span className="font-extrabold">
-                      McDonalds cabang Kaliurang
+                      {reservationData?.source}
                     </span>
                   </h2>
                 </div>

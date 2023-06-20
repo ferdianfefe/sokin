@@ -368,6 +368,7 @@ const Checkout: React.FC = (): JSX.Element => {
         serviceFee={layanan}
         foodDisc={promoFood}
         costDisc={promoOngkir}
+        succesful={successful}
       />
       {showOpsi && (
         <PopUpOpsi
@@ -428,7 +429,7 @@ const PaymentPopup: React.FC = ({
 }: {
   toggleShowOpsi: Function;
   opsiPembayaran: string;
-  successful?: Function;
+  successful: Function;
   merchantId?: string;
   merchantAddress?: string;
   cartId?: string;
@@ -484,7 +485,7 @@ const PaymentPopup: React.FC = ({
         costDisc,
       }),
     })
-    .then(() => router.push("/home"));
+    .then(successful());
   };
 
   return (
