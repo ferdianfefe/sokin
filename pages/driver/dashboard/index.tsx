@@ -30,6 +30,7 @@ const DriverDashboard = () => {
   //     router.push("/driver/signin");
   //   })
   // }
+  
 
   useEffect(() => {
     fetch("/api/order/getOrder", {
@@ -46,11 +47,10 @@ const DriverDashboard = () => {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
         let newArray = data.filter(function (item: any) {
           return item.status == "PROCESSING" || item.status == "DELIVERY";
         });
-        console.log(newArray);
+        console.log("newArray", newArray);
         if (newArray.length > 0) {
           setReservation(true);
           setReservationData(newArray[0]);
@@ -361,7 +361,7 @@ const DriverDashboard = () => {
             </svg>
           </div>
           <div className="mt-3 border-gray-400 border-[1px]">
-            <MapContainer keywordProp={keyword} />
+            <MapContainer keywordProp={keyword} wayPoints={[]}/>
           </div>
 
           <Button text="Berhenti Sementara" onClickHandler={setIsActive} />

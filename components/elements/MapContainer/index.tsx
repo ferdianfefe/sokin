@@ -12,6 +12,7 @@ interface MapContainerProps {
   isMapToggled?: () => void;
   getCenterHandler?: (center: number[]) => void;
   setMapCoordinates?: (coordinates: string) => void;
+  wayPoints?: any[];
 }
 
 const MapContainer: React.FC<MapContainerProps> = ({
@@ -20,6 +21,7 @@ const MapContainer: React.FC<MapContainerProps> = ({
   isMapToggled = false,
   getCenterHandler = () => {},
   setMapCoordinates = () => {},
+  wayPoints = [],
 }) => {
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -27,6 +29,7 @@ const MapContainer: React.FC<MapContainerProps> = ({
   const [lat, setLat] = useState(42.35);
   const [zoom, setZoom] = useState(9);
   const [keyword, setKeyword] = useState("Yogyakarta");
+  const [turningPoints, setTurningPoints] = useState([]);
 
   /* Resize map on initialization */
   useEffect(() => {
@@ -59,6 +62,85 @@ const MapContainer: React.FC<MapContainerProps> = ({
   }, [keywordProp]);
 
   useEffect(() => {
+    console.log("wayPoints", wayPoints)
+    if(wayPoints.length > 0){
+      console.log("wayPoints", wayPoints)
+      const fetchAPI = async () => {
+        const result = await fetch(
+          `https://api.mapbox.com/directions/v5/mapbox/driving/${wayPoints[0].lng},${wayPoints[0].lat};${110.3869743},${-7.76483838}?geometries=geojson&access_token=${mapboxgl.accessToken}`,
+          { method: "GET" }
+        );
+
+        const data = await result.json();
+        console.log("data", data.routes[0].geometry.coordinates[50])
+        setTurningPoints(data.routes[0].geometry.coordinates);
+
+        map?.current?.on("load", () => {
+
+          // if source does not exist
+          // if (!map?.current?.getSource("route")) {
+          //   map?.current?.addSource("route", {
+          //     type: "geojson",
+          //     data: {
+          //       type: "Feature",
+          //       properties: {},
+          //       geometry: {
+          //         type: "LineString",
+          //         coordinates: data.routes[0].geometry.coordinates,
+          //       },
+          //     },
+          //   });
+          // }
+
+          console.log(turningPoints)
+          // map?.current?.getSource("route").setData({
+          //   type: "Feature",
+          //   properties: {},
+          //   geometry: {
+          //     type: "LineString",
+          //     coordinates: data.routes[0].geometry.coordinates,
+          //   },
+          // });
+
+          // if the layer does not exist
+          if (!map?.current?.getLayer("route")) {
+            map?.current?.addLayer({
+              id: "route",
+              type: "line",
+              source: {
+                type: "geojson",
+                data: {
+                  type: "Feature",
+                  properties: {},
+                  geometry: {
+                    type: "LineString",
+                    coordinates: data.routes[0].geometry.coordinates,
+                  },
+                },
+              },
+              layout: {
+                "line-join": "round",
+                "line-cap": "round",
+              },
+              paint: {
+                "line-color": "#888",
+                "line-width": 8,
+              },
+            });
+            if (map.current?.queryRenderedFeatures({layers: ['route']}).length) {
+              // route is within view, do what you want
+           }
+
+          }
+  
+        })
+      }
+
+      fetchAPI();
+    }
+  }, [wayPoints]);
+
+  useEffect(() => {
     if (map.current) return; // initialize map only once
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
@@ -71,6 +153,7 @@ const MapContainer: React.FC<MapContainerProps> = ({
       setLng(map.current?.getCenter().lng.toFixed(4));
       setLat(map.current?.getCenter().lat.toFixed(4));
     });
+
   }, [lng, lat, zoom]);
 
   return (

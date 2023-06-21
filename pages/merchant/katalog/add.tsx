@@ -22,6 +22,8 @@ const Add: React.FC = (): JSX.Element => {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [menuImage, setMenuImage] = useState<File | null>(null);
 
+  const { data: session, status } = useSession();
+
   const router = useRouter();
 
   let id: any = null;
@@ -30,11 +32,7 @@ const Add: React.FC = (): JSX.Element => {
     id = router.query.id;
   }
 
-  // console.log(id + 'halo');
-
-  const { data: session, status } = useSession();
-  // console.log(session?.user);
-  const user = session?.user;
+  const user = session.user;
 
   console.log(user?.id);
 
@@ -236,18 +234,18 @@ const Add: React.FC = (): JSX.Element => {
 
 export default Add;
 
-export const getServerSideProps = async ({ req }: { req: any }) => {
-  const session = await getSession({ req });
-  // console.log(session);
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/merchant/signin",
-        permanent: false,
-      },
-    };
-  }
-  return {
-    props: { session },
-  };
-};
+// export const getServerSideProps = async ({ req }: { req: any }) => {
+//   const session = await getSession({ req });
+//   // console.log(session);
+//   if (!session) {
+//     return {
+//       redirect: {
+//         destination: "/merchant/signin",
+//         permanent: false,
+//       },
+//     };
+//   }
+//   return {
+//     props: { session },
+//   };
+// };

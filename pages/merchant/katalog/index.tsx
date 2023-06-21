@@ -6,15 +6,26 @@ import Searchbar from "components/elements/Searchbar";
 import MerchantLayout from "components/layout/MerchantLayout";
 import { getSession, useSession } from "next-auth/react";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import prisma from "lib/prisma";
 
-const Katalog = (props: { menu: any }): JSX.Element => {
+const Katalog = (): JSX.Element => {
   const { data: session, status } = useSession();
+
+  const [menu, setMenu] = useState([]);
   // console.log(session?.user);
   const user = session?.user;
 
-  console.log(props.menu);
+  console.log(user?.id);
+  
+  useEffect(() => {
+    fetch("/api/menu/getMenu", {
+      method: "POST",
+      body: JSON.stringify({
+        id: session.user.id,
+      }),
+    }).then((res) => res.json()).then((data) => setMenu(data));
+  }, [])
 
   const [customerView, setcustomerView] = useState(false);
 
@@ -109,9 +120,9 @@ const Katalog = (props: { menu: any }): JSX.Element => {
               </Menu.Items>
             </Menu>
           </div>
-          <Searchbar props={props.menu} />
+          <Searchbar props={menu} />
           <div className={customerView ? "grid grid-cols-2 gap-4" : ""}>
-            {props?.menu?.map((item: any, index: number) => {
+            {menu?.map((item: any, index: number) => {
               return (
                 <div className="" key={index}>
                   {customerView ? (
@@ -154,25 +165,25 @@ const Katalog = (props: { menu: any }): JSX.Element => {
 
 export default Katalog;
 
-export const getServerSideProps = async ({ req }: { req: any }) => {
-  const session = await getSession({ req });
-  // console.log(session);
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/merchant/signin",
-        permanent: false,
-      },
-    };
-  }
+// export const getServerSideProps = async ({ req }: { req: any }) => {
+//   const session = await getSession({ req });
+//   // console.log(session);
+//   if (!session) {
+//     return {
+//       redirect: {
+//         destination: "/merchant/signin",
+//         permanent: false,
+//       },
+//     };
+//   }
 
-  const data = await prisma.menu.findMany({
-    where: {
-      ownerId: session?.user.id,
-    },
-  });
+//   const data = await prisma.menu.findMany({
+//     where: {
+//       ownerId: session?.user.id,
+//     },
+//   });
 
-  return {
-    props: { menu: data },
-  };
-};
+//   return {
+//     props: { menu: data },
+//   };
+// };

@@ -31,6 +31,14 @@ const Order = () => {
     setStatusOrder(statusOrder + 1);
   };
 
+  const parseWaypoints = (waypoints) => {
+    let parsed = waypoints.split(",")
+    parsed.lng = parseFloat(parsed[0])
+    parsed.lat = parseFloat(parsed[1])
+
+    return parsed
+  }
+
   console.log(data);
 
   return (
@@ -78,7 +86,7 @@ const Order = () => {
         </div>
       </div>
       <div className="h-[400px]">
-        <MapContainer />
+        <MapContainer wayPoints={[parseWaypoints(data.source)]} />
       </div>
       <div className="">
         <Drag order={statusOrder} data={data}/>

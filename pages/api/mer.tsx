@@ -17,7 +17,7 @@ export default async function handle(
   res: NextApiResponse
 ) {
   if (req.method === "GET") {
-    const promo = await prisma.order.findMany();
+    const promo = await prisma.menu.findMany();
     // console.log(promo);
     return res.status(200).json(promo);
     // const cart = await prisma.cart.findFirst({
@@ -25,7 +25,9 @@ export default async function handle(
     //     include: { menuItems: { include: { menu: true } } },
     //   });
     //   return res.json(cart);
-    // const delCart = await prisma.order.deleteMany({})
+    // const delCart = await prisma.menu.delete({
+    //     where: { id: '6492af32b079bbde067ac831' },
+    // })
     // return res.status(200).json(delCart);
   }
   if (req.method === "POST") {
