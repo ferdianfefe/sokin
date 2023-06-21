@@ -68,7 +68,7 @@ const Input: React.FC<Props> = ({
           </div>
         ) : (
           <div>
-            <input
+            <input disabled={type === "disabled" ? true : false}
               type={type}
               {...formHookProps}
               value={value || defaultValue}

@@ -75,7 +75,7 @@ const MapContainer: React.FC<MapContainerProps> = ({
 
   return (
     <div className="relative">
-      <div className="fixed left-[50%] top-[55%] -translate-x-[50%] -translate-y-[50%] z-10">
+      <div className="absolute left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] z-10">
         <Image
           src="/images/icons/location.svg"
           height={41}
