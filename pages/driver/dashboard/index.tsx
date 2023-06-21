@@ -14,7 +14,9 @@ import TargetHarianProgressBar from "components/elements/TargetHarianProgressBar
 const DriverDashboard = () => {
   const [showPopUp, setShowPopup] = useState(false);
   const [Reservation, setReservation] = useState(false);
-  const [reservationData, setReservationData] = useState({user: {name: ""}, source: "tes", destination: "", createdAt: ""});
+  const [reservationData, setReservationData] = useState({
+    /*user: {name: ""}, source: "tes", destination: "", createdAt: ""*/
+  });
   const [keyword, setKeyword] = useState("");
   const router = useRouter();
   const [isActive, setIsActive] = useState(false);
@@ -23,12 +25,12 @@ const DriverDashboard = () => {
 
   // console.log(session?.user.role);
 
-  if (session?.user.role !== "driver") {
-    signOut().then(() => {
-      router.push("/driver/signin");
-    })
-  }
-  
+  // if (session?.user.role !== "driver") {
+  //   signOut().then(() => {
+  //     router.push("/driver/signin");
+  //   })
+  // }
+
   useEffect(() => {
     fetch("/api/order/getOrder", {
       method: "POST",
@@ -45,8 +47,13 @@ const DriverDashboard = () => {
       })
       .then((data) => {
         console.log(data);
-        if (data.length > 0) {
+        let newArray = data.filter(function (item: any) {
+          return item.status == "PROCESSING" || item.status == "DELIVERY";
+        });
+        console.log(newArray);
+        if (newArray.length > 0) {
           setReservation(true);
+          setReservationData(newArray[0]);
         }
         // alert(data.length);
       });
@@ -98,6 +105,8 @@ const DriverDashboard = () => {
   const handleInputChange = (event) => {
     setKeyword(event.target.value);
   };
+
+  console.log(driver);
 
   return (
     <DriverLayout
@@ -238,7 +247,9 @@ const DriverDashboard = () => {
           </p>
 
           <div className="mt-4 w-full px-4 h-[72px]">
-            <TargetHarianProgressBar percent={driver? driver.dailyTarget : 0} />
+            <TargetHarianProgressBar
+              percent={driver ? driver.dailyTarget : 0}
+            />
           </div>
         </div>
 
@@ -349,7 +360,7 @@ const DriverDashboard = () => {
               />
             </svg>
           </div>
-          <div className="flex w-[95%] h-full overflow-hidden bg-slate-200 rounded-[15px] mx-auto">
+          <div className="mt-3 border-gray-400 border-[1px]">
             <MapContainer keywordProp={keyword} />
           </div>
 
@@ -384,17 +395,17 @@ const PopUpDriver: React.FC<{
   setReservation = () => {},
 }) => {
   const handleAccept = async () => {
-    await fetch("/api/order", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        orderId: reservationData.id,
-        status: "DELIVERY",
-        from: "driver",
-      }),
-    });
+    // await fetch("/api/order", {
+    //   method: "PUT",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     orderId: reservationData.id,
+    //     status: "DELIVERY",
+    //     from: "driver",
+    //   }),
+    // });
     setReservation(true);
     setIsActive(true);
   };
@@ -481,7 +492,7 @@ const PopUpDriver: React.FC<{
                   </p>
                   <h2>
                     <span className="font-extrabold">
-                      McDonalds cabang Kaliurang
+                      {reservationData?.source}
                     </span>
                   </h2>
                 </div>
@@ -554,9 +565,7 @@ const PopUpDriver: React.FC<{
               <Button type="red" text="Tolak" href="/driver/dashboard" />
             </div>
 
-            <div
-              className="flex w-1/2 bg-slate-100"
-            >
+            <div className="flex w-1/2 bg-slate-100">
               <Button
                 type="green"
                 text="Terima"
@@ -609,7 +618,7 @@ type PropsSearch = {
 const OrderReservation = ({ reservationData }: { reservationData: any }) => {
   const starth = new Date(reservationData.createdAt).getHours();
   const startm = new Date(reservationData.createdAt).getMinutes();
-  const time = parseInt(reservationData.eta)
+  const time = parseInt(reservationData.eta);
 
   const router = useRouter();
   return (
@@ -668,18 +677,26 @@ const OrderReservation = ({ reservationData }: { reservationData: any }) => {
           </div>
           <div className="text-right">
             <p className="font-bold">Estimasi</p>
-            <h3 className="font-bold text-gray-500">{starth}:{startm.toString().padStart(2, "0")}</h3>
-            <h3 className="mt-9 font-bold text-gray-500">{(time+startm > 59) ? starth+1 : starth}:{((time+startm > 59) ? (startm+time)%59 : startm).toString().padStart(2, "0")}</h3>
+            <h3 className="font-bold text-gray-500">
+              {starth}:{startm.toString().padStart(2, "0")}
+            </h3>
+            <h3 className="mt-9 font-bold text-gray-500">
+              {time + startm > 59 ? starth + 1 : starth}:
+              {(time + startm > 59 ? (startm + time) % 59 : startm)
+                .toString()
+                .padStart(2, "0")}
+            </h3>
           </div>
         </div>
-        <div className="justify-center flex mt-1" onClick={
-          () => {
+        <div
+          className="justify-center flex mt-1"
+          onClick={() => {
             router.push({
-                pathname: '/driver/order',
-                query: { data: JSON.stringify(reservationData)}
-            })
-          }
-        }>
+              pathname: "/driver/order",
+              query: { data: JSON.stringify(reservationData) },
+            });
+          }}
+        >
           <Button text="Detail" size="small" className="w-1/3" />
         </div>
       </div>

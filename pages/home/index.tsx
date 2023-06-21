@@ -10,6 +10,7 @@ import SquareCardCarousel from "components/homepage-1/SquareCardCarousel";
 import { Router, useRouter } from "next/router";
 import DefaultLayout from "components/layout/DefaultLayout";
 import { useState, useEffect } from "react";
+import { io } from "socket.io-client";
 
 const Homepage: React.FunctionComponent = (): JSX.Element => {
   const [keyword, setKeyword] = useState("");
@@ -21,7 +22,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
   const { data, status } = useSession();
   const [profile, setProfile] = useState({balance: 0, creditScore: 0});
   const [isLoading, setIsLoading] = useState(true);
-  const [order, setOrder] = useState(true);
+  const [order, setOrder] = useState(false);
 
   // console.log(data?.user.role);
 
@@ -44,6 +45,38 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
       setIsLoading(false);
     })
   }, [])
+
+  useEffect(() => {
+    console.log('tes',data?.user.id);
+    fetch(`/api/order/getOrderHome`, {
+      method: "POST",
+      body: JSON.stringify({userId: data?.user?.id})
+    }).then(res => res.json()).then(data => {
+      // console.log(data);
+      let newArray = data.filter(function(item:any){
+        return item.status == "RECEIVED" || item.status == "PROCESSING" || item.status == "DELIVERY";
+        // return true;
+      });
+      if (newArray.length > 0) {
+        setReservationData(newArray[0]);
+        setOrder(true);
+      }
+    })
+  }, [])
+
+  useEffect(() => {
+    const socket = io();
+    socket.on("newOrder", (data) => {
+      setReservationData(data);
+      setOrder(true);
+    });
+    socket.on("updateOrder", (data) => {
+      setReservationData(data);
+    });
+    socket.on("updateOrderDriver", (data) => {
+      setReservationData(data);
+    });
+  }, []);
 
   const logout = async () => {
     const res = await signOut();
@@ -273,7 +306,7 @@ const Homepage: React.FunctionComponent = (): JSX.Element => {
               </div>
             </div>
           )}
-          {order && (
+          {(order && status == 'authenticated') && (
             <div className="px-5">
               <h2 className="text-xl font-bold">Reservasi Order</h2>
               <p className="font-semibold text-gray-400 text-sm">Sedang berlangsung</p>

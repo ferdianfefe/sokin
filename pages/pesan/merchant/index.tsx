@@ -171,6 +171,7 @@ const Merchant = (props: { menu: any }): JSX.Element => {
             return res.json();
           })
           .then((data) => {
+            console.log(data)
             setCartItemNumber(data.menuItems.length);
           });
       });

@@ -16,7 +16,11 @@ type CartContentProps = {
 };
 
 const Order = () => {
-  const [statusOrder, setStatusOrder] = useState(1);
+  const router = useRouter();
+
+  const data = JSON.parse(router.query.data)
+  
+  const [statusOrder, setStatusOrder] = useState((data.status == 'PROCESSING' ? 1 : data.status == 'DELIVERY' ? 2 : 3));
   const [showNotif, setShowNotif] = useState(false);
 
   const toggleNotif = () => {
@@ -27,23 +31,21 @@ const Order = () => {
     setStatusOrder(statusOrder + 1);
   };
 
-  const router = useRouter();
-
-  const data = JSON.parse(router.query.data)
-
   console.log(data);
 
   return (
     <div className="relative min-h-screen max-h-screen overflow-scroll border-black border-2">
-      {showNotif && <Notif order={statusOrder} toggleNotif={toggleNotif} continueOrder={continueOrder} />}
+      {showNotif && <Notif order={statusOrder} toggleNotif={toggleNotif} continueOrder={continueOrder} data={data} />}
       <div className="h-25 w-full my-5 px-5">
         <div className="flex items-center">
-          <Image
-            src={"/images/icons/left-arrow.svg"}
-            alt="plus-icon"
-            width={26}
-            height={26}
-          />
+          <div className='hover:cursor-pointer' onClick={() => {router.back()}}>
+            <Image
+              src={"/images/icons/left-arrow.svg"}
+              alt="plus-icon"
+              width={26}
+              height={26}
+            />
+          </div>
           {statusOrder === 1 ? (
             <h2 className="text-3xl font-semibold text-gray-600 ml-5">
               Sedang menuju ke Restoran
@@ -157,7 +159,7 @@ const Drag: React.FC = ({ order, data }: { order: number, data: any }): JSX.Elem
                   bounds={{ top: 0, bottom: 0 }}
                 >
                   <div className="">
-                    {orderNumber === 1 ? (
+                    {order === 1 ? (
                     <div className="p-4">
                       <div className="flex items-center justify-center">
                         <Image
@@ -173,7 +175,7 @@ const Drag: React.FC = ({ order, data }: { order: number, data: any }): JSX.Elem
                         <p className="text-c-orange-400">Selesai</p>
                       </div>
                     </div>
-                    ) : orderNumber === 2 ? (
+                    ) : order === 2 ? (
                       <div className="p-4">
                       <div className="flex items-center justify-center">
                         <Image
@@ -257,7 +259,7 @@ const Drag: React.FC = ({ order, data }: { order: number, data: any }): JSX.Elem
                         <div className="flex justify-between mb-4">
                           <p className="">Diskon</p>
                           <p className="">
-                            -Rp0
+                            -Rp {data.foodDisc + data.costDisc}
                             {/* {cartContent.reduce(
                   (total, item) => total + item.price * item.quantity,
                   0
@@ -270,12 +272,12 @@ const Drag: React.FC = ({ order, data }: { order: number, data: any }): JSX.Elem
                         </div>
                         <div className="flex justify-between mb-4">
                           <p className="">Biaya Layanan</p>
-                          <p className="">Rp2.500</p>
+                          <p className="">Rp {data.serviceFee}</p>
                         </div>
                         <hr className="border-[1.5px] border-[#000000] mb-4" />
                         <div className="flex justify-between mb-4 font-extrabold">
                           <p className="">Total</p>
-                          <p className="">Rp{(parseInt(data.foodFee) +  parseInt(data.costFee))}</p>
+                          <p className="">Rp{(parseInt(data.foodFee) +  parseInt(data.costFee) + parseInt(data.serviceFee) - parseInt(data.foodDisc) - parseInt(data.costDisc))}</p>
                         </div>
                       </div>
                     </div>
@@ -290,7 +292,7 @@ const Drag: React.FC = ({ order, data }: { order: number, data: any }): JSX.Elem
                         <div className="text-sm">
                           <p className="font-semibold">Soket</p>
                           <h3 className="font-extrabold text-c-orange-800">
-                            Rp55.750
+                            Rp {data.foodFee + data.costFee + data.serviceFee - data.foodDisc - data.costDisc}
                           </h3>
                         </div>
                       </div>
@@ -337,12 +339,57 @@ const Notif: React.FC = ({
   order,
   toggleNotif,
   continueOrder,
+  data,
 }: {
   order: Number;
   toggleNotif: () => void;
   continueOrder: () => void;
+  data: any;
 }): JSX.Element => {
   const [orderNumber, setOrderNumber] = useState(order);
+
+  const router = useRouter();
+
+  const nextStep = async () => {
+    if (orderNumber == 1) {
+      await fetch("/api/order", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          orderId: data.id,
+          status: "DELIVERY",
+          from: "driver",
+        }),
+      }).then(() => {
+        toggleNotif();
+        continueOrder();
+      });
+    }
+    if (orderNumber == 2) {
+      toggleNotif();
+      continueOrder();
+    }
+    if (orderNumber == 3) {
+      await fetch("/api/order", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          orderId: data.id,
+          status: "DONE",
+          from: "driver",
+        }),
+      }).then(() => {
+        toggleNotif();
+        continueOrder();
+        router.back();
+      });
+    }
+  }
+
   return (
     <div className="fixed inset-0 justify-center items-center z-[100] backdrop-blur-sm">
       <div className="bg-[#fff] h-48 py-2 my-64 rounded-[12px] border-[#FE8304]/20 border-[1px] shadow-lg mx-8 flex flex-col items-center justify-center">
@@ -377,10 +424,7 @@ const Notif: React.FC = ({
             type="green"
             className="!w-24"
             size="small"
-            onClickHandler={() => {
-              toggleNotif();
-              continueOrder();
-            }}
+            onClickHandler={nextStep}
           />
         </div>
       </div>
