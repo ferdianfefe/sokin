@@ -1,11 +1,12 @@
 import Image from "next/image";
-import { JSXElementConstructor, useState } from "react";
+import { JSXElementConstructor, useEffect, useState } from "react";
 import MapContainer from "components/elements/MapContainer";
 import Draggable from "react-draggable";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "components/elements/Button";
 import { useRouter } from "next/router";
 import { OrderStatus } from "@prisma/client";
+import { io } from "socket.io-client";
 
 type CartContentProps = {
   restaurantName: String;
@@ -16,7 +17,11 @@ type CartContentProps = {
 };
 
 const Order = () => {
-  const [statusOrder, setStatusOrder] = useState(1);
+  const router = useRouter();
+  
+  const data = JSON.parse(router.query.data);
+
+  const [statusOrder, setStatusOrder] = useState((data.status == 'RECEIVED') ? 1 : (data.status == 'PROCESSING') ? 2 : 3);
   const [showNotif, setShowNotif] = useState(false);
 
   const toggleNotif = () => {
@@ -27,9 +32,15 @@ const Order = () => {
     setStatusOrder(statusOrder + 1);
   };
 
-  const router = useRouter();
-
-  const data = JSON.parse(router.query.data);
+  useEffect(() => {
+    const socket = io();
+    socket.on("updateOrder", (data) => {
+      setStatusOrder((data.status == 'RECEIVED') ? 1 : (data.status == 'PROCESSING') ? 2 : 3);
+    });
+    socket.on("updateOrderDriver", (data) => {
+      setStatusOrder((data.status == 'RECEIVED') ? 1 : (data.status == 'PROCESSING') ? 2 : 3);
+    });
+  }, []);
 
   console.log(data);
 
@@ -44,12 +55,14 @@ const Order = () => {
       )}
       <div className="h-25 w-full my-5 px-5">
         <div className="flex items-center">
-          <Image
-            src={"/images/icons/left-arrow.svg"}
-            alt="plus-icon"
-            width={26}
-            height={26}
-          />
+          <div className="hover:cursor-pointer" onClick={() => {router.back()}}>
+            <Image
+              src={"/images/icons/left-arrow.svg"}
+              alt="plus-icon"
+              width={26}
+              height={26}
+            />
+          </div>
           {statusOrder === 1 ? (
             <h2 className="text-3xl font-semibold text-gray-600 ml-5">
               Sedang mencari driver
@@ -102,7 +115,7 @@ const Drag: React.FC = ({
   order: number;
   data: any;
 }): JSX.Element => {
-  const [orderNumber, setOrderNumber] = useState(order);
+  // const [orderNumber, setOrderNumber] = useState(order);
   const [isDragged, setIsDragged] = useState(true);
   const [dragPosition, setDragPosition] = useState({ x: 0, y: 0 });
   const [cartContent, setCartContent] = useState<CartContentProps[]>([
@@ -132,6 +145,8 @@ const Drag: React.FC = ({
     }
   };
 
+  console.log(data);
+
   return (
     <div className="">
       <Draggable
@@ -159,7 +174,7 @@ const Drag: React.FC = ({
                   bounds={{ top: 0, bottom: 0 }}
                 >
                   <div className="">
-                    {orderNumber === 1 ? (
+                    {order === 1 ? (
                       <div className="p-4">
                         <div className="flex items-center justify-center">
                           <Image
@@ -170,12 +185,12 @@ const Drag: React.FC = ({
                           />
                         </div>
                         <div className="flex justify-center gap-12 text-sm pr-4 font-semibold mt-1">
-                          <p className="text-c-orange-800">Ambil Makanan</p>
+                          <p className="text-c-orange-800">Cari Driver</p>
+                          <p className="text-c-orange-400">Ambil Makanan</p>
                           <p className="text-c-orange-400">Antar Makanan</p>
-                          <p className="text-c-orange-400">Selesai</p>
                         </div>
                       </div>
-                    ) : orderNumber === 2 ? (
+                    ) : order === 2 ? (
                       <div className="p-4">
                         <div className="flex items-center justify-center">
                           <Image
@@ -186,9 +201,9 @@ const Drag: React.FC = ({
                           />
                         </div>
                         <div className="flex justify-center gap-12 text-sm pr-4 font-semibold mt-1">
-                          <p className="text-c-orange-400">Ambil Makanan</p>
-                          <p className="text-c-orange-800">Antar Makanan</p>
-                          <p className="text-c-orange-400">Selesai</p>
+                          <p className="text-c-orange-400">Cari Driver</p>
+                          <p className="text-c-orange-800">Ambil Makanan</p>
+                          <p className="text-c-orange-400">Antar Makanan</p>
                         </div>
                       </div>
                     ) : (
@@ -202,9 +217,9 @@ const Drag: React.FC = ({
                           />
                         </div>
                         <div className="flex justify-center gap-12 text-sm pr-4 font-semibold mt-1">
+                          <p className="text-c-orange-400">Cari Driver</p>
                           <p className="text-c-orange-400">Ambil Makanan</p>
-                          <p className="text-c-orange-400">Antar Makanan</p>
-                          <p className="text-c-orange-800">Selesai</p>
+                          <p className="text-c-orange-800">Antar Makanan</p>
                         </div>
                       </div>
                     )}
@@ -218,9 +233,9 @@ const Drag: React.FC = ({
                           className="rounded-full border-[1px] border-gray-400"
                         />
                         <div className="ml-4">
-                          <p>Driver</p>
-                          <p>{data.user.name}</p>
-                          <p className="font-bold">plat motor</p>
+                          {/* <p>Driver</p> */}
+                          <p>{data.driver.name}</p>
+                          <p className="font-bold">{data.driver.licenseNumber}</p>
                         </div>
                       </div>
                       <div className="flex rounded-full bg-[#FFF0E0] w-16 px-1 h-7 drop-shadow-lg items-center justify-center gap-2 drop-shadow-[#FE8304]/20">
@@ -268,7 +283,7 @@ const Drag: React.FC = ({
                         <div className="flex justify-between mb-4">
                           <p className="">Diskon</p>
                           <p className="">
-                            -Rp0
+                            -Rp{data.foodDisc + data.costDisc}
                             {/* {cartContent.reduce(
                   (total, item) => total + item.price * item.quantity,
                   0
@@ -281,13 +296,13 @@ const Drag: React.FC = ({
                         </div>
                         <div className="flex justify-between mb-4">
                           <p className="">Biaya Layanan</p>
-                          <p className="">Rp2.500</p>
+                          <p className="">Rp{data.serviceFee}</p>
                         </div>
                         <hr className="border-[1.5px] border-[#000000] mb-4" />
                         <div className="flex justify-between mb-4 font-extrabold">
                           <p className="">Total</p>
                           <p className="">
-                            Rp{parseInt(data.foodFee) + parseInt(data.costFee)}
+                            Rp{parseInt(data.foodFee) + parseInt(data.costFee) + parseInt(data.serviceFee) - parseInt(data.foodDisc) - parseInt(data.costDisc)}
                           </p>
                         </div>
                       </div>
@@ -303,7 +318,7 @@ const Drag: React.FC = ({
                         <div className="text-sm">
                           <p className="font-semibold">Soket</p>
                           <h3 className="font-extrabold text-c-orange-800">
-                            Rp55.750
+                            Rp{data.foodFee + data.costFee + data.serviceFee - data.foodDisc - data.costDisc}
                           </h3>
                         </div>
                       </div>
