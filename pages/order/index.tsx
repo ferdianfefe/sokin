@@ -210,7 +210,7 @@ const Drag: React.FC = ({
                     )}
                     <div className="w-full h-[1px] bg-c-orange-800"></div>
                     <div className="flex h-full w-full items-center justify-between px-6 my-3">
-                      <div>
+                      <div className="flex">
                         <Image
                           src={"/images/regis/Person.svg"}
                           width={60}
