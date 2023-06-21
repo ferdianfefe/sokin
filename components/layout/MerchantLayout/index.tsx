@@ -8,21 +8,27 @@ const MerchantLayout: React.FC<{
   children: any;
   location: string;
   setNewOrderData: Function;
-  order: [];
+  // order: [];
   setOrder?: Function;
+  setIsOpen: Function;
 }> = ({
   children,
   location,
   setNewOrderData = () => {},
+  setIsOpen = () => {},
 }): JSX.Element => {
   const [newOrder, setNewOrder] = useState(null);
+  // const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const socket = io();
     socket.on("newOrder", (data) => {
-      setNewOrder(data);
       setNewOrderData(data);
+      // @ts-ignore
+      setIsOpen(true);
+      // setNewOrder(data);
     });
+    return
   }, []);
 
   const handleProcessOrder = async (id: string) => {

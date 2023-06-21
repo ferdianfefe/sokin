@@ -148,6 +148,8 @@ export default async function handle(
 
     res?.socket?.server?.io?.emit("newOrder", newOrder);
 
+    // console.log(newOrder);
+
     // delete cart
     // await prisma.cart.delete({
     //   where: { id: cartId },
@@ -161,14 +163,14 @@ export default async function handle(
     await prisma.user.update({
       where: { id: userId },
       data: {
-        balance: user.balance - foodFee - costFee,
+        balance: user.balance - foodFee - costFee - serviceFee + foodDisc + costDisc,
       },
     });
 
     return res.status(201).json(newOrder);
   } else if (req.method === "PUT") {
     try {
-      const { orderId, isAccepted, isCompleted, from="merchant", status} = req.body;
+      const { orderId, isAccepted, isCompleted, from, status} = req.body;
       console.log(orderId, isAccepted, isCompleted, status);
 
       let dataToUpdate: UpdateOrderData = {};
@@ -212,6 +214,21 @@ export default async function handle(
         },
       });
       console.log("success updating order");
+      // console.log(order);
+      // if (order.status == "DONE") {
+      //   await prisma.cart.delete({
+      //     where: { id: order.cartId },
+      //   });
+  
+      //   console.log("success deleting cart");
+  
+      //   await prisma.order.delete({
+      //     where: { id: order.id },
+      //   })
+
+      //   console.log("success deleting order");
+      // }
+
       if(from == "merchant"){
         res?.socket?.server?.io?.emit("updateOrder", order);
       }else{

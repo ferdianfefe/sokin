@@ -14,7 +14,7 @@ import TargetHarianProgressBar from "components/elements/TargetHarianProgressBar
 const DriverDashboard = () => {
   const [showPopUp, setShowPopup] = useState(false);
   const [Reservation, setReservation] = useState(false);
-  const [reservationData, setReservationData] = useState({user: {name: ""}, source: "tes", destination: "", createdAt: ""});
+  const [reservationData, setReservationData] = useState({/*user: {name: ""}, source: "tes", destination: "", createdAt: ""*/});
   const [keyword, setKeyword] = useState("");
   const router = useRouter();
   const [isActive, setIsActive] = useState(false);
@@ -23,11 +23,11 @@ const DriverDashboard = () => {
 
   // console.log(session?.user.role);
 
-  if (session?.user.role !== "driver") {
-    signOut().then(() => {
-      router.push("/driver/signin");
-    })
-  }
+  // if (session?.user.role !== "driver") {
+  //   signOut().then(() => {
+  //     router.push("/driver/signin");
+  //   })
+  // }
   
   useEffect(() => {
     fetch("/api/order/getOrder", {
@@ -45,8 +45,13 @@ const DriverDashboard = () => {
       })
       .then((data) => {
         console.log(data);
-        if (data.status === "success") {
+        let newArray = data.filter(function(item:any){
+              return item.status == "PROCESSING" || item.status == "DELIVERY";
+        });
+        console.log(newArray);
+        if (newArray.length > 0) {
           setReservation(true);
+          setReservationData(newArray[0])
         }
         // alert(data.length);
       });
@@ -98,6 +103,8 @@ const DriverDashboard = () => {
   const handleInputChange = (event) => {
     setKeyword(event.target.value);
   };
+
+  console.log(driver)
 
   return (
     <DriverLayout
@@ -384,17 +391,17 @@ const PopUpDriver: React.FC<{
   setReservation = () => {},
 }) => {
   const handleAccept = async () => {
-    await fetch("/api/order", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        orderId: reservationData.id,
-        status: "DELIVERY",
-        from: "driver",
-      }),
-    });
+    // await fetch("/api/order", {
+    //   method: "PUT",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     orderId: reservationData.id,
+    //     status: "DELIVERY",
+    //     from: "driver",
+    //   }),
+    // });
     setReservation(true);
     setIsActive(true);
   };
@@ -481,7 +488,7 @@ const PopUpDriver: React.FC<{
                   </p>
                   <h2>
                     <span className="font-extrabold">
-                      McDonalds cabang Kaliurang
+                      {reservationData?.source}
                     </span>
                   </h2>
                 </div>
