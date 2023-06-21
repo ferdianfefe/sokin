@@ -17,7 +17,7 @@ const Navbar: React.FC<Props> = ({ location, role, className }: Props) => {
             role === "merchant"
               ? "/merchant"
               : role === "driver"
-              ? "/driver/homepage"
+              ? "/driver/dashboard"
               : "/"
           }`}
         >
