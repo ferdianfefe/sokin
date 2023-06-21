@@ -1,3 +1,4 @@
+import Button from "components/elements/Button";
 import DefaultLayout from "components/layout/DefaultLayout";
 import MerchantLayout from "components/layout/MerchantLayout";
 import Image from "next/image";
@@ -104,6 +105,10 @@ const RiwayatOrder: React.FC = (): JSX.Element => {
           </div>
           <div className="flex justify-center items-center"></div>
           <div className="w-full h-[1px] bg-c-orange-700 left-0 top-60 my-3"></div>
+          <p className="text-center font-bold text-sm my-1">Kesanmu terhadap Driver</p>
+          <div className="h-24 w-80 border-[1px] border-c-orange-600 mx-auto rounded-2xl mb-4 p-2 justify-center flex items-start">
+            <textarea className="w-72 outline-none text-sm font-bold "></textarea>
+          </div>
           <p className="font-bold text-sm mb-2">Rincian Pesanan</p>
           {cartContent.map((item, index) => (
             <ItemBox key={index} item={item} index={index} />
@@ -158,6 +163,9 @@ const RiwayatOrder: React.FC = (): JSX.Element => {
               <h3 className="font-extrabold text-c-orange-800">Rp55.750</h3>
             </div>
           </div>
+        </div>
+        <div className="mx-4 my-5">
+          <Button text={"Kirim"} href="/home"/>
         </div>
       </div>
     </DefaultLayout>
