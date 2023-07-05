@@ -1,13 +1,7 @@
 # **SOKIN** 🛵🍕
 
-<div align="center" style="margin: 30px;">
-    <a href="https://refine.dev">
-    <img src="https://refine.ams3.cdn.digitaloceanspaces.com/refine_logo.png"  align="center" />
-    </a>
-</div>
-<br/>
-
-This [refine](https://github.com/pankod/refine) project was generated with [superplate](https://github.com/pankod/refine).
+## Project Overview
+Sokin is a food order and delivery service app with real-time location tracking feature. Overall, this app provides 3 different roles, namely customer, driver, and merchant. 
 
 ## Branch Naming
 `<type>/<short_description>`
